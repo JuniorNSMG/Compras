@@ -7,7 +7,7 @@ let package = Package(
         .iOS(.v17)
     ],
     products: [
-        .executable(
+        .library(
             name: "ComprasApp",
             targets: ["ComprasApp"])
     ],
@@ -15,7 +15,7 @@ let package = Package(
         .package(url: "https://github.com/supabase/supabase-swift.git", from: "2.5.0")
     ],
     targets: [
-        .executableTarget(
+        .target(
             name: "ComprasApp",
             dependencies: [
                 .product(name: "Supabase", package: "supabase-swift")
