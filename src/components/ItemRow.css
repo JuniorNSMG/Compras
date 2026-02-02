@@ -1,0 +1,96 @@
+.item-row {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 15px;
+  border-bottom: 1px solid #f0f0f0;
+  transition: background-color 0.2s, opacity 0.3s;
+  min-height: 70px;
+}
+
+.item-row:active {
+  background-color: #f8f8f8;
+}
+
+.item-row.comprado {
+  opacity: 0.5;
+}
+
+.item-row.deleting {
+  opacity: 0;
+  transform: translateX(-100%);
+  transition: opacity 0.3s, transform 0.3s;
+}
+
+.checkbox-button {
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.checkbox {
+  width: 28px;
+  height: 28px;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.checkbox.checked {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-color: #667eea;
+}
+
+.checkmark {
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.item-icon {
+  font-size: 42px;
+  flex-shrink: 0;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.item-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.item-nome {
+  font-size: 18px;
+  font-weight: 500;
+  color: #333;
+  word-wrap: break-word;
+}
+
+.item-row.comprado .item-nome {
+  text-decoration: line-through;
+}
+
+.item-quantidade {
+  font-size: 14px;
+  color: #666;
+  margin-top: 2px;
+}
+
+.delete-button {
+  padding: 8px;
+  font-size: 20px;
+  opacity: 0.4;
+  transition: opacity 0.2s;
+  flex-shrink: 0;
+}
+
+.delete-button:active {
+  opacity: 1;
+}
