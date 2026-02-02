@@ -6,7 +6,7 @@ class AuthService: ObservableObject {
     @Published var currentUser: User?
     @Published var isAuthenticated = false
 
-    private let supabase = SupabaseClient.shared.client
+    private let supabase = SupabaseManager.shared.client
 
     init() {
         Task {

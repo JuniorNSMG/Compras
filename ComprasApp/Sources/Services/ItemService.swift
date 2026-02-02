@@ -2,7 +2,7 @@ import Foundation
 import Supabase
 
 class ItemService {
-    private let supabase = SupabaseClient.shared.client
+    private let supabase = SupabaseManager.shared.client
 
     func getItens(listaId: UUID) async throws -> [Item] {
         let response: [Item] = try await supabase

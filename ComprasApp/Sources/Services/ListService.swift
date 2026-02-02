@@ -2,7 +2,7 @@ import Foundation
 import Supabase
 
 class ListService {
-    private let supabase = SupabaseClient.shared.client
+    private let supabase = SupabaseManager.shared.client
 
     func getListas(userId: UUID) async throws -> [Lista] {
         let response: [Lista] = try await supabase

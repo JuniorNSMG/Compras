@@ -1,17 +1,16 @@
 import Foundation
 import Supabase
 
-class SupabaseClient {
-    static let shared = SupabaseClient()
+class SupabaseManager {
+    static let shared = SupabaseManager()
 
-    let client: SupabaseClient
+    let client: Supabase.Client
 
     private init() {
-        // IMPORTANTE: Substitua com suas credenciais do Supabase
-        let supabaseURL = URL(string: "YOUR_SUPABASE_URL")!
-        let supabaseKey = "YOUR_SUPABASE_ANON_KEY"
+        let supabaseURL = URL(string: "https://taiichrigowbyzqkxngv.supabase.co")!
+        let supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRhaWljaHJpZ293Ynl6cWt4bmd2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAwNjQ5MzMsImV4cCI6MjA4NTY0MDkzM30.JfOdmnNABTqupMmDBnFgXaj8q5TJ92LgcUwgtCEG7Bw"
 
-        client = SupabaseClient(
+        client = Supabase.Client(
             supabaseURL: supabaseURL,
             supabaseKey: supabaseKey
         )
