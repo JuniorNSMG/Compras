@@ -4,22 +4,23 @@ import PackageDescription
 let package = Package(
     name: "ComprasApp",
     platforms: [
-        .iOS(.v16)
+        .iOS(.v17)
     ],
     products: [
-        .library(
+        .executable(
             name: "ComprasApp",
             targets: ["ComprasApp"])
     ],
     dependencies: [
-        .package(url: "https://github.com/supabase/supabase-swift.git", from: "2.0.0")
+        .package(url: "https://github.com/supabase/supabase-swift.git", from: "2.5.0")
     ],
     targets: [
-        .target(
+        .executableTarget(
             name: "ComprasApp",
             dependencies: [
                 .product(name: "Supabase", package: "supabase-swift")
-            ]
+            ],
+            path: "Sources"
         )
     ]
 )
