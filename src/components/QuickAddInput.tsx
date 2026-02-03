@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { itemService } from '@/services/itemService'
 import { useStore } from '@/store/useStore'
+import { ProductIcon } from './ProductIcon'
 import type { Item } from '@/types'
 import './QuickAddInput.css'
 
@@ -104,7 +105,9 @@ export function QuickAddInput() {
               onClick={() => handleSuggestionClick(suggestion)}
               className="suggestion-item"
             >
-              <span className="suggestion-icon">{suggestion.icon_name}</span>
+              <span className="suggestion-icon">
+                <ProductIcon icon={suggestion.icon_name} size={28} />
+              </span>
               <span className="suggestion-text">{suggestion.nome}</span>
             </button>
           ))}

@@ -41,8 +41,8 @@
 }
 
 .checkbox.checked {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-color: #667eea;
+  background: #4ade80;
+  border-color: #22c55e;
 }
 
 .checkmark {

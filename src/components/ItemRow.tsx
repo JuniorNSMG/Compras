@@ -18,11 +18,17 @@ export function ItemRow({ item, animandoSaida = false, compacto = false }: ItemR
   const longPressTimer = useRef<NodeJS.Timeout | null>(null)
 
   async function handleToggle() {
+    // Atualização otimista - atualiza localmente primeiro para resposta instantânea
+    const novoEstado = !item.comprado
+    updateItem(item.id, { ...item, comprado: novoEstado })
+
+    // Sincroniza com o banco em background
     try {
-      const updated = await itemService.toggleComprado(item.id, !item.comprado)
-      updateItem(item.id, updated)
+      await itemService.toggleComprado(item.id, novoEstado)
     } catch (error) {
       console.error('Erro ao atualizar item:', error)
+      // Reverte em caso de erro
+      updateItem(item.id, { ...item, comprado: !novoEstado })
     }
   }
 
