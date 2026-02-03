@@ -1,6 +1,7 @@
 import { supabase } from '@/lib/supabase'
 import type { Item } from '@/types'
 import { getProductIcon, getCategoriaFromNome } from '@/utils/productIcons'
+import { customizacaoService } from './customizacaoService'
 
 export const itemService = {
   async getItens(listaId: string): Promise<Item[]> {
@@ -19,10 +20,25 @@ export const itemService = {
     listaId: string,
     nome: string,
     quantidade?: number,
-    unidade?: string
+    unidade?: string,
+    userId?: string
   ): Promise<Item> {
-    const categoria = getCategoriaFromNome(nome)
-    const icon_name = getProductIcon(nome, categoria)
+    let categoria = getCategoriaFromNome(nome)
+    let icon_name = getProductIcon(nome, categoria)
+
+    // Verificar se existe customização salva para este produto
+    if (userId) {
+      try {
+        const customizacao = await customizacaoService.getCustomizacao(userId, nome)
+        if (customizacao) {
+          categoria = customizacao.categoria
+          icon_name = customizacao.icon_name
+        }
+      } catch (error) {
+        console.error('Erro ao buscar customização:', error)
+        // Continua com valores padrão
+      }
+    }
 
     const { data, error } = await supabase
       .from('itens')

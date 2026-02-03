@@ -1,7 +1,9 @@
 import { useState } from 'react'
 import { itemService } from '@/services/itemService'
+import { customizacaoService } from '@/services/customizacaoService'
 import { useStore } from '@/store/useStore'
 import { ProductIcon } from './ProductIcon'
+import { ORDEM_CATEGORIAS, AVAILABLE_ICONS } from '@/utils/productIcons'
 import type { Item } from '@/types'
 import './ItemOptions.css'
 
@@ -11,20 +13,38 @@ interface ItemOptionsProps {
 }
 
 export function ItemOptions({ item, onClose }: ItemOptionsProps) {
-  const { updateItem, removeItem } = useStore()
+  const { user, updateItem, removeItem } = useStore()
   const [quantidade, setQuantidade] = useState(item.quantidade?.toString() || '1')
   const [unidade, setUnidade] = useState(item.unidade || '')
+  const [categoria, setCategoria] = useState(item.categoria)
+  const [iconName, setIconName] = useState(item.icon_name)
   const [salvando, setSalvando] = useState(false)
+  const [mostrarIcones, setMostrarIcones] = useState(false)
 
   async function handleSalvar() {
+    if (!user) return
+
     try {
       setSalvando(true)
       const qtd = parseFloat(quantidade) || 1
+
+      // Atualizar o item
       const updated = await itemService.updateItem(item.id, {
         quantidade: qtd,
-        unidade: unidade.trim() || undefined
+        unidade: unidade.trim() || undefined,
+        categoria,
+        icon_name: iconName,
       })
       updateItem(item.id, updated)
+
+      // Salvar customização para uso futuro
+      await customizacaoService.saveCustomizacao(
+        user.id,
+        item.nome,
+        categoria,
+        iconName
+      )
+
       onClose()
     } catch (error) {
       console.error('Erro ao atualizar:', error)
@@ -55,16 +75,17 @@ export function ItemOptions({ item, onClose }: ItemOptionsProps) {
       <div className="item-options-content" onClick={(e) => e.stopPropagation()}>
         <div className="item-options-header">
           <div className="item-options-icon">
-            <ProductIcon icon={item.icon_name} size={48} />
+            <ProductIcon icon={iconName} size={48} />
           </div>
           <div className="item-options-title">
             <h3>{item.nome}</h3>
-            <p className="item-options-categoria">{item.categoria}</p>
+            <p className="item-options-categoria">{categoria}</p>
           </div>
           <button onClick={onClose} className="item-options-close">✕</button>
         </div>
 
         <div className="item-options-body">
+          {/* Quantidade */}
           <div className="input-section">
             <label>Quantidade</label>
             <div className="quantidade-input-group">
@@ -75,7 +96,6 @@ export function ItemOptions({ item, onClose }: ItemOptionsProps) {
                 min="0.1"
                 step="0.1"
                 disabled={salvando}
-                autoFocus
               />
               <input
                 type="text"
@@ -87,6 +107,54 @@ export function ItemOptions({ item, onClose }: ItemOptionsProps) {
               />
             </div>
             <p className="hint">Exemplo: 2 kg, 6 un, 1 L</p>
+          </div>
+
+          {/* Categoria */}
+          <div className="input-section">
+            <label>Categoria</label>
+            <select
+              value={categoria}
+              onChange={(e) => setCategoria(e.target.value)}
+              disabled={salvando}
+              className="categoria-select"
+            >
+              {ORDEM_CATEGORIAS.map((cat) => (
+                <option key={cat} value={cat}>
+                  {cat}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Ícone */}
+          <div className="input-section">
+            <label>Ícone</label>
+            <button
+              onClick={() => setMostrarIcones(!mostrarIcones)}
+              disabled={salvando}
+              className="icon-selector-button"
+            >
+              <ProductIcon icon={iconName} size={32} />
+              <span>Selecionar ícone</span>
+            </button>
+
+            {mostrarIcones && (
+              <div className="icon-grid">
+                {AVAILABLE_ICONS.map((iconOption) => (
+                  <button
+                    key={iconOption.icon}
+                    onClick={() => {
+                      setIconName(iconOption.icon)
+                      setMostrarIcones(false)
+                    }}
+                    className={`icon-option ${iconName === iconOption.icon ? 'selected' : ''}`}
+                    title={iconOption.name}
+                  >
+                    <ProductIcon icon={iconOption.icon} size={32} />
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
           <div className="item-options-actions">

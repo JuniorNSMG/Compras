@@ -23,3 +23,13 @@ export interface User {
   id: string
   email: string
 }
+
+export interface ProdutoCustomizacao {
+  id: string
+  user_id: string
+  nome_produto: string
+  categoria: string
+  icon_name: string
+  created_at: string
+  updated_at: string
+}

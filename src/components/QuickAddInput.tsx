@@ -58,7 +58,8 @@ export function QuickAddInput() {
         currentLista.id,
         nome,
         quantidade,
-        unidade
+        unidade,
+        user?.id
       )
       addItem(newItem)
       setInput('')
