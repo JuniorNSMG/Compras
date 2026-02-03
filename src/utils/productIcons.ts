@@ -286,7 +286,6 @@ export const PRODUCT_ICONS: Record<string, string> = {
   'bolacha': 'fluent-emoji:cookie',
   'cookie': 'fluent-emoji:cookie',
   'wafer': 'fluent-emoji:cookie',
-  'torrada': 'fluent-emoji:bread',
   'salgadinho': 'fluent-emoji:potato-chips',
   'chips': 'fluent-emoji:potato-chips',
   'doritos': 'fluent-emoji:potato-chips',
