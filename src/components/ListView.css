@@ -186,6 +186,88 @@
   opacity: 0.8;
 }
 
+/* Seção de frequentemente comprado */
+.frequentes-section {
+  margin-top: 20px;
+  background: white;
+  border-top: 2px solid #f0f0f0;
+}
+
+.frequentes-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px;
+  background: #fffbf0;
+  border: none;
+  text-align: left;
+  transition: background-color 0.2s;
+}
+
+.frequentes-header:active {
+  background-color: #fff5db;
+}
+
+.frequentes-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #666;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.frequentes-list {
+  background: white;
+  border-top: 1px solid #e8e8e8;
+}
+
+.frequente-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 15px;
+  border-bottom: 1px solid #f0f0f0;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.frequente-item:active {
+  background-color: #fffbf0;
+}
+
+.frequente-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.frequente-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.frequente-nome {
+  font-size: 15px;
+  color: #333;
+  font-weight: 500;
+}
+
+.frequente-stats {
+  font-size: 12px;
+  color: #f59e0b;
+  font-weight: 600;
+}
+
+.frequentes-empty {
+  padding: 20px;
+  text-align: center;
+  color: #999;
+  font-size: 14px;
+}
+
 .empty-state {
   display: flex;
   flex-direction: column;

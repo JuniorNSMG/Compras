@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from 'react'
 import { itemService } from '@/services/itemService'
 import { listService } from '@/services/listService'
 import { authService } from '@/services/authService'
+import { historicoComprasService, type HistoricoCompra } from '@/services/historicoComprasService'
 import { useStore } from '@/store/useStore'
 import { QuickAddInput } from './QuickAddInput'
 import { ItemRow } from './ItemRow'
@@ -17,7 +18,9 @@ export function ListView() {
   const [listas, setListas] = useState<any[]>([])
   const [itemsAnimandoSaida, setItemsAnimandoSaida] = useState<Set<string>>(new Set())
   const [compradosExpandido, setCompradosExpandido] = useState(false)
+  const [frequentesExpandido, setFrequentesExpandido] = useState(false)
   const [mostrarGerenciarListas, setMostrarGerenciarListas] = useState(false)
+  const [frequentementeComprados, setFrequentementeComprados] = useState<HistoricoCompra[]>([])
   const previousItensRef = useRef<Map<string, boolean>>(new Map())
   const containerRef = useRef<HTMLDivElement>(null)
   const scrollPositionRef = useRef<number>(0)
@@ -25,6 +28,7 @@ export function ListView() {
   useEffect(() => {
     if (user) {
       loadListas()
+      loadFrequentementeComprados()
     }
   }, [user])
 
@@ -49,6 +53,16 @@ export function ListView() {
       }
     } catch (error) {
       console.error('Erro ao carregar listas:', error)
+    }
+  }
+
+  async function loadFrequentementeComprados() {
+    if (!user) return
+    try {
+      const data = await historicoComprasService.getFrequentementeComprados(user.id)
+      setFrequentementeComprados(data)
+    } catch (error) {
+      console.error('Erro ao carregar frequentemente comprados:', error)
     }
   }
 
@@ -84,6 +98,8 @@ export function ListView() {
           data.map((item: Item) => [item.id, item.comprado])
         )
       }
+      // Recarregar frequentemente comprados para refletir mudanças
+      await loadFrequentementeComprados()
     } catch (error) {
       console.error('Erro ao carregar itens:', error)
     } finally {
@@ -111,6 +127,30 @@ export function ListView() {
       } finally {
         setSyncing(false)
       }
+    }
+  }
+
+  async function handleAdicionarFrequente(historico: HistoricoCompra) {
+    if (!currentLista || !user) return
+
+    try {
+      setSyncing(true)
+      // Criar novo item na lista atual com os dados do histórico
+      await itemService.createItem(
+        currentLista.id,
+        historico.item_nome,
+        1, // quantidade padrão
+        undefined, // sem unidade
+        user.id
+      )
+      await loadItens()
+      // Recarregar histórico para atualizar contadores se necessário
+      await loadFrequentementeComprados()
+    } catch (error) {
+      console.error('Erro ao adicionar item frequente:', error)
+      alert('Erro ao adicionar item. Tente novamente.')
+    } finally {
+      setSyncing(false)
     }
   }
 
@@ -303,6 +343,49 @@ export function ListView() {
                 )}
               </div>
             )}
+
+            {/* Seção de Frequentemente Comprado (sempre visível) */}
+            <div className="frequentes-section">
+              <button
+                className="frequentes-header"
+                onClick={() => setFrequentesExpandido(!frequentesExpandido)}
+              >
+                <span className="frequentes-title">
+                  ⭐ Frequentemente Comprado ({frequentementeComprados.length})
+                </span>
+                <span className="dropdown-icon">
+                  {frequentesExpandido ? '▲' : '▼'}
+                </span>
+              </button>
+
+              {frequentesExpandido && (
+                <div className="frequentes-list">
+                  {frequentementeComprados.length === 0 ? (
+                    <div className="frequentes-empty">
+                      <p>Seus itens mais comprados aparecerão aqui</p>
+                    </div>
+                  ) : (
+                    frequentementeComprados.map(historico => (
+                      <div
+                        key={historico.id}
+                        className="frequente-item"
+                        onClick={() => handleAdicionarFrequente(historico)}
+                      >
+                        <div className="frequente-icon">
+                          <ProductIcon icon={historico.icon_name} size={20} />
+                        </div>
+                        <div className="frequente-info">
+                          <div className="frequente-nome">{historico.item_nome}</div>
+                          <div className="frequente-stats">
+                            {historico.purchase_count}x comprado
+                          </div>
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+              )}
+            </div>
           </>
         )}
       </div>

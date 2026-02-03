@@ -1,5 +1,6 @@
 import { useState, useRef } from 'react'
 import { itemService } from '@/services/itemService'
+import { historicoComprasService } from '@/services/historicoComprasService'
 import { useStore } from '@/store/useStore'
 import { ItemOptions } from './ItemOptions'
 import { ProductIcon } from './ProductIcon'
@@ -13,7 +14,7 @@ interface ItemRowProps {
 }
 
 export function ItemRow({ item, animandoSaida = false, compacto = false }: ItemRowProps) {
-  const { updateItem } = useStore()
+  const { user, updateItem } = useStore()
   const [showOptions, setShowOptions] = useState(false)
   const longPressTimer = useRef<NodeJS.Timeout | null>(null)
 
@@ -25,6 +26,16 @@ export function ItemRow({ item, animandoSaida = false, compacto = false }: ItemR
     // Sincroniza com o banco em background
     try {
       await itemService.toggleComprado(item.id, novoEstado)
+
+      // Se está marcando como comprado, registrar no histórico
+      if (novoEstado && user) {
+        await historicoComprasService.registrarCompra(
+          user.id,
+          item.nome,
+          item.icon_name,
+          item.categoria
+        )
+      }
     } catch (error) {
       console.error('Erro ao atualizar item:', error)
       // Reverte em caso de erro
@@ -65,7 +76,7 @@ export function ItemRow({ item, animandoSaida = false, compacto = false }: ItemR
   if (compacto) {
     return (
       <>
-        <div className="item-row-compacto">
+        <div className="item-row-compacto" onClick={handleToggle}>
           <div className="item-icon-inline">
             <ProductIcon icon={item.icon_name} size={20} />
           </div>
