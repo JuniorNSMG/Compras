@@ -30,6 +30,9 @@ jobs:
         run: npm install
 
       - name: Build
+        env:
+          VITE_SUPABASE_URL: https://taiichrigowbyzqkxngv.supabase.co
+          VITE_SUPABASE_ANON_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRhaWljaHJpZ293Ynl6cWt4bmd2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAwNjQ5MzMsImV4cCI6MjA4NTY0MDkzM30.JfOdmnNABTqupMmDBnFgXaj8q5TJ92LgcUwgtCEG7Bw
         run: npm run build
 
       - name: Setup Pages
