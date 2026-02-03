@@ -97,24 +97,11 @@
 
 /* Item animando saída (5 segundos riscado) */
 .item-row.animando-saida {
-  opacity: 0.6;
-  animation: fadeOut 5s ease-in-out;
+  opacity: 0.5;
 }
 
 .item-row.animando-saida .item-nome {
   text-decoration: line-through;
-}
-
-@keyframes fadeOut {
-  0% {
-    opacity: 0.6;
-  }
-  80% {
-    opacity: 0.6;
-  }
-  100% {
-    opacity: 0;
-  }
 }
 
 /* Versão compacta para lista de comprados */
