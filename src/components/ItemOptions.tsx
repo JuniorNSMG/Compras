@@ -20,6 +20,17 @@ export function ItemOptions({ item, onClose }: ItemOptionsProps) {
   const [iconName, setIconName] = useState(item.icon_name)
   const [salvando, setSalvando] = useState(false)
   const [mostrarIcones, setMostrarIcones] = useState(false)
+  const [buscaIcone, setBuscaIcone] = useState('')
+
+  // Filtrar ícones baseado na busca
+  const iconesFiltrados = AVAILABLE_ICONS.filter((iconOption) => {
+    if (!buscaIcone) return true
+    const search = buscaIcone.toLowerCase()
+    return (
+      iconOption.name.toLowerCase().includes(search) ||
+      iconOption.keywords.some((keyword) => keyword.toLowerCase().includes(search))
+    )
+  })
 
   async function handleSalvar() {
     if (!user) return
@@ -139,21 +150,36 @@ export function ItemOptions({ item, onClose }: ItemOptionsProps) {
             </button>
 
             {mostrarIcones && (
-              <div className="icon-grid">
-                {AVAILABLE_ICONS.map((iconOption) => (
-                  <button
-                    key={iconOption.icon}
-                    onClick={() => {
-                      setIconName(iconOption.icon)
-                      setMostrarIcones(false)
-                    }}
-                    className={`icon-option ${iconName === iconOption.icon ? 'selected' : ''}`}
-                    title={iconOption.name}
-                  >
-                    <ProductIcon icon={iconOption.icon} size={32} />
-                  </button>
-                ))}
-              </div>
+              <>
+                <input
+                  type="text"
+                  value={buscaIcone}
+                  onChange={(e) => setBuscaIcone(e.target.value)}
+                  placeholder="Buscar ícone... (ex: fruta, carne, bebida)"
+                  className="icon-search-input"
+                  disabled={salvando}
+                />
+                <div className="icon-grid">
+                  {iconesFiltrados.length > 0 ? (
+                    iconesFiltrados.map((iconOption) => (
+                      <button
+                        key={iconOption.icon}
+                        onClick={() => {
+                          setIconName(iconOption.icon)
+                          setMostrarIcones(false)
+                          setBuscaIcone('')
+                        }}
+                        className={`icon-option ${iconName === iconOption.icon ? 'selected' : ''}`}
+                        title={iconOption.name}
+                      >
+                        <ProductIcon icon={iconOption.icon} size={32} />
+                      </button>
+                    ))
+                  ) : (
+                    <p className="no-icons-message">Nenhum ícone encontrado para "{buscaIcone}"</p>
+                  )}
+                </div>
+              </>
             )}
           </div>
 

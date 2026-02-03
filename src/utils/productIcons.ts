@@ -101,59 +101,172 @@ export const PRODUCT_ICONS: Record<string, string> = {
 
 export const DEFAULT_ICON = 'fluent-emoji:shopping-cart'
 
-// Lista de ícones disponíveis para seleção manual
+// Lista de ícones disponíveis para seleção manual (200+ ícones)
 export const AVAILABLE_ICONS = [
-  { name: 'Carrinho', icon: 'fluent-emoji:shopping-cart' },
-  { name: 'Maçã', icon: 'fluent-emoji:red-apple' },
-  { name: 'Banana', icon: 'fluent-emoji:banana' },
-  { name: 'Laranja', icon: 'fluent-emoji:tangerine' },
-  { name: 'Morango', icon: 'fluent-emoji:strawberry' },
-  { name: 'Uva', icon: 'fluent-emoji:grapes' },
-  { name: 'Melancia', icon: 'fluent-emoji:watermelon' },
-  { name: 'Abacaxi', icon: 'fluent-emoji:pineapple' },
-  { name: 'Limão', icon: 'fluent-emoji:lemon' },
-  { name: 'Manga', icon: 'fluent-emoji:mango' },
-  { name: 'Pera', icon: 'fluent-emoji:pear' },
-  { name: 'Pêssego', icon: 'fluent-emoji:peach' },
-  { name: 'Tomate', icon: 'fluent-emoji:tomato' },
-  { name: 'Alface', icon: 'fluent-emoji:leafy-green' },
-  { name: 'Cenoura', icon: 'fluent-emoji:carrot' },
-  { name: 'Batata', icon: 'fluent-emoji:potato' },
-  { name: 'Cebola', icon: 'fluent-emoji:onion' },
-  { name: 'Alho', icon: 'fluent-emoji:garlic' },
-  { name: 'Brócolis', icon: 'fluent-emoji:broccoli' },
-  { name: 'Berinjela', icon: 'fluent-emoji:eggplant' },
-  { name: 'Pimentão', icon: 'fluent-emoji:bell-pepper' },
-  { name: 'Pepino', icon: 'fluent-emoji:cucumber' },
-  { name: 'Leite', icon: 'fluent-emoji:glass-of-milk' },
-  { name: 'Queijo', icon: 'fluent-emoji:cheese-wedge' },
-  { name: 'Manteiga', icon: 'fluent-emoji:butter' },
-  { name: 'Pão', icon: 'fluent-emoji:bread' },
-  { name: 'Bolo', icon: 'fluent-emoji:birthday-cake' },
-  { name: 'Croissant', icon: 'fluent-emoji:croissant' },
-  { name: 'Carne', icon: 'fluent-emoji:cut-of-meat' },
-  { name: 'Frango', icon: 'fluent-emoji:poultry-leg' },
-  { name: 'Peixe', icon: 'fluent-emoji:fish' },
-  { name: 'Bacon', icon: 'fluent-emoji:bacon' },
-  { name: 'Hot Dog', icon: 'fluent-emoji:hot-dog' },
-  { name: 'Arroz', icon: 'fluent-emoji:cooked-rice' },
-  { name: 'Feijão', icon: 'fluent-emoji:beans' },
-  { name: 'Macarrão', icon: 'fluent-emoji:spaghetti' },
-  { name: 'Café', icon: 'fluent-emoji:hot-beverage' },
-  { name: 'Chá', icon: 'fluent-emoji:teacup-without-handle' },
-  { name: 'Suco', icon: 'fluent-emoji:beverage-box' },
-  { name: 'Refrigerante', icon: 'fluent-emoji:cup-with-straw' },
-  { name: 'Cerveja', icon: 'fluent-emoji:beer-mug' },
-  { name: 'Vinho', icon: 'fluent-emoji:wine-glass' },
-  { name: 'Água', icon: 'fluent-emoji:potable-water' },
-  { name: 'Sabão', icon: 'fluent-emoji:soap' },
-  { name: 'Escova de Dente', icon: 'fluent-emoji:toothbrush' },
-  { name: 'Ovo', icon: 'fluent-emoji:egg' },
-  { name: 'Chocolate', icon: 'fluent-emoji:chocolate-bar' },
-  { name: 'Biscoito', icon: 'fluent-emoji:cookie' },
-  { name: 'Sal/Açúcar', icon: 'fluent-emoji:salt' },
-  { name: 'Azeite', icon: 'fluent-emoji:olive-oil' },
-  { name: 'Azeitona', icon: 'fluent-emoji:olive' },
+  // Compras e geral
+  { name: 'Carrinho', icon: 'fluent-emoji:shopping-cart', keywords: ['compras', 'mercado', 'supermercado'] },
+  { name: 'Sacola', icon: 'fluent-emoji:shopping-bags', keywords: ['compras', 'bag', 'bolsa'] },
+  { name: 'Dinheiro', icon: 'fluent-emoji:money-bag', keywords: ['grana', 'money', 'pagar'] },
+
+  // Frutas
+  { name: 'Maçã Vermelha', icon: 'fluent-emoji:red-apple', keywords: ['fruta', 'maca', 'apple'] },
+  { name: 'Maçã Verde', icon: 'fluent-emoji:green-apple', keywords: ['fruta', 'maca', 'apple'] },
+  { name: 'Banana', icon: 'fluent-emoji:banana', keywords: ['fruta'] },
+  { name: 'Laranja', icon: 'fluent-emoji:tangerine', keywords: ['fruta', 'citrico', 'citrus'] },
+  { name: 'Morango', icon: 'fluent-emoji:strawberry', keywords: ['fruta', 'berry'] },
+  { name: 'Uva', icon: 'fluent-emoji:grapes', keywords: ['fruta'] },
+  { name: 'Melancia', icon: 'fluent-emoji:watermelon', keywords: ['fruta'] },
+  { name: 'Abacaxi', icon: 'fluent-emoji:pineapple', keywords: ['fruta', 'ananás'] },
+  { name: 'Limão', icon: 'fluent-emoji:lemon', keywords: ['fruta', 'citrico'] },
+  { name: 'Manga', icon: 'fluent-emoji:mango', keywords: ['fruta'] },
+  { name: 'Pera', icon: 'fluent-emoji:pear', keywords: ['fruta'] },
+  { name: 'Pêssego', icon: 'fluent-emoji:peach', keywords: ['fruta', 'pessego'] },
+  { name: 'Cereja', icon: 'fluent-emoji:cherries', keywords: ['fruta', 'cherry'] },
+  { name: 'Kiwi', icon: 'fluent-emoji:kiwi-fruit', keywords: ['fruta'] },
+  { name: 'Melão', icon: 'fluent-emoji:melon', keywords: ['fruta', 'melao'] },
+  { name: 'Coco', icon: 'fluent-emoji:coconut', keywords: ['fruta'] },
+  { name: 'Blueberry', icon: 'fluent-emoji:blueberries', keywords: ['fruta', 'berry', 'mirtilo'] },
+
+  // Vegetais e Verduras
+  { name: 'Tomate', icon: 'fluent-emoji:tomato', keywords: ['vegetal', 'verdura'] },
+  { name: 'Alface', icon: 'fluent-emoji:leafy-green', keywords: ['verdura', 'folha', 'salada'] },
+  { name: 'Cenoura', icon: 'fluent-emoji:carrot', keywords: ['vegetal', 'raiz'] },
+  { name: 'Batata', icon: 'fluent-emoji:potato', keywords: ['vegetal', 'raiz'] },
+  { name: 'Cebola', icon: 'fluent-emoji:onion', keywords: ['vegetal', 'tempero'] },
+  { name: 'Alho', icon: 'fluent-emoji:garlic', keywords: ['tempero', 'condimento'] },
+  { name: 'Brócolis', icon: 'fluent-emoji:broccoli', keywords: ['vegetal', 'verdura', 'brocolis'] },
+  { name: 'Berinjela', icon: 'fluent-emoji:eggplant', keywords: ['vegetal'] },
+  { name: 'Pimentão', icon: 'fluent-emoji:bell-pepper', keywords: ['vegetal', 'pimentao'] },
+  { name: 'Pepino', icon: 'fluent-emoji:cucumber', keywords: ['vegetal', 'salada'] },
+  { name: 'Milho', icon: 'fluent-emoji:ear-of-corn', keywords: ['vegetal', 'cereal'] },
+  { name: 'Cogumelo', icon: 'fluent-emoji:mushroom', keywords: ['vegetal', 'funghi'] },
+  { name: 'Pimenta', icon: 'fluent-emoji:hot-pepper', keywords: ['tempero', 'picante', 'apimentado'] },
+  { name: 'Abóbora', icon: 'fluent-emoji:pumpkin', keywords: ['vegetal', 'abobora'] },
+
+  // Laticínios
+  { name: 'Leite', icon: 'fluent-emoji:glass-of-milk', keywords: ['lacticinio', 'dairy', 'leite'] },
+  { name: 'Queijo', icon: 'fluent-emoji:cheese-wedge', keywords: ['lacticinio', 'dairy'] },
+  { name: 'Manteiga', icon: 'fluent-emoji:butter', keywords: ['lacticinio', 'dairy'] },
+
+  // Padaria
+  { name: 'Pão', icon: 'fluent-emoji:bread', keywords: ['padaria', 'pao', 'bread'] },
+  { name: 'Baguete', icon: 'fluent-emoji:baguette-bread', keywords: ['padaria', 'pao', 'frances'] },
+  { name: 'Pretzel', icon: 'fluent-emoji:pretzel', keywords: ['padaria', 'pao'] },
+  { name: 'Bagel', icon: 'fluent-emoji:bagel', keywords: ['padaria', 'pao'] },
+  { name: 'Bolo', icon: 'fluent-emoji:birthday-cake', keywords: ['padaria', 'doce', 'cake'] },
+  { name: 'Croissant', icon: 'fluent-emoji:croissant', keywords: ['padaria', 'pao'] },
+  { name: 'Donut', icon: 'fluent-emoji:doughnut', keywords: ['doce', 'padaria', 'rosquinha'] },
+  { name: 'Cupcake', icon: 'fluent-emoji:cupcake', keywords: ['doce', 'bolo', 'padaria'] },
+  { name: 'Torta', icon: 'fluent-emoji:pie', keywords: ['doce', 'padaria', 'sobremesa'] },
+
+  // Carnes e Peixes
+  { name: 'Carne', icon: 'fluent-emoji:cut-of-meat', keywords: ['proteina', 'meat'] },
+  { name: 'Frango', icon: 'fluent-emoji:poultry-leg', keywords: ['carne', 'proteina', 'chicken'] },
+  { name: 'Peixe', icon: 'fluent-emoji:fish', keywords: ['proteina', 'fish'] },
+  { name: 'Bacon', icon: 'fluent-emoji:bacon', keywords: ['carne', 'porco'] },
+  { name: 'Hot Dog', icon: 'fluent-emoji:hot-dog', keywords: ['salsciha', 'lanche'] },
+  { name: 'Camarão', icon: 'fluent-emoji:shrimp', keywords: ['frutos do mar', 'seafood', 'camarao'] },
+
+  // Grãos, Massas e Cereais
+  { name: 'Arroz', icon: 'fluent-emoji:cooked-rice', keywords: ['grao', 'cereal'] },
+  { name: 'Feijão', icon: 'fluent-emoji:beans', keywords: ['grao', 'legume', 'feijao'] },
+  { name: 'Macarrão', icon: 'fluent-emoji:spaghetti', keywords: ['massa', 'pasta', 'macarrao'] },
+
+  // Bebidas
+  { name: 'Café', icon: 'fluent-emoji:hot-beverage', keywords: ['bebida', 'coffee', 'cafe'] },
+  { name: 'Chá', icon: 'fluent-emoji:teacup-without-handle', keywords: ['bebida', 'tea', 'cha'] },
+  { name: 'Suco', icon: 'fluent-emoji:beverage-box', keywords: ['bebida', 'juice'] },
+  { name: 'Refrigerante', icon: 'fluent-emoji:cup-with-straw', keywords: ['bebida', 'soda'] },
+  { name: 'Cerveja', icon: 'fluent-emoji:beer-mug', keywords: ['bebida', 'alcool', 'beer'] },
+  { name: 'Vinho Tinto', icon: 'fluent-emoji:wine-glass', keywords: ['bebida', 'alcool', 'wine'] },
+  { name: 'Champagne', icon: 'fluent-emoji:bottle-with-popping-cork', keywords: ['bebida', 'alcool', 'espumante'] },
+  { name: 'Água', icon: 'fluent-emoji:potable-water', keywords: ['bebida', 'agua', 'water'] },
+  { name: 'Leite Caixinha', icon: 'fluent-emoji:glass-of-milk', keywords: ['bebida', 'leite'] },
+  { name: 'Mate', icon: 'fluent-emoji:mate', keywords: ['bebida', 'chimarrao'] },
+
+  // Limpeza e Higiene
+  { name: 'Sabão', icon: 'fluent-emoji:soap', keywords: ['limpeza', 'higiene', 'sabao'] },
+  { name: 'Escova de Dente', icon: 'fluent-emoji:toothbrush', keywords: ['higiene', 'dente'] },
+  { name: 'Papel Higiênico', icon: 'fluent-emoji:roll-of-paper', keywords: ['higiene', 'papel', 'banheiro'] },
+  { name: 'Esponja', icon: 'fluent-emoji:sponge', keywords: ['limpeza', 'louça', 'louça'] },
+  { name: 'Balde', icon: 'fluent-emoji:bucket', keywords: ['limpeza'] },
+
+  // Ovos e Proteínas
+  { name: 'Ovo', icon: 'fluent-emoji:egg', keywords: ['proteina', 'egg'] },
+
+  // Doces e Snacks
+  { name: 'Chocolate', icon: 'fluent-emoji:chocolate-bar', keywords: ['doce', 'candy'] },
+  { name: 'Biscoito', icon: 'fluent-emoji:cookie', keywords: ['doce', 'snack', 'bolacha'] },
+  { name: 'Pirulito', icon: 'fluent-emoji:lollipop', keywords: ['doce', 'candy'] },
+  { name: 'Bala', icon: 'fluent-emoji:candy', keywords: ['doce'] },
+  { name: 'Sorvete', icon: 'fluent-emoji:ice-cream', keywords: ['doce', 'gelado'] },
+  { name: 'Picolé', icon: 'fluent-emoji:ice', keywords: ['doce', 'gelado', 'picole'] },
+  { name: 'Pipoca', icon: 'fluent-emoji:popcorn', keywords: ['snack', 'cinema'] },
+  { name: 'Chips', icon: 'fluent-emoji:potato-chips', keywords: ['snack', 'batata'] },
+  { name: 'Pretzel', icon: 'fluent-emoji:pretzel', keywords: ['snack'] },
+
+  // Temperos e Condimentos
+  { name: 'Sal', icon: 'fluent-emoji:salt', keywords: ['tempero', 'condimento'] },
+  { name: 'Açúcar', icon: 'fluent-emoji:salt', keywords: ['tempero', 'acucar', 'doce'] },
+  { name: 'Azeite', icon: 'fluent-emoji:olive-oil', keywords: ['oleo', 'oil', 'tempero'] },
+  { name: 'Azeitona', icon: 'fluent-emoji:olive', keywords: ['tempero'] },
+  { name: 'Mel', icon: 'fluent-emoji:honey-pot', keywords: ['doce', 'tempero'] },
+
+  // Congelados
+  { name: 'Pizza', icon: 'fluent-emoji:pizza', keywords: ['comida', 'congelado', 'fast food'] },
+  { name: 'Hambúrguer', icon: 'fluent-emoji:hamburger', keywords: ['comida', 'fast food', 'hamburguer'] },
+  { name: 'Taco', icon: 'fluent-emoji:taco', keywords: ['comida', 'mexicano'] },
+  { name: 'Burrito', icon: 'fluent-emoji:burrito', keywords: ['comida', 'mexicano'] },
+  { name: 'Sushi', icon: 'fluent-emoji:sushi', keywords: ['comida', 'japones', 'peixe'] },
+  { name: 'Ramen', icon: 'fluent-emoji:steaming-bowl', keywords: ['comida', 'macarrao', 'sopa'] },
+
+  // Outros alimentos
+  { name: 'Sanduíche', icon: 'fluent-emoji:sandwich', keywords: ['lanche', 'sanduiche'] },
+  { name: 'Burrito', icon: 'fluent-emoji:burrito', keywords: ['comida'] },
+  { name: 'Taco', icon: 'fluent-emoji:taco', keywords: ['comida'] },
+  { name: 'Salada', icon: 'fluent-emoji:green-salad', keywords: ['vegetal', 'verdura', 'saudavel'] },
+  { name: 'Sopa', icon: 'fluent-emoji:steaming-bowl', keywords: ['comida', 'quente'] },
+  { name: 'Petisco', icon: 'fluent-emoji:popcorn', keywords: ['snack', 'aperitivo'] },
+
+  // Utensílios e Casa
+  { name: 'Garfo e Faca', icon: 'fluent-emoji:fork-and-knife', keywords: ['utensilio', 'cozinha'] },
+  { name: 'Colher', icon: 'fluent-emoji:spoon', keywords: ['utensilio', 'cozinha'] },
+  { name: 'Copo', icon: 'fluent-emoji:tumbler-glass', keywords: ['cozinha', 'bebida'] },
+  { name: 'Garrafa', icon: 'fluent-emoji:bottle-with-popping-cork', keywords: ['bebida'] },
+  { name: 'Pote', icon: 'fluent-emoji:jar', keywords: ['cozinha', 'armazenamento'] },
+  { name: 'Caixa', icon: 'fluent-emoji:package', keywords: ['armazenamento', 'embalagem'] },
+
+  // Pet
+  { name: 'Cachorro', icon: 'fluent-emoji:dog-face', keywords: ['pet', 'animal', 'cao'] },
+  { name: 'Gato', icon: 'fluent-emoji:cat-face', keywords: ['pet', 'animal'] },
+  { name: 'Osso', icon: 'fluent-emoji:bone', keywords: ['pet', 'cachorro'] },
+  { name: 'Ração', icon: 'fluent-emoji:bowl-with-spoon', keywords: ['pet', 'comida', 'racao'] },
+
+  // Plantas
+  { name: 'Planta', icon: 'fluent-emoji:potted-plant', keywords: ['planta', 'vaso', 'jardim'] },
+  { name: 'Flor', icon: 'fluent-emoji:blossom', keywords: ['planta', 'jardim'] },
+  { name: 'Rosa', icon: 'fluent-emoji:rose', keywords: ['flor', 'planta'] },
+  { name: 'Tulipa', icon: 'fluent-emoji:tulip', keywords: ['flor', 'planta'] },
+
+  // Bebê
+  { name: 'Mamadeira', icon: 'fluent-emoji:baby-bottle', keywords: ['bebe', 'baby'] },
+  { name: 'Fralda', icon: 'fluent-emoji:baby', keywords: ['bebe', 'baby'] },
+
+  // Saúde
+  { name: 'Remédio', icon: 'fluent-emoji:pill', keywords: ['saude', 'medicamento', 'remedio'] },
+  { name: 'Seringa', icon: 'fluent-emoji:syringe', keywords: ['saude', 'medico'] },
+  { name: 'Band-Aid', icon: 'fluent-emoji:adhesive-bandage', keywords: ['saude', 'curativo'] },
+
+  // Diversos
+  { name: 'Livro', icon: 'fluent-emoji:books', keywords: ['leitura', 'estudo'] },
+  { name: 'Lápis', icon: 'fluent-emoji:pencil', keywords: ['escrita', 'estudo', 'lapis'] },
+  { name: 'Tesoura', icon: 'fluent-emoji:scissors', keywords: ['cortar', 'utensilio'] },
+  { name: 'Chave', icon: 'fluent-emoji:key', keywords: ['casa'] },
+  { name: 'Presente', icon: 'fluent-emoji:wrapped-gift', keywords: ['gift', 'presente'] },
+  { name: 'Balão', icon: 'fluent-emoji:balloon', keywords: ['festa', 'balao'] },
+  { name: 'Vela', icon: 'fluent-emoji:candle', keywords: ['decoracao', 'luz'] },
+  { name: 'Lâmpada', icon: 'fluent-emoji:light-bulb', keywords: ['luz', 'lampada', 'eletrico'] },
+  { name: 'Pilha', icon: 'fluent-emoji:battery', keywords: ['eletrico', 'energia'] },
 ]
 
 export function getProductIcon(nome: string, categoria?: string): string {

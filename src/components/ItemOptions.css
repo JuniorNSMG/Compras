@@ -257,3 +257,38 @@
 .icon-option:hover {
   border-color: #4ade80;
 }
+
+/* Campo de busca de ícones */
+.icon-search-input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 15px;
+  margin-top: 12px;
+  margin-bottom: 8px;
+  transition: border-color 0.2s;
+}
+
+.icon-search-input:focus {
+  outline: none;
+  border-color: #4ade80;
+}
+
+.icon-search-input::placeholder {
+  color: #999;
+}
+
+.icon-search-input:disabled {
+  opacity: 0.5;
+  background: #f5f5f5;
+}
+
+/* Mensagem de nenhum ícone encontrado */
+.no-icons-message {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: #999;
+  padding: 20px;
+  font-size: 14px;
+}
