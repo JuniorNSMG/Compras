@@ -5,7 +5,6 @@ import { authService } from '@/services/authService'
 import { useStore } from '@/store/useStore'
 import { QuickAddInput } from './QuickAddInput'
 import { ItemRow } from './ItemRow'
-import type { Item } from '@/types'
 import './ListView.css'
 
 export function ListView() {
