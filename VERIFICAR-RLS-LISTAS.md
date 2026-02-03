@@ -31,19 +31,19 @@ WHERE schemaname = 'public' AND tablename = 'listas';
 SELECT * FROM pg_policies WHERE tablename = 'listas';
 ```
 
-## Solução: Recriar políticas RLS
+## Solução: Execute este SQL COMPLETO
 
-Se as políticas não existirem ou estiverem incorretas, execute:
+**IMPORTANTE:** Execute TODO o bloco de uma vez no SQL Editor do Supabase:
 
 ```sql
--- 1. Ativar RLS
-ALTER TABLE listas ENABLE ROW LEVEL SECURITY;
-
--- 2. Remover políticas antigas (se existirem)
+-- 1. Remover políticas antigas (se existirem)
 DROP POLICY IF EXISTS "Usuários podem ver suas próprias listas" ON listas;
 DROP POLICY IF EXISTS "Usuários podem criar suas próprias listas" ON listas;
 DROP POLICY IF EXISTS "Usuários podem atualizar suas próprias listas" ON listas;
 DROP POLICY IF EXISTS "Usuários podem deletar suas próprias listas" ON listas;
+
+-- 2. Ativar RLS
+ALTER TABLE listas ENABLE ROW LEVEL SECURITY;
 
 -- 3. Criar políticas corretas
 CREATE POLICY "Usuários podem ver suas próprias listas"
@@ -63,6 +63,8 @@ CREATE POLICY "Usuários podem deletar suas próprias listas"
   ON listas FOR DELETE
   USING (auth.uid() = user_id);
 ```
+
+**NOTA:** O `DROP POLICY IF EXISTS` remove as políticas antigas antes de criar novas, evitando o erro "policy already exists".
 
 ## Teste
 
