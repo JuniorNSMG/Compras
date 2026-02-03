@@ -1,35 +1,31 @@
 import { useState, useRef, useEffect } from 'react'
 import { itemService } from '@/services/itemService'
+import { searchCacheService, type SearchCacheItem } from '@/services/searchCacheService'
 import { useStore } from '@/store/useStore'
 import { ProductIcon } from './ProductIcon'
-import type { Item } from '@/types'
 import './QuickAddInput.css'
 
 export function QuickAddInput() {
   const [input, setInput] = useState('')
-  const [suggestions, setSuggestions] = useState<Item[]>([])
+  const [suggestions, setSuggestions] = useState<SearchCacheItem[]>([])
   const [showSuggestions, setShowSuggestions] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
   const { currentLista, addItem, user } = useStore()
 
   useEffect(() => {
-    if (input.length >= 2 && user) {
+    if (input.length >= 1) {
       loadSuggestions()
     } else {
       setSuggestions([])
       setShowSuggestions(false)
     }
-  }, [input, user])
+  }, [input])
 
-  async function loadSuggestions() {
-    if (!user) return
-    try {
-      const items = await itemService.searchHistorico(user.id, input)
-      setSuggestions(items.slice(0, 5))
-      setShowSuggestions(items.length > 0)
-    } catch (error) {
-      console.error('Erro ao buscar sugestões:', error)
-    }
+  function loadSuggestions() {
+    // Busca instantânea no cache local
+    const results = searchCacheService.search(input)
+    setSuggestions(results)
+    setShowSuggestions(results.length > 0)
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -63,6 +59,16 @@ export function QuickAddInput() {
         user?.id
       )
       addItem(newItem)
+
+      // Adicionar ao cache de busca
+      if (user) {
+        searchCacheService.addToCache({
+          nome: newItem.nome,
+          icon_name: newItem.icon_name,
+          categoria: newItem.categoria
+        }, user.id)
+      }
+
       setInput('')
       setShowSuggestions(false)
       inputRef.current?.focus()
@@ -71,11 +77,8 @@ export function QuickAddInput() {
     }
   }
 
-  function handleSuggestionClick(suggestion: Item) {
-    const text = suggestion.quantidade
-      ? `${suggestion.nome} ${suggestion.quantidade}${suggestion.unidade || ''}`
-      : suggestion.nome
-    addItemFromInput(text)
+  function handleSuggestionClick(suggestion: SearchCacheItem) {
+    addItemFromInput(suggestion.nome)
   }
 
   return (
@@ -99,9 +102,9 @@ export function QuickAddInput() {
 
       {showSuggestions && suggestions.length > 0 && (
         <div className="suggestions-list">
-          {suggestions.map((suggestion) => (
+          {suggestions.map((suggestion, index) => (
             <button
-              key={suggestion.id}
+              key={`${suggestion.nome}-${index}`}
               onClick={() => handleSuggestionClick(suggestion)}
               className="suggestion-item"
             >

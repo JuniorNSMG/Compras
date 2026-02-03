@@ -3,6 +3,7 @@ import { itemService } from '@/services/itemService'
 import { listService } from '@/services/listService'
 import { authService } from '@/services/authService'
 import { historicoComprasService, type HistoricoCompra } from '@/services/historicoComprasService'
+import { searchCacheService } from '@/services/searchCacheService'
 import { useStore } from '@/store/useStore'
 import { QuickAddInput } from './QuickAddInput'
 import { ItemRow } from './ItemRow'
@@ -30,6 +31,8 @@ export function ListView() {
     if (user) {
       loadListas()
       loadFrequentementeComprados()
+      // Inicializar cache de busca
+      searchCacheService.initializeCache(user.id)
     }
   }, [user])
 
