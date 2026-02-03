@@ -133,9 +133,9 @@ export function ListView() {
     })
   }, [itens])
 
-  // Separar itens em: não comprados, animando saída, e comprados (escondidos)
-  const itensNaoComprados = itens.filter(item => !item.comprado)
-  const itensAnimando = itens.filter(item => item.comprado && itemsAnimandoSaida.has(item.id))
+  // Separar itens: não comprados + animando (permanecem na categoria), e comprados (vão para seção inferior)
+  // Durante animação, item permanece na categoria original
+  const itensNaoComprados = itens.filter(item => !item.comprado || itemsAnimandoSaida.has(item.id))
   const itensComprados = itens.filter(item => item.comprado && !itemsAnimandoSaida.has(item.id))
 
   // Agrupar itens não comprados por categoria
@@ -218,7 +218,7 @@ export function ListView() {
           </div>
         ) : (
           <>
-            {/* Itens não comprados agrupados por categoria */}
+            {/* Itens não comprados agrupados por categoria (inclui itens animando) */}
             {Object.entries(itensAgrupadosPorCategoria).map(([categoria, items]) => (
               <div key={categoria} className="categoria-section">
                 <div className="categoria-header">
@@ -227,20 +227,15 @@ export function ListView() {
                 </div>
                 <div className="items-section">
                   {items.map(item => (
-                    <ItemRow key={item.id} item={item} />
+                    <ItemRow
+                      key={item.id}
+                      item={item}
+                      animandoSaida={itemsAnimandoSaida.has(item.id)}
+                    />
                   ))}
                 </div>
               </div>
             ))}
-
-            {/* Itens animando saída (5 segundos riscados) */}
-            {itensAnimando.length > 0 && (
-              <div className="items-section">
-                {itensAnimando.map(item => (
-                  <ItemRow key={item.id} item={item} animandoSaida />
-                ))}
-              </div>
-            )}
 
             {/* Seção de comprados (colapsável) */}
             {itensComprados.length > 0 && (
