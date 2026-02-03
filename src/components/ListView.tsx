@@ -6,7 +6,8 @@ import { useStore } from '@/store/useStore'
 import { QuickAddInput } from './QuickAddInput'
 import { ItemRow } from './ItemRow'
 import { GerenciarListas } from './GerenciarListas'
-import { ORDEM_CATEGORIAS } from '@/utils/productIcons'
+import { ProductIcon } from './ProductIcon'
+import { ORDEM_CATEGORIAS, DEFAULT_ICON } from '@/utils/productIcons'
 import type { Item } from '@/types'
 import './ListView.css'
 
@@ -213,7 +214,9 @@ export function ListView() {
       <div className="items-container safe-area-bottom">
         {itens.length === 0 ? (
           <div className="empty-state">
-            <div className="empty-icon">🛒</div>
+            <div className="empty-icon">
+              <ProductIcon icon={DEFAULT_ICON} size={80} />
+            </div>
             <p>Adicione seu primeiro item</p>
           </div>
         ) : (

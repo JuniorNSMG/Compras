@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { itemService } from '@/services/itemService'
 import { useStore } from '@/store/useStore'
+import { ProductIcon } from './ProductIcon'
 import type { Item } from '@/types'
 import './ItemOptions.css'
 
@@ -53,7 +54,9 @@ export function ItemOptions({ item, onClose }: ItemOptionsProps) {
     <div className="item-options-overlay" onClick={onClose}>
       <div className="item-options-content" onClick={(e) => e.stopPropagation()}>
         <div className="item-options-header">
-          <div className="item-options-icon">{item.icon_name}</div>
+          <div className="item-options-icon">
+            <ProductIcon icon={item.icon_name} size={48} />
+          </div>
           <div className="item-options-title">
             <h3>{item.nome}</h3>
             <p className="item-options-categoria">{item.categoria}</p>

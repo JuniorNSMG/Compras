@@ -2,6 +2,7 @@ import { useState, useRef } from 'react'
 import { itemService } from '@/services/itemService'
 import { useStore } from '@/store/useStore'
 import { ItemOptions } from './ItemOptions'
+import { ProductIcon } from './ProductIcon'
 import type { Item } from '@/types'
 import './ItemRow.css'
 
@@ -72,11 +73,19 @@ export function ItemRow({ item, animandoSaida = false, compacto = false }: ItemR
           </div>
         </button>
 
-        {!compacto && <div className="item-icon">{item.icon_name}</div>}
+        {!compacto && (
+          <div className="item-icon">
+            <ProductIcon icon={item.icon_name} size={40} />
+          </div>
+        )}
 
         <div className="item-content">
           <div className="item-nome">
-            {compacto && <span className="item-icon-inline">{item.icon_name}</span>}
+            {compacto && (
+              <span className="item-icon-inline">
+                <ProductIcon icon={item.icon_name} size={20} />
+              </span>
+            )}
             {item.nome}
           </div>
           {!compacto && item.quantidade && (
