@@ -229,7 +229,7 @@
   padding: 12px;
   background: #f9fafb;
   border-radius: 8px;
-  max-height: 300px;
+  max-height: 60vh;
   overflow-y: auto;
 }
 
