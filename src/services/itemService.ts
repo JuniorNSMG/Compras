@@ -9,6 +9,7 @@ export const itemService = {
       .from('itens')
       .select('*')
       .eq('lista_id', listaId)
+      .or('hidden.is.null,hidden.eq.false')
       .order('comprado', { ascending: true })
       .order('created_at', { ascending: false })
 
@@ -96,9 +97,10 @@ export const itemService = {
   },
 
   async deleteComprados(listaId: string): Promise<void> {
+    // Marcar como hidden ao invés de deletar para manter histórico
     const { error } = await supabase
       .from('itens')
-      .delete()
+      .update({ hidden: true })
       .eq('lista_id', listaId)
       .eq('comprado', true)
 

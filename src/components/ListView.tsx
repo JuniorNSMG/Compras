@@ -31,7 +31,8 @@ export function ListView() {
     if (user) {
       loadListas()
       loadFrequentementeComprados()
-      // Inicializar cache de busca
+      // Inicializar cache de busca (carrega do localStorage instantaneamente)
+      // Funciona tanto no login quanto ao recarregar página já logado
       searchCacheService.initializeCache(user.id)
     }
   }, [user])

@@ -73,13 +73,13 @@ class SearchCacheService {
       if (listas && listas.length > 0) {
         const listaIds = listas.map(l => l.id)
 
-        // 3. Buscar todos os itens únicos das listas
+        // 3. Buscar todos os itens únicos das listas (incluindo hidden para formar cache completo)
         const { data: itens } = await supabase
           .from('itens')
           .select('nome, icon_name, categoria')
           .in('lista_id', listaIds)
           .order('created_at', { ascending: false })
-          .limit(200)
+          .limit(500)
 
         itens?.forEach(item => {
           const nameLower = item.nome.toLowerCase()
