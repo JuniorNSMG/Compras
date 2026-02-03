@@ -21,6 +21,7 @@ export function ListView() {
   const [frequentesExpandido, setFrequentesExpandido] = useState(false)
   const [mostrarGerenciarListas, setMostrarGerenciarListas] = useState(false)
   const [frequentementeComprados, setFrequentementeComprados] = useState<HistoricoCompra[]>([])
+  const [toastMessage, setToastMessage] = useState<string>('')
   const previousItensRef = useRef<Map<string, boolean>>(new Map())
   const containerRef = useRef<HTMLDivElement>(null)
   const scrollPositionRef = useRef<number>(0)
@@ -133,6 +134,17 @@ export function ListView() {
   async function handleAdicionarFrequente(historico: HistoricoCompra) {
     if (!currentLista || !user) return
 
+    // Verificar se o item já existe na lista (não comprados)
+    const itemExiste = itens.some(
+      item => item.nome.toLowerCase() === historico.item_nome.toLowerCase() && !item.comprado
+    )
+
+    if (itemExiste) {
+      setToastMessage('Item já está na lista')
+      setTimeout(() => setToastMessage(''), 2000)
+      return
+    }
+
     try {
       setSyncing(true)
       // Criar novo item na lista atual com os dados do histórico
@@ -146,9 +158,14 @@ export function ListView() {
       await loadItens()
       // Recarregar histórico para atualizar contadores se necessário
       await loadFrequentementeComprados()
+
+      // Mostrar mensagem de sucesso
+      setToastMessage(`${historico.item_nome} adicionado`)
+      setTimeout(() => setToastMessage(''), 2000)
     } catch (error) {
       console.error('Erro ao adicionar item frequente:', error)
-      alert('Erro ao adicionar item. Tente novamente.')
+      setToastMessage('Erro ao adicionar item')
+      setTimeout(() => setToastMessage(''), 2000)
     } finally {
       setSyncing(false)
     }
@@ -398,6 +415,13 @@ export function ListView() {
           onClose={() => setMostrarGerenciarListas(false)}
           onListasUpdated={loadListas}
         />
+      )}
+
+      {/* Toast de notificação */}
+      {toastMessage && (
+        <div className="toast-notification">
+          {toastMessage}
+        </div>
       )}
     </div>
   )

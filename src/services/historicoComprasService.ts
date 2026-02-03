@@ -52,7 +52,7 @@ class HistoricoComprasService {
     }
   }
 
-  // Buscar itens frequentemente comprados (ordenados por frequência)
+  // Buscar itens frequentemente comprados (ordenados por frequência e nome)
   async getFrequentementeComprados(userId: string, minCount = 1): Promise<HistoricoCompra[]> {
     const { data, error } = await supabase
       .from('historico_compras')
@@ -60,6 +60,7 @@ class HistoricoComprasService {
       .eq('user_id', userId)
       .gte('purchase_count', minCount)
       .order('purchase_count', { ascending: false })
+      .order('item_nome', { ascending: true })
       .limit(50)
 
     if (error) throw error
