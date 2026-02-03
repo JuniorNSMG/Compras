@@ -19,6 +19,8 @@ export function ListView() {
   const [compradosExpandido, setCompradosExpandido] = useState(false)
   const [mostrarGerenciarListas, setMostrarGerenciarListas] = useState(false)
   const previousItensRef = useRef<Map<string, boolean>>(new Map())
+  const containerRef = useRef<HTMLDivElement>(null)
+  const scrollPositionRef = useRef<number>(0)
 
   useEffect(() => {
     if (user) {
@@ -125,10 +127,22 @@ export function ListView() {
 
       // Após 5 segundos, remove da lista de animação
       setTimeout(() => {
+        // Salvar posição do scroll antes de remover
+        if (containerRef.current) {
+          scrollPositionRef.current = containerRef.current.scrollTop
+        }
+
         setItemsAnimandoSaida(prev => {
           const next = new Set(prev)
           next.delete(item.id)
           return next
+        })
+
+        // Restaurar posição do scroll após o próximo render
+        requestAnimationFrame(() => {
+          if (containerRef.current) {
+            containerRef.current.scrollTop = scrollPositionRef.current
+          }
         })
       }, 5000)
     })
@@ -211,7 +225,7 @@ export function ListView() {
 
       <QuickAddInput />
 
-      <div className="items-container safe-area-bottom">
+      <div ref={containerRef} className="items-container safe-area-bottom">
         {itens.length === 0 ? (
           <div className="empty-state">
             <div className="empty-icon">
