@@ -97,6 +97,23 @@ export function ListView() {
     }
   }
 
+  async function handleLimparComprados() {
+    if (!currentLista) return
+
+    if (confirm(`Deseja remover todos os ${itensComprados.length} itens comprados?`)) {
+      try {
+        setSyncing(true)
+        await itemService.deleteComprados(currentLista.id)
+        await loadItens()
+      } catch (error) {
+        console.error('Erro ao limpar itens comprados:', error)
+        alert('Erro ao limpar itens. Tente novamente.')
+      } finally {
+        setSyncing(false)
+      }
+    }
+  }
+
   // Salvar no cache sempre que itens mudar
   useEffect(() => {
     if (currentLista && itens.length > 0) {
@@ -270,11 +287,19 @@ export function ListView() {
                 </button>
 
                 {compradosExpandido && (
-                  <div className="comprados-list">
-                    {itensComprados.map(item => (
-                      <ItemRow key={item.id} item={item} compacto />
-                    ))}
-                  </div>
+                  <>
+                    <button
+                      className="limpar-comprados-button"
+                      onClick={handleLimparComprados}
+                    >
+                      🗑️ Limpar itens comprados
+                    </button>
+                    <div className="comprados-list">
+                      {itensComprados.map(item => (
+                        <ItemRow key={item.id} item={item} compacto />
+                      ))}
+                    </div>
+                  </>
                 )}
               </div>
             )}

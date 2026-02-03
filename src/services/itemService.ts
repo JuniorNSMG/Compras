@@ -95,6 +95,18 @@ export const itemService = {
     await this.updateListaTimestamp(listaId)
   },
 
+  async deleteComprados(listaId: string): Promise<void> {
+    const { error } = await supabase
+      .from('itens')
+      .delete()
+      .eq('lista_id', listaId)
+      .eq('comprado', true)
+
+    if (error) throw error
+
+    await this.updateListaTimestamp(listaId)
+  },
+
   async updateListaTimestamp(listaId: string): Promise<void> {
     await supabase
       .from('listas')

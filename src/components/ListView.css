@@ -161,6 +161,27 @@
   border-top: 1px solid #e8e8e8;
 }
 
+.limpar-comprados-button {
+  width: calc(100% - 30px);
+  margin: 15px;
+  padding: 12px;
+  background: #ff6b6b;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: opacity 0.2s;
+}
+
+.limpar-comprados-button:active {
+  opacity: 0.8;
+}
+
 .empty-state {
   display: flex;
   flex-direction: column;
