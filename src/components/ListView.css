@@ -71,6 +71,14 @@
   font-weight: 600;
 }
 
+.list-option.gerenciar {
+  margin-top: 10px;
+  border-top: 1px solid #e0e0e0;
+  padding-top: 15px;
+  color: #667eea;
+  font-weight: 600;
+}
+
 .items-container {
   flex: 1;
   overflow-y: auto;
@@ -78,6 +86,36 @@
 
 .items-section {
   background: white;
+}
+
+/* Seção de categoria */
+.categoria-section {
+  margin-bottom: 20px;
+}
+
+.categoria-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 15px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  position: sticky;
+  top: 60px;
+  z-index: 50;
+}
+
+.categoria-header h3 {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.categoria-count {
+  font-size: 12px;
+  opacity: 0.9;
 }
 
 /* Seção de comprados (colapsável) */
