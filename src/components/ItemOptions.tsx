@@ -21,7 +21,7 @@ export function ItemOptions({ item, onClose }: ItemOptionsProps) {
       const qtd = parseFloat(quantidade) || 1
       const updated = await itemService.updateItem(item.id, {
         quantidade: qtd,
-        unidade: unidade.trim() || null
+        unidade: unidade.trim() || undefined
       })
       updateItem(item.id, updated)
       onClose()
