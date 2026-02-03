@@ -26,9 +26,12 @@ export function ItemOptions({ item, onClose }: ItemOptionsProps) {
   const iconesFiltrados = AVAILABLE_ICONS.filter((iconOption) => {
     if (!buscaIcone) return true
     const search = buscaIcone.toLowerCase()
+    // Extrair nome do ícone do formato "fluent-emoji:nome-do-icone"
+    const iconNameOnly = iconOption.icon.split(':')[1] || ''
     return (
       iconOption.name.toLowerCase().includes(search) ||
-      iconOption.keywords.some((keyword) => keyword.toLowerCase().includes(search))
+      iconOption.keywords.some((keyword) => keyword.toLowerCase().includes(search)) ||
+      iconNameOnly.toLowerCase().includes(search)
     )
   })
 
