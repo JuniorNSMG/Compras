@@ -37,9 +37,6 @@ export function ItemOptions({ item, onClose }: ItemOptionsProps) {
     return matchName || matchKeywords || matchIconName
   })
 
-  // Debug: mostrar total de ícones disponíveis e filtrados
-  console.log(`Total de ícones: ${AVAILABLE_ICONS.length}, Filtrados: ${iconesFiltrados.length}, Busca: "${buscaIcone}"`)
-
   async function handleSalvar() {
     if (!user) return
 
