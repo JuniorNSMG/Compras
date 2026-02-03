@@ -55,51 +55,50 @@ export function ItemRow({ item, animandoSaida = false, compacto = false }: ItemR
   }
 
   const classNames = [
-    'item-row',
+    'item-card',
     item.comprado && 'comprado',
     animandoSaida && 'animando-saida',
     compacto && 'compacto'
   ].filter(Boolean).join(' ')
 
-  return (
-    <>
-      <div
-        className={classNames}
-        onTouchStart={handleTouchStart}
-        onTouchEnd={handleTouchEnd}
-        onTouchMove={handleTouchMove}
-      >
-        <button
-          onClick={handleToggle}
-          className="checkbox-button"
-          aria-label={item.comprado ? 'Marcar como não comprado' : 'Marcar como comprado'}
-        >
-          <div className={`checkbox ${item.comprado ? 'checked' : ''}`}>
-            {item.comprado && <span className="checkmark">✓</span>}
+  // Versão compacta (para seção de comprados)
+  if (compacto) {
+    return (
+      <>
+        <div className="item-row-compacto">
+          <div className="item-icon-inline">
+            <ProductIcon icon={item.icon_name} size={20} />
           </div>
-        </button>
-
-        {!compacto && (
-          <div className="item-icon">
-            <ProductIcon icon={item.icon_name} size={40} />
-          </div>
-        )}
-
-        <div className="item-content">
-          <div className="item-nome">
-            {compacto && (
-              <span className="item-icon-inline">
-                <ProductIcon icon={item.icon_name} size={20} />
-              </span>
-            )}
-            {item.nome}
-          </div>
-          {!compacto && item.quantidade && (
-            <div className="item-quantidade">
+          <div className="item-nome">{item.nome}</div>
+          {item.quantidade && (
+            <div className="item-quantidade-compacto">
               {item.quantidade}{item.unidade || ''}
             </div>
           )}
         </div>
+      </>
+    )
+  }
+
+  // Versão card (para itens não comprados)
+  return (
+    <>
+      <div
+        className={classNames}
+        onClick={handleToggle}
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+        onTouchMove={handleTouchMove}
+      >
+        <div className="card-icon">
+          <ProductIcon icon={item.icon_name} size={48} />
+        </div>
+        <div className="card-nome">{item.nome}</div>
+        {item.quantidade && (
+          <div className="card-quantidade">
+            {item.quantidade}{item.unidade ? ` ${item.unidade}` : ''}
+          </div>
+        )}
       </div>
 
       {showOptions && (

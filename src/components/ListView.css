@@ -88,6 +88,10 @@
 
 .items-section {
   background: white;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 10px;
+  padding: 15px;
 }
 
 /* Seção de categoria */
