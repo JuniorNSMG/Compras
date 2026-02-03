@@ -438,7 +438,6 @@ export const AVAILABLE_ICONS = [
   { name: 'Pepino', icon: 'fluent-emoji:cucumber', keywords: ['vegetal', 'salada'] },
   { name: 'Milho', icon: 'fluent-emoji:ear-of-corn', keywords: ['vegetal', 'cereal'] },
   { name: 'Cogumelo', icon: 'fluent-emoji:mushroom', keywords: ['vegetal', 'funghi'] },
-  { name: 'Pimenta', icon: 'fluent-emoji:hot-pepper', keywords: ['tempero', 'picante', 'apimentado'] },
   { name: 'Abóbora', icon: 'fluent-emoji:pumpkin', keywords: ['vegetal', 'abobora'] },
   { name: 'Abobrinha', icon: 'fluent-emoji:cucumber', keywords: ['vegetal'] },
   { name: 'Beterraba', icon: 'fluent-emoji:onion', keywords: ['vegetal', 'raiz'] },
@@ -456,10 +455,8 @@ export const AVAILABLE_ICONS = [
   // Padaria
   { name: 'Pão', icon: 'fluent-emoji:bread', keywords: ['padaria', 'pao', 'bread'] },
   { name: 'Baguete', icon: 'fluent-emoji:baguette-bread', keywords: ['padaria', 'pao', 'frances'] },
-  { name: 'Pretzel', icon: 'fluent-emoji:pretzel', keywords: ['padaria', 'pao'] },
   { name: 'Bagel', icon: 'fluent-emoji:bagel', keywords: ['padaria', 'pao'] },
   { name: 'Bolo', icon: 'fluent-emoji:birthday-cake', keywords: ['padaria', 'doce', 'cake'] },
-  { name: 'Croissant', icon: 'fluent-emoji:croissant', keywords: ['padaria', 'pao'] },
   { name: 'Donut', icon: 'fluent-emoji:doughnut', keywords: ['doce', 'padaria', 'rosquinha'] },
   { name: 'Cupcake', icon: 'fluent-emoji:cupcake', keywords: ['doce', 'bolo', 'padaria'] },
   { name: 'Torta', icon: 'fluent-emoji:pie', keywords: ['doce', 'padaria', 'sobremesa'] },
@@ -511,7 +508,6 @@ export const AVAILABLE_ICONS = [
   { name: 'Picolé', icon: 'fluent-emoji:ice', keywords: ['doce', 'gelado', 'picole'] },
   { name: 'Pipoca', icon: 'fluent-emoji:popcorn', keywords: ['snack', 'cinema'] },
   { name: 'Chips', icon: 'fluent-emoji:potato-chips', keywords: ['snack', 'batata'] },
-  { name: 'Pretzel', icon: 'fluent-emoji:pretzel', keywords: ['snack'] },
   { name: 'Amendoim', icon: 'fluent-emoji:peanuts', keywords: ['snack', 'castanha'] },
   { name: 'Castanha', icon: 'fluent-emoji:peanuts', keywords: ['snack', 'nozes'] },
   { name: 'Açaí', icon: 'fluent-emoji:ice-cream', keywords: ['doce', 'acai', 'sobremesa'] },
@@ -541,8 +537,6 @@ export const AVAILABLE_ICONS = [
 
   // Outros alimentos
   { name: 'Sanduíche', icon: 'fluent-emoji:sandwich', keywords: ['lanche', 'sanduiche'] },
-  { name: 'Burrito', icon: 'fluent-emoji:burrito', keywords: ['comida'] },
-  { name: 'Taco', icon: 'fluent-emoji:taco', keywords: ['comida'] },
   { name: 'Salada', icon: 'fluent-emoji:green-salad', keywords: ['vegetal', 'verdura', 'saudavel'] },
   { name: 'Sopa', icon: 'fluent-emoji:steaming-bowl', keywords: ['comida', 'quente'] },
   { name: 'Petisco', icon: 'fluent-emoji:popcorn', keywords: ['snack', 'aperitivo'] },
@@ -586,7 +580,6 @@ export const AVAILABLE_ICONS = [
   { name: 'Vela', icon: 'fluent-emoji:candle', keywords: ['decoracao', 'luz'] },
   { name: 'Lâmpada', icon: 'fluent-emoji:light-bulb', keywords: ['luz', 'lampada', 'eletrico'] },
   { name: 'Pilha', icon: 'fluent-emoji:battery', keywords: ['eletrico', 'energia'] },
-  { name: 'Fogo', icon: 'fluent-emoji:fire', keywords: ['fogo', 'fosforo', 'isqueiro'] },
   { name: 'Termômetro', icon: 'fluent-emoji:thermometer', keywords: ['saude', 'temperatura'] },
   { name: 'Pote/Jar', icon: 'fluent-emoji:jar', keywords: ['cozinha', 'pote', 'vidro'] },
   { name: 'Caixa/Pacote', icon: 'fluent-emoji:package', keywords: ['caixa', 'embalagem', 'entrega'] },
@@ -607,7 +600,6 @@ export const AVAILABLE_ICONS = [
   { name: 'Corrente', icon: 'fluent-emoji:chains', keywords: ['corrente', 'chain', 'ferro'] },
   { name: 'Ímã', icon: 'fluent-emoji:magnet', keywords: ['ima', 'magnet', 'magnetico'] },
   { name: 'Engrenagem', icon: 'fluent-emoji:gear', keywords: ['mecanica', 'gear', 'engrenagem'] },
-  { name: 'Âncora', icon: 'fluent-emoji:anchor', keywords: ['ancora', 'anchor', 'peso'] },
 
   // Casa e Móveis
   { name: 'Casa', icon: 'fluent-emoji:house', keywords: ['casa', 'home', 'moradia'] },
