@@ -53,7 +53,7 @@ class HistoricoComprasService {
   }
 
   // Buscar itens frequentemente comprados (ordenados por frequência)
-  async getFrequentementeComprados(userId: string, minCount = 2): Promise<HistoricoCompra[]> {
+  async getFrequentementeComprados(userId: string, minCount = 1): Promise<HistoricoCompra[]> {
     const { data, error } = await supabase
       .from('historico_compras')
       .select('*')
