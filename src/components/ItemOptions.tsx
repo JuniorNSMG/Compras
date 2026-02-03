@@ -25,15 +25,20 @@ export function ItemOptions({ item, onClose }: ItemOptionsProps) {
   // Filtrar ícones baseado na busca
   const iconesFiltrados = AVAILABLE_ICONS.filter((iconOption) => {
     if (!buscaIcone) return true
-    const search = buscaIcone.toLowerCase()
+    const search = buscaIcone.toLowerCase().trim()
+
     // Extrair nome do ícone do formato "fluent-emoji:nome-do-icone"
     const iconNameOnly = iconOption.icon.split(':')[1] || ''
-    return (
-      iconOption.name.toLowerCase().includes(search) ||
-      iconOption.keywords.some((keyword) => keyword.toLowerCase().includes(search)) ||
-      iconNameOnly.toLowerCase().includes(search)
-    )
+
+    const matchName = iconOption.name.toLowerCase().includes(search)
+    const matchKeywords = iconOption.keywords.some((keyword) => keyword.toLowerCase().includes(search))
+    const matchIconName = iconNameOnly.toLowerCase().includes(search)
+
+    return matchName || matchKeywords || matchIconName
   })
+
+  // Debug: mostrar total de ícones disponíveis e filtrados
+  console.log(`Total de ícones: ${AVAILABLE_ICONS.length}, Filtrados: ${iconesFiltrados.length}, Busca: "${buscaIcone}"`)
 
   async function handleSalvar() {
     if (!user) return
@@ -158,7 +163,7 @@ export function ItemOptions({ item, onClose }: ItemOptionsProps) {
                   type="text"
                   value={buscaIcone}
                   onChange={(e) => setBuscaIcone(e.target.value)}
-                  placeholder="Buscar ícone... (ex: fruta, carne, bebida)"
+                  placeholder="Buscar ícone... (ex: martelo, hammer, tool, car)"
                   className="icon-search-input"
                   disabled={salvando}
                 />
