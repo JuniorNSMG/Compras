@@ -1,6 +1,7 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { itemService } from '@/services/itemService'
 import { useStore } from '@/store/useStore'
+import { ItemOptions } from './ItemOptions'
 import type { Item } from '@/types'
 import './ItemRow.css'
 
@@ -11,8 +12,9 @@ interface ItemRowProps {
 }
 
 export function ItemRow({ item, animandoSaida = false, compacto = false }: ItemRowProps) {
-  const { updateItem, removeItem } = useStore()
-  const [isDeleting, setIsDeleting] = useState(false)
+  const { updateItem } = useStore()
+  const [showOptions, setShowOptions] = useState(false)
+  const longPressTimer = useRef<NodeJS.Timeout | null>(null)
 
   async function handleToggle() {
     try {
@@ -23,62 +25,74 @@ export function ItemRow({ item, animandoSaida = false, compacto = false }: ItemR
     }
   }
 
-  async function handleDelete() {
-    if (!confirm(`Remover "${item.nome}"?`)) return
+  const handleTouchStart = () => {
+    if (!compacto) {
+      longPressTimer.current = setTimeout(() => {
+        setShowOptions(true)
+      }, 500)
+    }
+  }
 
-    setIsDeleting(true)
-    try {
-      await itemService.deleteItem(item.id, item.lista_id)
-      removeItem(item.id)
-    } catch (error) {
-      console.error('Erro ao deletar item:', error)
-      setIsDeleting(false)
+  const handleTouchEnd = () => {
+    if (longPressTimer.current) {
+      clearTimeout(longPressTimer.current)
+      longPressTimer.current = null
+    }
+  }
+
+  const handleTouchMove = () => {
+    if (longPressTimer.current) {
+      clearTimeout(longPressTimer.current)
+      longPressTimer.current = null
     }
   }
 
   const classNames = [
     'item-row',
     item.comprado && 'comprado',
-    isDeleting && 'deleting',
     animandoSaida && 'animando-saida',
     compacto && 'compacto'
   ].filter(Boolean).join(' ')
 
   return (
-    <div className={classNames}>
-      <button
-        onClick={handleToggle}
-        className="checkbox-button"
-        aria-label={item.comprado ? 'Marcar como não comprado' : 'Marcar como comprado'}
+    <>
+      <div
+        className={classNames}
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+        onTouchMove={handleTouchMove}
       >
-        <div className={`checkbox ${item.comprado ? 'checked' : ''}`}>
-          {item.comprado && <span className="checkmark">✓</span>}
-        </div>
-      </button>
-
-      {!compacto && <div className="item-icon">{item.icon_name}</div>}
-
-      <div className="item-content">
-        <div className="item-nome">
-          {compacto && <span className="item-icon-inline">{item.icon_name}</span>}
-          {item.nome}
-        </div>
-        {!compacto && item.quantidade && (
-          <div className="item-quantidade">
-            {item.quantidade}{item.unidade || ''}
+        <button
+          onClick={handleToggle}
+          className="checkbox-button"
+          aria-label={item.comprado ? 'Marcar como não comprado' : 'Marcar como comprado'}
+        >
+          <div className={`checkbox ${item.comprado ? 'checked' : ''}`}>
+            {item.comprado && <span className="checkmark">✓</span>}
           </div>
-        )}
+        </button>
+
+        {!compacto && <div className="item-icon">{item.icon_name}</div>}
+
+        <div className="item-content">
+          <div className="item-nome">
+            {compacto && <span className="item-icon-inline">{item.icon_name}</span>}
+            {item.nome}
+          </div>
+          {!compacto && item.quantidade && (
+            <div className="item-quantidade">
+              {item.quantidade}{item.unidade || ''}
+            </div>
+          )}
+        </div>
       </div>
 
-      {!compacto && (
-        <button
-          onClick={handleDelete}
-          className="delete-button"
-          aria-label="Remover item"
-        >
-          🗑️
-        </button>
+      {showOptions && (
+        <ItemOptions
+          item={item}
+          onClose={() => setShowOptions(false)}
+        />
       )}
-    </div>
+    </>
   )
 }
