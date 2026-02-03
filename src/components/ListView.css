@@ -80,9 +80,41 @@
   background: white;
 }
 
+/* Seção de comprados (colapsável) */
 .comprados-section {
-  margin-top: 10px;
+  margin-top: 20px;
+  background: white;
   border-top: 2px solid #f0f0f0;
+}
+
+.comprados-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px;
+  background: #f8f8f8;
+  border: none;
+  text-align: left;
+  transition: background-color 0.2s;
+}
+
+.comprados-header:active {
+  background-color: #f0f0f0;
+}
+
+.comprados-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #666;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.comprados-list {
+  background: white;
+  border-top: 1px solid #e8e8e8;
 }
 
 .empty-state {

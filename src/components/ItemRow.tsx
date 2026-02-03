@@ -6,9 +6,11 @@ import './ItemRow.css'
 
 interface ItemRowProps {
   item: Item
+  animandoSaida?: boolean
+  compacto?: boolean
 }
 
-export function ItemRow({ item }: ItemRowProps) {
+export function ItemRow({ item, animandoSaida = false, compacto = false }: ItemRowProps) {
   const { updateItem, removeItem } = useStore()
   const [isDeleting, setIsDeleting] = useState(false)
 
@@ -34,8 +36,16 @@ export function ItemRow({ item }: ItemRowProps) {
     }
   }
 
+  const classNames = [
+    'item-row',
+    item.comprado && 'comprado',
+    isDeleting && 'deleting',
+    animandoSaida && 'animando-saida',
+    compacto && 'compacto'
+  ].filter(Boolean).join(' ')
+
   return (
-    <div className={`item-row ${item.comprado ? 'comprado' : ''} ${isDeleting ? 'deleting' : ''}`}>
+    <div className={classNames}>
       <button
         onClick={handleToggle}
         className="checkbox-button"
@@ -46,24 +56,29 @@ export function ItemRow({ item }: ItemRowProps) {
         </div>
       </button>
 
-      <div className="item-icon">{item.icon_name}</div>
+      {!compacto && <div className="item-icon">{item.icon_name}</div>}
 
       <div className="item-content">
-        <div className="item-nome">{item.nome}</div>
-        {item.quantidade && (
+        <div className="item-nome">
+          {compacto && <span className="item-icon-inline">{item.icon_name}</span>}
+          {item.nome}
+        </div>
+        {!compacto && item.quantidade && (
           <div className="item-quantidade">
             {item.quantidade}{item.unidade || ''}
           </div>
         )}
       </div>
 
-      <button
-        onClick={handleDelete}
-        className="delete-button"
-        aria-label="Remover item"
-      >
-        🗑️
-      </button>
+      {!compacto && (
+        <button
+          onClick={handleDelete}
+          className="delete-button"
+          aria-label="Remover item"
+        >
+          🗑️
+        </button>
+      )}
     </div>
   )
 }

@@ -94,3 +94,46 @@
 .delete-button:active {
   opacity: 1;
 }
+
+/* Item animando saída (5 segundos riscado) */
+.item-row.animando-saida {
+  opacity: 0.6;
+  animation: fadeOut 5s ease-in-out;
+}
+
+.item-row.animando-saida .item-nome {
+  text-decoration: line-through;
+}
+
+@keyframes fadeOut {
+  0% { opacity: 0.6; }
+  80% { opacity: 0.6; }
+  100% { opacity: 0; transform: translateY(-10px); }
+}
+
+/* Versão compacta para lista de comprados */
+.item-row.compacto {
+  min-height: auto;
+  padding: 10px 15px;
+  gap: 10px;
+}
+
+.item-row.compacto .checkbox {
+  width: 22px;
+  height: 22px;
+}
+
+.item-row.compacto .checkmark {
+  font-size: 14px;
+}
+
+.item-row.compacto .item-nome {
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.item-icon-inline {
+  font-size: 20px;
+}

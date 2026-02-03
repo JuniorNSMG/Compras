@@ -5,12 +5,15 @@ import { authService } from '@/services/authService'
 import { useStore } from '@/store/useStore'
 import { QuickAddInput } from './QuickAddInput'
 import { ItemRow } from './ItemRow'
+import type { Item } from '@/types'
 import './ListView.css'
 
 export function ListView() {
   const { user, currentLista, itens, setCurrentLista, setItens, setSyncing } = useStore()
   const [showListSelector, setShowListSelector] = useState(false)
   const [listas, setListas] = useState<any[]>([])
+  const [itemsAnimandoSaida, setItemsAnimandoSaida] = useState<Set<string>>(new Set())
+  const [compradosExpandido, setCompradosExpandido] = useState(false)
 
   useEffect(() => {
     if (user) {
@@ -61,8 +64,30 @@ export function ListView() {
     }
   }
 
+  // Detectar quando item é marcado como comprado para iniciar animação
+  useEffect(() => {
+    const novosComprados = itens.filter(item =>
+      item.comprado && !itemsAnimandoSaida.has(item.id)
+    )
+
+    novosComprados.forEach(item => {
+      setItemsAnimandoSaida(prev => new Set(prev).add(item.id))
+
+      // Após 5 segundos, remove da lista de animação
+      setTimeout(() => {
+        setItemsAnimandoSaida(prev => {
+          const next = new Set(prev)
+          next.delete(item.id)
+          return next
+        })
+      }, 5000)
+    })
+  }, [itens])
+
+  // Separar itens em: não comprados, animando saída, e comprados (escondidos)
   const itensNaoComprados = itens.filter(item => !item.comprado)
-  const itensComprados = itens.filter(item => item.comprado)
+  const itensAnimando = itens.filter(item => item.comprado && itemsAnimandoSaida.has(item.id))
+  const itensComprados = itens.filter(item => item.comprado && !itemsAnimandoSaida.has(item.id))
 
   return (
     <div className="list-view-container container">
@@ -103,6 +128,7 @@ export function ListView() {
           </div>
         ) : (
           <>
+            {/* Itens não comprados */}
             {itensNaoComprados.length > 0 && (
               <div className="items-section">
                 {itensNaoComprados.map(item => (
@@ -111,11 +137,37 @@ export function ListView() {
               </div>
             )}
 
-            {itensComprados.length > 0 && (
-              <div className="items-section comprados-section">
-                {itensComprados.map(item => (
-                  <ItemRow key={item.id} item={item} />
+            {/* Itens animando saída (5 segundos riscados) */}
+            {itensAnimando.length > 0 && (
+              <div className="items-section">
+                {itensAnimando.map(item => (
+                  <ItemRow key={item.id} item={item} animandoSaida />
                 ))}
+              </div>
+            )}
+
+            {/* Seção de comprados (colapsável) */}
+            {itensComprados.length > 0 && (
+              <div className="comprados-section">
+                <button
+                  className="comprados-header"
+                  onClick={() => setCompradosExpandido(!compradosExpandido)}
+                >
+                  <span className="comprados-title">
+                    ✓ Comprados ({itensComprados.length})
+                  </span>
+                  <span className="dropdown-icon">
+                    {compradosExpandido ? '▲' : '▼'}
+                  </span>
+                </button>
+
+                {compradosExpandido && (
+                  <div className="comprados-list">
+                    {itensComprados.map(item => (
+                      <ItemRow key={item.id} item={item} compacto />
+                    ))}
+                  </div>
+                )}
               </div>
             )}
           </>
