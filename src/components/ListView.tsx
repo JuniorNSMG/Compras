@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { itemService } from '@/services/itemService'
 import { listService } from '@/services/listService'
 import { authService } from '@/services/authService'
@@ -17,6 +17,7 @@ export function ListView() {
   const [itemsAnimandoSaida, setItemsAnimandoSaida] = useState<Set<string>>(new Set())
   const [compradosExpandido, setCompradosExpandido] = useState(false)
   const [mostrarGerenciarListas, setMostrarGerenciarListas] = useState(false)
+  const previousItensRef = useRef<Map<string, boolean>>(new Map())
 
   useEffect(() => {
     if (user) {
@@ -50,10 +51,36 @@ export function ListView() {
 
   async function loadItens() {
     if (!currentLista) return
+
+    // Carregar do cache local primeiro
+    const cacheKey = `itens_${currentLista.id}`
+    const cached = localStorage.getItem(cacheKey)
+    if (cached) {
+      try {
+        const cachedItens = JSON.parse(cached)
+        setItens(cachedItens)
+        // Inicializar previousItensRef com o estado do cache
+        previousItensRef.current = new Map(
+          cachedItens.map((item: Item) => [item.id, item.comprado])
+        )
+      } catch (e) {
+        console.error('Erro ao carregar cache:', e)
+      }
+    }
+
+    // Sincronizar com o banco em background
     try {
       setSyncing(true)
       const data = await itemService.getItens(currentLista.id)
       setItens(data)
+      // Salvar no cache
+      localStorage.setItem(cacheKey, JSON.stringify(data))
+      // Atualizar previousItensRef apenas se não foi inicializado
+      if (previousItensRef.current.size === 0) {
+        previousItensRef.current = new Map(
+          data.map((item: Item) => [item.id, item.comprado])
+        )
+      }
     } catch (error) {
       console.error('Erro ao carregar itens:', error)
     } finally {
@@ -67,13 +94,32 @@ export function ListView() {
     }
   }
 
-  // Detectar quando item é marcado como comprado para iniciar animação
+  // Salvar no cache sempre que itens mudar
   useEffect(() => {
-    const novosComprados = itens.filter(item =>
-      item.comprado && !itemsAnimandoSaida.has(item.id)
-    )
+    if (currentLista && itens.length > 0) {
+      const cacheKey = `itens_${currentLista.id}`
+      localStorage.setItem(cacheKey, JSON.stringify(itens))
+    }
+  }, [itens, currentLista])
 
-    novosComprados.forEach(item => {
+  // Detectar quando item MUDA de não comprado para comprado (não todos os comprados)
+  useEffect(() => {
+    const recemComprados: Item[] = []
+
+    itens.forEach(item => {
+      const previousComprado = previousItensRef.current.get(item.id)
+
+      // Se o item MUDOU de false para true (recém comprado)
+      if (item.comprado && previousComprado === false) {
+        recemComprados.push(item)
+      }
+
+      // Atualizar o estado anterior
+      previousItensRef.current.set(item.id, item.comprado)
+    })
+
+    // Animar apenas os recém comprados
+    recemComprados.forEach(item => {
       setItemsAnimandoSaida(prev => new Set(prev).add(item.id))
 
       // Após 5 segundos, remove da lista de animação
