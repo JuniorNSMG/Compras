@@ -75,11 +75,18 @@ export function GerenciarListas({ listas, userId, onClose, onListasUpdated }: Ge
   }
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
+    <div className="modal-overlay" onClick={onClose} role="dialog" aria-modal="true" aria-labelledby="modal-title">
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
         <header className="modal-header">
-          <h2>Gerenciar Listas</h2>
-          <button onClick={onClose} className="close-button">✕</button>
+          <h2 id="modal-title">Gerenciar Listas</h2>
+          <button
+            onClick={onClose}
+            className="close-button"
+            aria-label="Fechar modal"
+            type="button"
+          >
+            ✕
+          </button>
         </header>
 
         <div className="modal-body">
@@ -94,13 +101,15 @@ export function GerenciarListas({ listas, userId, onClose, onListasUpdated }: Ge
                 placeholder="Nome da lista..."
                 onKeyDown={(e) => e.key === 'Enter' && handleCriar()}
                 disabled={salvando}
+                aria-label="Nome da nova lista"
               />
               <button
                 onClick={handleCriar}
                 disabled={!novoNome.trim() || salvando}
                 className="btn-primary"
+                type="button"
               >
-                Criar
+                {salvando ? 'Criando...' : 'Criar'}
               </button>
             </div>
           </div>
@@ -123,11 +132,14 @@ export function GerenciarListas({ listas, userId, onClose, onListasUpdated }: Ge
                         }}
                         autoFocus
                         disabled={salvando}
+                        aria-label="Novo nome da lista"
                       />
                       <button
                         onClick={() => handleRenomear(lista.id)}
                         disabled={!nomeEdicao.trim() || salvando}
                         className="btn-success"
+                        type="button"
+                        aria-label="Confirmar renomeação"
                       >
                         ✓
                       </button>
@@ -135,6 +147,8 @@ export function GerenciarListas({ listas, userId, onClose, onListasUpdated }: Ge
                         onClick={() => setEditandoId(null)}
                         disabled={salvando}
                         className="btn-cancel"
+                        type="button"
+                        aria-label="Cancelar renomeação"
                       >
                         ✕
                       </button>
@@ -147,14 +161,18 @@ export function GerenciarListas({ listas, userId, onClose, onListasUpdated }: Ge
                           onClick={() => iniciarEdicao(lista)}
                           className="btn-icon"
                           title="Renomear"
+                          type="button"
+                          aria-label={`Renomear ${lista.nome}`}
                         >
                           ✏️
                         </button>
                         <button
                           onClick={() => handleDeletar(lista)}
                           className="btn-icon"
-                          title="Deletar"
+                          title={listas.length === 1 ? 'Você precisa ter pelo menos uma lista' : 'Deletar'}
+                          type="button"
                           disabled={listas.length === 1}
+                          aria-label={`Deletar ${lista.nome}`}
                         >
                           🗑️
                         </button>
