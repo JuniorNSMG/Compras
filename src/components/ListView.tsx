@@ -4,6 +4,7 @@ import { listService } from '@/services/listService'
 import { authService } from '@/services/authService'
 import { historicoComprasService, type HistoricoCompra } from '@/services/historicoComprasService'
 import { searchCacheService } from '@/services/searchCacheService'
+import { preferencesService } from '@/services/preferencesService'
 import { useStore } from '@/store/useStore'
 import { QuickAddInput } from './QuickAddInput'
 import { ItemRow } from './ItemRow'
@@ -56,7 +57,17 @@ export function ListView() {
         setListas([newLista])
         setCurrentLista(newLista)
       } else {
-        setCurrentLista(data[0])
+        // Tentar usar a lista padrão, senão usar a primeira
+        const defaultListId = preferencesService.getDefaultListId(user.id)
+        const defaultLista = data.find(l => l.id === defaultListId)
+
+        if (defaultLista) {
+          console.log('⭐ Carregando lista padrão:', defaultLista.nome)
+          setCurrentLista(defaultLista)
+        } else {
+          console.log('📋 Carregando primeira lista:', data[0].nome)
+          setCurrentLista(data[0])
+        }
       }
     } catch (error) {
       console.error('Erro ao carregar listas:', error)

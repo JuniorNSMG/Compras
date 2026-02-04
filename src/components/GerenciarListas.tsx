@@ -1,6 +1,7 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { listService } from '@/services/listService'
 import { compartilhamentoService } from '@/services/compartilhamentoService'
+import { preferencesService } from '@/services/preferencesService'
 import { CompartilharLista } from './CompartilharLista'
 import type { Lista } from '@/types'
 import './GerenciarListas.css'
@@ -19,6 +20,13 @@ export function GerenciarListas({ listas, userId, onClose, onListasUpdated }: Ge
   const [nomeEdicao, setNomeEdicao] = useState('')
   const [salvando, setSalvando] = useState(false)
   const [listaCompartilhando, setListaCompartilhando] = useState<Lista | null>(null)
+  const [listaPadraoId, setListaPadraoId] = useState<string | null>(null)
+
+  // Carregar lista padrão ao montar o componente
+  useEffect(() => {
+    const defaultId = preferencesService.getDefaultListId(userId)
+    setListaPadraoId(defaultId)
+  }, [userId])
 
   async function handleCriar() {
     if (!novoNome.trim()) return
@@ -103,6 +111,18 @@ export function GerenciarListas({ listas, userId, onClose, onListasUpdated }: Ge
   function iniciarEdicao(lista: Lista) {
     setEditandoId(lista.id)
     setNomeEdicao(lista.nome)
+  }
+
+  function handleTogglePadrao(listaId: string) {
+    if (listaPadraoId === listaId) {
+      // Remover como padrão
+      preferencesService.clearDefaultListId(userId)
+      setListaPadraoId(null)
+    } else {
+      // Definir como padrão
+      preferencesService.setDefaultListId(userId, listaId)
+      setListaPadraoId(listaId)
+    }
   }
 
   return (
@@ -212,8 +232,22 @@ export function GerenciarListas({ listas, userId, onClose, onListasUpdated }: Ge
                     </div>
                   ) : (
                     <>
-                      <span className="lista-nome">{lista.nome}</span>
+                      <span className="lista-nome">
+                        {lista.nome}
+                        {listaPadraoId === lista.id && (
+                          <span className="badge-padrao" title="Lista padrão">Padrão</span>
+                        )}
+                      </span>
                       <div className="lista-actions">
+                        <button
+                          onClick={() => handleTogglePadrao(lista.id)}
+                          className={`btn-icon ${listaPadraoId === lista.id ? 'btn-padrao-ativo' : ''}`}
+                          title={listaPadraoId === lista.id ? 'Remover como padrão' : 'Definir como padrão'}
+                          type="button"
+                          aria-label={`Definir ${lista.nome} como padrão`}
+                        >
+                          {listaPadraoId === lista.id ? '⭐' : '☆'}
+                        </button>
                         <button
                           onClick={() => setListaCompartilhando(lista)}
                           className="btn-icon"
