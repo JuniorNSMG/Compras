@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { listService } from '@/services/listService'
+import { CompartilharLista } from './CompartilharLista'
 import type { Lista } from '@/types'
 import './GerenciarListas.css'
 
@@ -15,6 +16,7 @@ export function GerenciarListas({ listas, userId, onClose, onListasUpdated }: Ge
   const [editandoId, setEditandoId] = useState<string | null>(null)
   const [nomeEdicao, setNomeEdicao] = useState('')
   const [salvando, setSalvando] = useState(false)
+  const [listaCompartilhando, setListaCompartilhando] = useState<Lista | null>(null)
 
   async function handleCriar() {
     if (!novoNome.trim()) return
@@ -158,6 +160,15 @@ export function GerenciarListas({ listas, userId, onClose, onListasUpdated }: Ge
                       <span className="lista-nome">{lista.nome}</span>
                       <div className="lista-actions">
                         <button
+                          onClick={() => setListaCompartilhando(lista)}
+                          className="btn-icon"
+                          title="Compartilhar"
+                          type="button"
+                          aria-label={`Compartilhar ${lista.nome}`}
+                        >
+                          🔗
+                        </button>
+                        <button
                           onClick={() => iniciarEdicao(lista)}
                           className="btn-icon"
                           title="Renomear"
@@ -185,6 +196,14 @@ export function GerenciarListas({ listas, userId, onClose, onListasUpdated }: Ge
           </div>
         </div>
       </div>
+
+      {/* Modal de Compartilhamento */}
+      {listaCompartilhando && (
+        <CompartilharLista
+          lista={listaCompartilhando}
+          onClose={() => setListaCompartilhando(null)}
+        />
+      )}
     </div>
   )
 }

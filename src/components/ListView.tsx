@@ -27,6 +27,7 @@ export function ListView() {
   const containerRef = useRef<HTMLDivElement>(null)
   const scrollPositionRef = useRef<number>(0)
   const frequentesSectionRef = useRef<HTMLDivElement>(null)
+  const compradosSectionRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (user) {
@@ -197,6 +198,19 @@ export function ListView() {
     }
   }, [frequentesExpandido])
 
+  // Auto-scroll para seção de comprados quando expandir
+  useEffect(() => {
+    if (compradosExpandido && compradosSectionRef.current) {
+      // Pequeno delay para garantir que o conteúdo foi renderizado antes de rolar
+      setTimeout(() => {
+        compradosSectionRef.current?.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        })
+      }, 100)
+    }
+  }, [compradosExpandido])
+
   // Detectar quando item MUDA de não comprado para comprado (não todos os comprados)
   useEffect(() => {
     const recemComprados: Item[] = []
@@ -348,7 +362,7 @@ export function ListView() {
 
             {/* Seção de comprados (colapsável) */}
             {itensComprados.length > 0 && (
-              <div className="comprados-section">
+              <div ref={compradosSectionRef} className="comprados-section">
                 <button
                   className="comprados-header"
                   onClick={() => setCompradosExpandido(!compradosExpandido)}
