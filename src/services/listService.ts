@@ -3,31 +3,51 @@ import type { Lista } from '@/types'
 
 export const listService = {
   async getListas(userId: string): Promise<Lista[]> {
+    console.log('📚 Buscando listas para usuário:', userId)
+
     // Buscar IDs de listas onde o usuário tem acesso (próprias + compartilhadas)
     const { data: acessos, error: acessosError } = await supabase
       .from('lista_usuarios')
       .select('lista_id')
       .eq('user_id', userId)
 
-    if (acessosError) throw acessosError
+    console.log('📦 Acessos encontrados:', { acessos, acessosError })
+
+    if (acessosError) {
+      console.error('❌ Erro ao buscar acessos:', acessosError)
+      throw acessosError
+    }
 
     if (!acessos || acessos.length === 0) {
+      console.warn('⚠️ Nenhum acesso encontrado em lista_usuarios')
+      console.log('💡 Pode ser necessário migrar listas antigas')
       return []
     }
 
     // Buscar as listas completas
     const listaIds = acessos.map(a => a.lista_id)
+    console.log('🔍 Buscando listas com IDs:', listaIds)
+
     const { data, error } = await supabase
       .from('listas')
       .select('*')
       .in('id', listaIds)
       .order('updated_at', { ascending: false })
 
-    if (error) throw error
+    console.log('📋 Listas encontradas:', { data, error })
+
+    if (error) {
+      console.error('❌ Erro ao buscar listas:', error)
+      throw error
+    }
+
+    console.log('✅ Retornando', data?.length || 0, 'listas')
     return data || []
   },
 
   async createLista(userId: string, nome: string): Promise<Lista> {
+    console.log('➕ Criando lista:', nome, 'para usuário:', userId)
+
     // Criar a lista
     const { data: lista, error: listaError } = await supabase
       .from('listas')
@@ -38,9 +58,15 @@ export const listService = {
       .select()
       .single()
 
-    if (listaError) throw listaError
+    if (listaError) {
+      console.error('❌ Erro ao criar lista:', listaError)
+      throw listaError
+    }
+
+    console.log('✅ Lista criada:', lista.id)
 
     // Adicionar o criador como dono na tabela lista_usuarios
+    console.log('👤 Adicionando usuário como dono...')
     const { error: usuarioError } = await supabase
       .from('lista_usuarios')
       .insert({
@@ -49,8 +75,12 @@ export const listService = {
         is_owner: true,
       })
 
-    if (usuarioError) throw usuarioError
+    if (usuarioError) {
+      console.error('❌ Erro ao adicionar usuário:', usuarioError)
+      throw usuarioError
+    }
 
+    console.log('✅ Usuário adicionado como dono')
     return lista
   },
 
