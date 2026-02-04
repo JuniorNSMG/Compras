@@ -26,6 +26,7 @@ export function ListView() {
   const previousItensRef = useRef<Map<string, boolean>>(new Map())
   const containerRef = useRef<HTMLDivElement>(null)
   const scrollPositionRef = useRef<number>(0)
+  const frequentesSectionRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (user) {
@@ -182,6 +183,19 @@ export function ListView() {
       localStorage.setItem(cacheKey, JSON.stringify(itens))
     }
   }, [itens, currentLista])
+
+  // Auto-scroll para seção de frequentes quando expandir
+  useEffect(() => {
+    if (frequentesExpandido && frequentesSectionRef.current) {
+      // Pequeno delay para garantir que o conteúdo foi renderizado antes de rolar
+      setTimeout(() => {
+        frequentesSectionRef.current?.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        })
+      }, 100)
+    }
+  }, [frequentesExpandido])
 
   // Detectar quando item MUDA de não comprado para comprado (não todos os comprados)
   useEffect(() => {
@@ -366,7 +380,7 @@ export function ListView() {
             )}
 
             {/* Seção de Frequentemente Comprado (sempre visível) */}
-            <div className="frequentes-section">
+            <div ref={frequentesSectionRef} className="frequentes-section">
               <button
                 className="frequentes-header"
                 onClick={() => setFrequentesExpandido(!frequentesExpandido)}
