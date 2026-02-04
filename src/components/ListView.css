@@ -9,75 +9,98 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 15px;
-  border-bottom: 1px solid #e0e0e0;
-  background: white;
+  padding: var(--space-md);
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-white);
   position: sticky;
   top: 0;
   z-index: 101;
+  box-shadow: var(--shadow-sm);
 }
 
 .list-title-button {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 0;
+  gap: var(--space-sm);
+  padding: var(--space-sm);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-base);
+  font-family: var(--font-heading);
+}
+
+.list-title-button:hover {
+  background-color: rgba(8, 145, 178, 0.05);
 }
 
 .list-title-button h1 {
-  font-size: 24px;
+  font-size: 22px;
   font-weight: 600;
-  color: #333;
+  color: var(--color-primary);
+  margin: 0;
 }
 
 .dropdown-icon {
   font-size: 12px;
-  color: #666;
+  color: var(--color-primary);
+  opacity: 0.7;
+  transition: transform var(--transition-base);
 }
 
 .signout-button {
-  padding: 8px 16px;
-  color: #666;
+  padding: var(--space-sm) var(--space-md);
+  color: var(--color-text-light);
   font-size: 14px;
-  border-radius: 8px;
-  transition: background-color 0.2s;
+  font-weight: 500;
+  border-radius: var(--radius-md);
+  transition: all var(--transition-base);
 }
 
-.signout-button:active {
-  background-color: #f0f0f0;
+.signout-button:hover {
+  background-color: rgba(220, 38, 38, 0.05);
+  color: var(--color-error);
 }
 
 .list-selector {
-  background: white;
-  border-bottom: 1px solid #e0e0e0;
-  padding: 10px;
+  background: var(--color-white);
+  border-bottom: 1px solid var(--color-border);
+  padding: var(--space-sm);
+  box-shadow: var(--shadow-md);
 }
 
 .list-option {
   width: 100%;
-  padding: 12px 15px;
+  padding: var(--space-md);
   text-align: left;
-  border-radius: 8px;
-  margin-bottom: 5px;
-  transition: background-color 0.2s;
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-xs);
+  transition: all var(--transition-base);
+  font-weight: 500;
+  color: var(--color-text);
+  cursor: pointer;
 }
 
-.list-option:active {
-  background-color: #f0f0f0;
+.list-option:hover {
+  background-color: rgba(8, 145, 178, 0.05);
+  transform: translateX(2px);
 }
 
 .list-option.active {
-  background-color: #e8eaf6;
-  color: #667eea;
+  background-color: var(--color-primary);
+  color: var(--color-white);
   font-weight: 600;
+  box-shadow: var(--shadow-sm);
 }
 
 .list-option.gerenciar {
-  margin-top: 10px;
-  border-top: 1px solid #e0e0e0;
-  padding-top: 15px;
-  color: #667eea;
+  margin-top: var(--space-md);
+  border-top: 1px solid var(--color-border);
+  padding-top: var(--space-md);
+  color: var(--color-cta);
   font-weight: 600;
+}
+
+.list-option.gerenciar:hover {
+  background-color: rgba(5, 150, 105, 0.05);
 }
 
 .items-container {
@@ -96,43 +119,48 @@
 
 /* Seção de categoria */
 .categoria-section {
-  margin-bottom: 20px;
+  margin-bottom: var(--space-lg);
 }
 
 .categoria-section:first-child {
-  padding-top: 60px;
+  padding-top: var(--space-3xl);
 }
 
 .categoria-header {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 12px 15px;
-  background: #e8f5e9;
-  color: #666;
+  gap: var(--space-sm);
+  padding: var(--space-md);
+  background: linear-gradient(135deg, rgba(8, 145, 178, 0.08) 0%, rgba(5, 150, 105, 0.08) 100%);
+  color: var(--color-primary);
   position: sticky;
   top: 61px;
   z-index: 50;
+  border-left: 3px solid var(--color-cta);
+  font-family: var(--font-heading);
 }
 
 .categoria-header h3 {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
   margin: 0;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.8px;
+  color: var(--color-text);
 }
 
 .categoria-count {
   font-size: 12px;
-  opacity: 0.9;
+  opacity: 0.7;
+  font-weight: 500;
+  color: var(--color-cta);
 }
 
 /* Seção de comprados (colapsável) */
 .comprados-section {
-  margin-top: 20px;
-  background: white;
-  border-top: 2px solid #f0f0f0;
+  margin-top: var(--space-lg);
+  background: var(--color-white);
+  border-top: 2px solid var(--color-border);
 }
 
 .comprados-header {
@@ -140,24 +168,26 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 15px;
-  background: #f8f8f8;
+  padding: var(--space-md);
+  background: rgba(8, 145, 178, 0.03);
   border: none;
   text-align: left;
-  transition: background-color 0.2s;
+  transition: all var(--transition-base);
+  cursor: pointer;
+  font-family: var(--font-heading);
 }
 
-.comprados-header:active {
-  background-color: #f0f0f0;
+.comprados-header:hover {
+  background-color: rgba(8, 145, 178, 0.08);
 }
 
 .comprados-title {
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 600;
-  color: #666;
+  color: var(--color-text);
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-sm);
 }
 
 .comprados-list {
@@ -167,30 +197,34 @@
 
 .limpar-comprados-button {
   width: calc(100% - 30px);
-  margin: 15px;
-  padding: 12px;
-  background: #ff6b6b;
-  color: white;
+  margin: var(--space-md);
+  padding: var(--space-md);
+  background: var(--color-error);
+  color: var(--color-white);
   border: none;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   font-size: 15px;
   font-weight: 600;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  transition: opacity 0.2s;
+  gap: var(--space-sm);
+  transition: all var(--transition-base);
+  cursor: pointer;
+  font-family: var(--font-body);
 }
 
-.limpar-comprados-button:active {
-  opacity: 0.8;
+.limpar-comprados-button:hover {
+  background-color: #B91C1C;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
 }
 
 /* Seção de frequentemente comprado */
 .frequentes-section {
-  margin-top: 20px;
-  background: white;
-  border-top: 2px solid #f0f0f0;
+  margin-top: var(--space-lg);
+  background: var(--color-white);
+  border-top: 2px solid var(--color-border);
 }
 
 .frequentes-header {
@@ -198,24 +232,26 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 15px;
-  background: #fffbf0;
+  padding: var(--space-md);
+  background: rgba(5, 150, 105, 0.03);
   border: none;
   text-align: left;
-  transition: background-color 0.2s;
+  transition: all var(--transition-base);
+  cursor: pointer;
+  font-family: var(--font-heading);
 }
 
-.frequentes-header:active {
-  background-color: #fff5db;
+.frequentes-header:hover {
+  background-color: rgba(5, 150, 105, 0.08);
 }
 
 .frequentes-title {
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 600;
-  color: #666;
+  color: var(--color-text);
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-sm);
 }
 
 .frequentes-list {
@@ -226,38 +262,43 @@
 .frequente-item {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 10px 15px;
-  border-bottom: 1px solid #f0f0f0;
+  gap: var(--space-md);
+  padding: var(--space-md);
+  border-bottom: 1px solid var(--color-border);
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: all var(--transition-base);
 }
 
-.frequente-item:active {
-  background-color: #fffbf0;
+.frequente-item:hover {
+  background-color: rgba(5, 150, 105, 0.05);
+  transform: translateX(2px);
 }
 
 .frequente-icon {
   font-size: 20px;
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .frequente-info {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: var(--space-xs);
 }
 
 .frequente-nome {
   font-size: 15px;
-  color: #333;
+  color: var(--color-text);
   font-weight: 500;
+  font-family: var(--font-body);
 }
 
 .frequente-stats {
   font-size: 12px;
-  color: #f59e0b;
+  color: var(--color-cta);
   font-weight: 600;
 }
 
@@ -294,15 +335,16 @@
   bottom: 80px;
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(0, 0, 0, 0.85);
-  color: white;
-  padding: 12px 24px;
-  border-radius: 24px;
+  background: var(--color-primary);
+  color: var(--color-white);
+  padding: var(--space-md) var(--space-lg);
+  border-radius: var(--radius-full);
   font-size: 14px;
   font-weight: 500;
   z-index: 1000;
-  animation: toast-slide-up 0.3s ease-out;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  animation: toast-slide-up var(--transition-slow) ease-out;
+  box-shadow: var(--shadow-lg);
+  font-family: var(--font-body);
 }
 
 @keyframes toast-slide-up {
@@ -313,5 +355,11 @@
   to {
     opacity: 1;
     transform: translateX(-50%) translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toast-notification {
+    animation: none;
   }
 }

@@ -1,29 +1,35 @@
 /* Card de item (versão principal) */
 .item-card {
-  background: white;
-  border: 2px solid #e0e0e0;
-  border-radius: 12px;
-  padding: 12px;
+  background: var(--color-white);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-md);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: var(--space-sm);
   min-height: 120px;
-  transition: all 0.2s;
+  transition: all var(--transition-base);
   cursor: pointer;
   text-align: center;
 }
 
+.item-card:hover {
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
 .item-card:active {
-  background-color: #f0fdf4;
-  border-color: #4ade80;
+  background-color: rgba(5, 150, 105, 0.05);
+  border-color: var(--color-cta);
   transform: scale(0.98);
 }
 
 .item-card.comprado {
   opacity: 0.5;
-  background: #f8f8f8;
+  background: rgba(8, 145, 178, 0.02);
 }
 
 .item-card.animando-saida {
@@ -45,7 +51,8 @@
 .card-nome {
   font-size: 14px;
   font-weight: 600;
-  color: #333;
+  color: var(--color-text);
+  font-family: var(--font-body);
   word-wrap: break-word;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -58,48 +65,55 @@
 
 .item-card.comprado .card-nome {
   text-decoration: line-through;
-  color: #999;
+  color: var(--color-text-light);
 }
 
 .card-quantidade {
   font-size: 12px;
-  color: #4ade80;
+  color: var(--color-cta);
   font-weight: 600;
-  background: #f0fdf4;
-  padding: 2px 8px;
-  border-radius: 10px;
+  background: rgba(5, 150, 105, 0.1);
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-md);
+  font-family: var(--font-body);
 }
 
 /* Versão compacta para lista de comprados */
 .item-row-compacto {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 10px 15px;
-  border-bottom: 1px solid #f0f0f0;
+  gap: var(--space-md);
+  padding: var(--space-md);
+  border-bottom: 1px solid var(--color-border);
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: all var(--transition-base);
 }
 
-.item-row-compacto:active {
-  background-color: #f0f0f0;
+.item-row-compacto:hover {
+  background-color: rgba(8, 145, 178, 0.05);
+  transform: translateX(2px);
 }
 
 .item-row-compacto .item-icon-inline {
   font-size: 20px;
   flex-shrink: 0;
   opacity: 0.5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .item-row-compacto .item-nome {
   flex: 1;
   font-size: 15px;
-  color: #666;
+  color: var(--color-text-light);
   text-decoration: line-through;
+  font-family: var(--font-body);
 }
 
 .item-row-compacto .item-quantidade-compacto {
   font-size: 13px;
-  color: #999;
+  color: var(--color-text-light);
   flex-shrink: 0;
+  font-family: var(--font-body);
 }
