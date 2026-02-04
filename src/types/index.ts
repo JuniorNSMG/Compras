@@ -33,14 +33,3 @@ export interface ProdutoCustomizacao {
   created_at: string
   updated_at: string
 }
-
-export interface ListaCompartilhamento {
-  id: string
-  lista_id: string
-  owner_id: string
-  shared_user_id: string | null
-  share_token: string
-  accepted: boolean
-  created_at: string
-  accepted_at: string | null
-}

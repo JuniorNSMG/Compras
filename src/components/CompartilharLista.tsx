@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { compartilhamentoService } from '@/services/compartilhamentoService'
-import type { Lista, ListaCompartilhamento } from '@/types'
+import type { Lista } from '@/types'
 import './CompartilharLista.css'
 
 interface CompartilharListaProps {
@@ -9,68 +9,85 @@ interface CompartilharListaProps {
 }
 
 export function CompartilharLista({ lista, onClose }: CompartilharListaProps) {
-  const [shareUrl, setShareUrl] = useState<string>('')
+  const [shareCode, setShareCode] = useState<string>('')
   const [loading, setLoading] = useState(false)
   const [copied, setCopied] = useState(false)
-  const [compartilhamentos, setCompartilhamentos] = useState<ListaCompartilhamento[]>([])
+  const [usuarios, setUsuarios] = useState<any[]>([])
 
   useEffect(() => {
-    carregarCompartilhamentos()
+    carregarCompartilhamento()
+    carregarUsuarios()
   }, [])
 
-  async function carregarCompartilhamentos() {
+  async function carregarCompartilhamento() {
     try {
-      const data = await compartilhamentoService.getCompartilhamentosDaLista(lista.id)
-      setCompartilhamentos(data)
-
-      // Se já existe um compartilhamento não aceito, usar esse link
-      const pendente = data.find(c => !c.accepted)
-      if (pendente) {
-        const baseUrl = window.location.origin
-        setShareUrl(`${baseUrl}/compartilhar/${pendente.share_token}`)
+      const codigo = await compartilhamentoService.getCodigo(lista.id)
+      if (codigo) {
+        setShareCode(codigo)
       }
     } catch (error) {
-      console.error('Erro ao carregar compartilhamentos:', error)
+      console.error('Erro ao carregar código:', error)
     }
   }
 
-  async function handleGerarLink() {
+  async function carregarUsuarios() {
+    try {
+      const users = await compartilhamentoService.getUsuariosDaLista(lista.id)
+      setUsuarios(users)
+    } catch (error) {
+      console.error('Erro ao carregar usuários:', error)
+    }
+  }
+
+  async function handleGerarCodigo() {
     try {
       setLoading(true)
-      const { url } = await compartilhamentoService.criarCompartilhamento(lista.id, lista.user_id)
-      setShareUrl(url)
-      await carregarCompartilhamentos()
+      const codigo = await compartilhamentoService.criarCodigo(lista.id, lista.user_id)
+      setShareCode(codigo)
     } catch (error) {
-      console.error('Erro ao gerar link:', error)
-      alert('Erro ao gerar link de compartilhamento')
+      console.error('Erro ao gerar código:', error)
+      alert('Erro ao gerar código de compartilhamento')
     } finally {
       setLoading(false)
     }
   }
 
-  async function handleCopiarLink() {
+  async function handleCopiarCodigo() {
     try {
-      await navigator.clipboard.writeText(shareUrl)
+      await navigator.clipboard.writeText(shareCode)
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
     } catch (error) {
       console.error('Erro ao copiar:', error)
-      alert('Erro ao copiar link')
+      alert('Erro ao copiar código')
     }
   }
 
-  async function handleRemoverCompartilhamento(compartilhamentoId: string) {
-    if (!confirm('Deseja remover este compartilhamento?')) return
+  async function handleRemoverCodigo() {
+    if (!confirm('Deseja remover o código de compartilhamento? Ninguém mais poderá usar este código.')) return
 
     try {
-      await compartilhamentoService.removerCompartilhamento(compartilhamentoId)
-      await carregarCompartilhamentos()
-      setShareUrl('')
+      await compartilhamentoService.removerCodigo(lista.id)
+      setShareCode('')
     } catch (error) {
-      console.error('Erro ao remover compartilhamento:', error)
-      alert('Erro ao remover compartilhamento')
+      console.error('Erro ao remover código:', error)
+      alert('Erro ao remover código')
     }
   }
+
+  async function handleRemoverUsuario(userId: string) {
+    if (!confirm('Deseja remover o acesso deste usuário?')) return
+
+    try {
+      await compartilhamentoService.removerUsuario(lista.id, userId)
+      await carregarUsuarios()
+    } catch (error) {
+      console.error('Erro ao remover usuário:', error)
+      alert('Erro ao remover usuário')
+    }
+  }
+
+  const usuariosCompartilhados = usuarios.filter(u => !u.is_owner)
 
   return (
     <div className="modal-overlay" onClick={onClose}>
@@ -85,63 +102,62 @@ export function CompartilharLista({ lista, onClose }: CompartilharListaProps) {
         <div className="modal-body">
           <div className="compartilhar-section">
             <p className="compartilhar-descricao">
-              Gere um link para compartilhar esta lista. Qualquer pessoa com o link poderá
-              adicionar, editar e remover itens da lista em tempo real.
+              Gere um código de 6 caracteres para compartilhar esta lista.
+              Qualquer pessoa com o código poderá acessar e editar a lista.
             </p>
 
-            {!shareUrl ? (
+            {!shareCode ? (
               <button
-                onClick={handleGerarLink}
+                onClick={handleGerarCodigo}
                 disabled={loading}
                 className="btn-primary btn-gerar-link"
               >
-                {loading ? 'Gerando...' : '🔗 Gerar Link de Compartilhamento'}
+                {loading ? 'Gerando...' : '🔗 Gerar Código'}
               </button>
             ) : (
               <div className="link-gerado">
-                <div className="link-container">
-                  <input
-                    type="text"
-                    value={shareUrl}
-                    readOnly
-                    className="link-input"
-                    onClick={(e) => e.currentTarget.select()}
-                  />
+                <div className="codigo-container">
+                  <div className="codigo-display">{shareCode}</div>
                   <button
-                    onClick={handleCopiarLink}
+                    onClick={handleCopiarCodigo}
                     className="btn-copiar"
-                    title="Copiar link"
+                    title="Copiar código"
                   >
-                    {copied ? '✓ Copiado!' : '📋 Copiar'}
+                    {copied ? '✓' : '📋'}
+                  </button>
+                  <button
+                    onClick={handleRemoverCodigo}
+                    className="btn-remover-codigo"
+                    title="Remover código"
+                  >
+                    🗑️
                   </button>
                 </div>
                 <p className="link-aviso">
-                  ⚠️ Qualquer pessoa com este link poderá acessar e editar a lista
+                  ⚠️ Compartilhe este código apenas com pessoas de confiança
                 </p>
               </div>
             )}
           </div>
 
-          {compartilhamentos.length > 0 && (
+          {usuariosCompartilhados.length > 0 && (
             <div className="compartilhamentos-ativos">
-              <h3>Compartilhamentos</h3>
+              <h3>Usuários com Acesso ({usuariosCompartilhados.length})</h3>
               <div className="compartilhamentos-list">
-                {compartilhamentos.map(comp => (
-                  <div key={comp.id} className="compartilhamento-item">
+                {usuariosCompartilhados.map(user => (
+                  <div key={user.user_id} className="compartilhamento-item">
                     <div className="compartilhamento-info">
                       <span className="compartilhamento-status">
-                        {comp.accepted ? '✓ Aceito' : '⏳ Pendente'}
+                        👤 Usuário Compartilhado
                       </span>
-                      {comp.accepted && comp.accepted_at && (
-                        <span className="compartilhamento-data">
-                          {new Date(comp.accepted_at).toLocaleDateString('pt-BR')}
-                        </span>
-                      )}
+                      <span className="compartilhamento-data">
+                        {new Date(user.created_at).toLocaleDateString('pt-BR')}
+                      </span>
                     </div>
                     <button
-                      onClick={() => handleRemoverCompartilhamento(comp.id)}
+                      onClick={() => handleRemoverUsuario(user.user_id)}
                       className="btn-icon btn-remover"
-                      title="Remover compartilhamento"
+                      title="Remover acesso"
                     >
                       🗑️
                     </button>

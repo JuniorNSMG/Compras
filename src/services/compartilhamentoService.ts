@@ -1,131 +1,125 @@
 import { supabase } from '@/lib/supabase'
-import type { ListaCompartilhamento } from '@/types'
 
-function generateShareToken(): string {
-  // Gerar token aleatório único
-  return crypto.randomUUID()
+function generateShareCode(): string {
+  // Gerar código de 6 caracteres alfanuméricos
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789' // Remove caracteres confusos
+  let code = ''
+  for (let i = 0; i < 6; i++) {
+    code += chars.charAt(Math.floor(Math.random() * chars.length))
+  }
+  return code
 }
 
 export const compartilhamentoService = {
   /**
-   * Criar um link de compartilhamento para uma lista
+   * Criar código de compartilhamento para uma lista
    */
-  async criarCompartilhamento(listaId: string, ownerId: string): Promise<{ token: string; url: string }> {
-    const shareToken = generateShareToken()
+  async criarCodigo(listaId: string, ownerId: string): Promise<string> {
+    const shareCode = generateShareCode()
 
     const { error } = await supabase
       .from('lista_compartilhamentos')
       .insert({
         lista_id: listaId,
         owner_id: ownerId,
-        share_token: shareToken,
-        accepted: false,
+        share_code: shareCode,
       })
       .select()
       .single()
 
     if (error) throw error
-
-    // Gerar URL de compartilhamento
-    const baseUrl = window.location.origin
-    const shareUrl = `${baseUrl}/compartilhar/${shareToken}`
-
-    return {
-      token: shareToken,
-      url: shareUrl,
-    }
+    return shareCode
   },
 
   /**
-   * Aceitar convite de compartilhamento
+   * Obter código de compartilhamento de uma lista
    */
-  async aceitarCompartilhamento(shareToken: string, userId: string): Promise<ListaCompartilhamento> {
-    // Primeiro, buscar o compartilhamento pelo token
+  async getCodigo(listaId: string): Promise<string | null> {
+    const { data, error } = await supabase
+      .from('lista_compartilhamentos')
+      .select('share_code')
+      .eq('lista_id', listaId)
+      .single()
+
+    if (error) return null
+    return data?.share_code || null
+  },
+
+  /**
+   * Aceitar compartilhamento usando código
+   */
+  async aceitarPorCodigo(shareCode: string, userId: string): Promise<void> {
+    // Buscar lista pelo código
     const { data: compartilhamento, error: fetchError } = await supabase
       .from('lista_compartilhamentos')
-      .select('*')
-      .eq('share_token', shareToken)
+      .select('lista_id, owner_id')
+      .eq('share_code', shareCode.toUpperCase())
       .single()
 
-    if (fetchError) throw new Error('Link de compartilhamento inválido ou expirado')
-
-    // Verificar se já foi aceito por outro usuário
-    if (compartilhamento.accepted && compartilhamento.shared_user_id !== userId) {
-      throw new Error('Este link já foi utilizado por outro usuário')
+    if (fetchError || !compartilhamento) {
+      throw new Error('Código inválido')
     }
 
-    // Verificar se o usuário não é o dono da lista
+    // Verificar se usuário não é o dono
     if (compartilhamento.owner_id === userId) {
-      throw new Error('Você não pode aceitar compartilhamento da sua própria lista')
+      throw new Error('Você não pode usar o código da sua própria lista')
     }
 
-    // Atualizar compartilhamento
-    const { data, error } = await supabase
-      .from('lista_compartilhamentos')
-      .update({
-        shared_user_id: userId,
-        accepted: true,
-        accepted_at: new Date().toISOString(),
+    // Adicionar usuário à lista
+    const { error: insertError } = await supabase
+      .from('lista_usuarios')
+      .insert({
+        lista_id: compartilhamento.lista_id,
+        user_id: userId,
+        is_owner: false,
       })
-      .eq('id', compartilhamento.id)
-      .select()
-      .single()
 
-    if (error) throw error
-
-    return data
+    if (insertError) {
+      // Se erro for de duplicata, significa que já está compartilhado
+      if (insertError.code === '23505') {
+        throw new Error('Você já tem acesso a esta lista')
+      }
+      throw insertError
+    }
   },
 
   /**
-   * Obter compartilhamentos de uma lista
+   * Remover código de compartilhamento
    */
-  async getCompartilhamentosDaLista(listaId: string): Promise<ListaCompartilhamento[]> {
-    const { data, error } = await supabase
+  async removerCodigo(listaId: string): Promise<void> {
+    const { error } = await supabase
       .from('lista_compartilhamentos')
-      .select('*')
+      .delete()
       .eq('lista_id', listaId)
-      .order('created_at', { ascending: false })
+
+    if (error) throw error
+  },
+
+  /**
+   * Obter usuários com acesso a uma lista
+   */
+  async getUsuariosDaLista(listaId: string): Promise<any[]> {
+    const { data, error } = await supabase
+      .from('lista_usuarios')
+      .select('user_id, is_owner, created_at')
+      .eq('lista_id', listaId)
+      .order('created_at', { ascending: true })
 
     if (error) throw error
     return data || []
   },
 
   /**
-   * Remover compartilhamento
+   * Remover usuário de uma lista compartilhada
    */
-  async removerCompartilhamento(compartilhamentoId: string): Promise<void> {
+  async removerUsuario(listaId: string, userId: string): Promise<void> {
     const { error } = await supabase
-      .from('lista_compartilhamentos')
+      .from('lista_usuarios')
       .delete()
-      .eq('id', compartilhamentoId)
+      .eq('lista_id', listaId)
+      .eq('user_id', userId)
+      .eq('is_owner', false) // Não pode remover o dono
 
     if (error) throw error
-  },
-
-  /**
-   * Validar se um token de compartilhamento é válido
-   */
-  async validarToken(shareToken: string): Promise<boolean> {
-    const { data, error } = await supabase
-      .from('lista_compartilhamentos')
-      .select('id')
-      .eq('share_token', shareToken)
-      .single()
-
-    return !error && !!data
-  },
-
-  /**
-   * Obter informações do compartilhamento por token
-   */
-  async getCompartilhamentoPorToken(shareToken: string): Promise<ListaCompartilhamento | null> {
-    const { data, error } = await supabase
-      .from('lista_compartilhamentos')
-      .select('*')
-      .eq('share_token', shareToken)
-      .single()
-
-    if (error) return null
-    return data
   },
 }

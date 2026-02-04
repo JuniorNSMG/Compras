@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { listService } from '@/services/listService'
+import { compartilhamentoService } from '@/services/compartilhamentoService'
 import { CompartilharLista } from './CompartilharLista'
 import type { Lista } from '@/types'
 import './GerenciarListas.css'
@@ -13,6 +14,7 @@ interface GerenciarListasProps {
 
 export function GerenciarListas({ listas, userId, onClose, onListasUpdated }: GerenciarListasProps) {
   const [novoNome, setNovoNome] = useState('')
+  const [codigo, setCodigo] = useState('')
   const [editandoId, setEditandoId] = useState<string | null>(null)
   const [nomeEdicao, setNomeEdicao] = useState('')
   const [salvando, setSalvando] = useState(false)
@@ -46,6 +48,33 @@ export function GerenciarListas({ listas, userId, onClose, onListasUpdated }: Ge
     } catch (error) {
       console.error('Erro ao renomear lista:', error)
       alert('Erro ao renomear lista')
+    } finally {
+      setSalvando(false)
+    }
+  }
+
+  async function handleUsarCodigo() {
+    const codigoLimpo = codigo.trim().toUpperCase()
+    if (!codigoLimpo) {
+      alert('Digite um código válido')
+      return
+    }
+
+    if (codigoLimpo.length !== 6) {
+      alert('O código deve ter 6 caracteres')
+      return
+    }
+
+    try {
+      setSalvando(true)
+      await compartilhamentoService.aceitarPorCodigo(codigoLimpo, userId)
+      setCodigo('')
+      alert('Lista adicionada com sucesso!')
+      onListasUpdated()
+      onClose()
+    } catch (error: any) {
+      console.error('Erro ao usar código:', error)
+      alert(error.message || 'Código inválido ou expirado')
     } finally {
       setSalvando(false)
     }
@@ -112,6 +141,32 @@ export function GerenciarListas({ listas, userId, onClose, onListasUpdated }: Ge
                 type="button"
               >
                 {salvando ? 'Criando...' : 'Criar'}
+              </button>
+            </div>
+          </div>
+
+          {/* Adicionar lista por código */}
+          <div className="criar-lista-section codigo-section">
+            <h3>Adicionar Lista por Código</h3>
+            <div className="input-group">
+              <input
+                type="text"
+                value={codigo}
+                onChange={(e) => setCodigo(e.target.value.toUpperCase())}
+                placeholder="Digite o código (6 caracteres)..."
+                maxLength={6}
+                onKeyDown={(e) => e.key === 'Enter' && handleUsarCodigo()}
+                disabled={salvando}
+                aria-label="Código de compartilhamento"
+                style={{ fontFamily: 'monospace', letterSpacing: '2px' }}
+              />
+              <button
+                onClick={handleUsarCodigo}
+                disabled={codigo.trim().length !== 6 || salvando}
+                className="btn-primary"
+                type="button"
+              >
+                {salvando ? 'Adicionando...' : 'Adicionar'}
               </button>
             </div>
           </div>

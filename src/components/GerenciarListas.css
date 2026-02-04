@@ -101,6 +101,16 @@
   border-bottom: 2px solid var(--color-border);
 }
 
+.codigo-section {
+  border-color: var(--color-primary);
+  border-width: 2px;
+  border-style: dashed;
+}
+
+.codigo-section h3 {
+  color: var(--color-primary) !important;
+}
+
 .criar-lista-section h3,
 .listas-existentes h3 {
   font-size: 15px;
