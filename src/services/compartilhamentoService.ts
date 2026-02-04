@@ -16,8 +16,11 @@ export const compartilhamentoService = {
    */
   async criarCodigo(listaId: string, ownerId: string): Promise<string> {
     const shareCode = generateShareCode()
+    console.log('🔐 Gerando código:', shareCode)
+    console.log('📋 Lista ID:', listaId)
+    console.log('👤 Owner ID:', ownerId)
 
-    const { error } = await supabase
+    const { data, error } = await supabase
       .from('lista_compartilhamentos')
       .insert({
         lista_id: listaId,
@@ -27,7 +30,12 @@ export const compartilhamentoService = {
       .select()
       .single()
 
-    if (error) throw error
+    if (error) {
+      console.error('❌ Erro ao criar código:', error)
+      throw error
+    }
+
+    console.log('✅ Código criado com sucesso:', data)
     return shareCode
   },
 
@@ -49,6 +57,9 @@ export const compartilhamentoService = {
    * Aceitar compartilhamento usando código
    */
   async aceitarPorCodigo(shareCode: string, userId: string): Promise<void> {
+    console.log('🔍 Buscando código:', shareCode.toUpperCase())
+    console.log('🔍 User ID:', userId)
+
     // Buscar lista pelo código
     const { data: compartilhamento, error: fetchError } = await supabase
       .from('lista_compartilhamentos')
@@ -56,16 +67,31 @@ export const compartilhamentoService = {
       .eq('share_code', shareCode.toUpperCase())
       .single()
 
-    if (fetchError || !compartilhamento) {
+    console.log('📦 Resultado da busca:', { compartilhamento, fetchError })
+
+    if (fetchError) {
+      console.error('❌ Erro ao buscar código:', fetchError)
+      if (fetchError.code === 'PGRST116') {
+        throw new Error('Código não encontrado ou inválido')
+      }
+      throw new Error(`Erro ao buscar código: ${fetchError.message}`)
+    }
+
+    if (!compartilhamento) {
+      console.error('❌ Compartilhamento não encontrado')
       throw new Error('Código inválido')
     }
 
+    console.log('✅ Código encontrado! Lista ID:', compartilhamento.lista_id)
+
     // Verificar se usuário não é o dono
     if (compartilhamento.owner_id === userId) {
+      console.warn('⚠️ Usuário tentou usar código da própria lista')
       throw new Error('Você não pode usar o código da sua própria lista')
     }
 
     // Adicionar usuário à lista
+    console.log('➕ Adicionando usuário à lista...')
     const { error: insertError } = await supabase
       .from('lista_usuarios')
       .insert({
@@ -75,12 +101,15 @@ export const compartilhamentoService = {
       })
 
     if (insertError) {
+      console.error('❌ Erro ao adicionar usuário:', insertError)
       // Se erro for de duplicata, significa que já está compartilhado
       if (insertError.code === '23505') {
         throw new Error('Você já tem acesso a esta lista')
       }
-      throw insertError
+      throw new Error(`Erro ao adicionar acesso: ${insertError.message}`)
     }
+
+    console.log('✅ Usuário adicionado com sucesso!')
   },
 
   /**
