@@ -1,6 +1,7 @@
 import { supabase } from '@/lib/supabase'
 import type { Item } from '@/types'
 import { getProductIcon, getCategoriaFromNome } from '@/utils/productIcons'
+import { toTitleCase } from '@/utils/textUtils'
 import { customizacaoService } from './customizacaoService'
 
 export const itemService = {
@@ -24,6 +25,9 @@ export const itemService = {
     unidade?: string,
     userId?: string
   ): Promise<Item> {
+    // Formatar nome em Title Case
+    nome = toTitleCase(nome)
+
     let categoria = getCategoriaFromNome(nome)
     let icon_name = getProductIcon(nome, categoria)
 
@@ -65,6 +69,11 @@ export const itemService = {
     id: string,
     updates: Partial<Omit<Item, 'id' | 'lista_id' | 'created_at' | 'updated_at'>>
   ): Promise<Item> {
+    // Formatar nome em Title Case se estiver sendo atualizado
+    if (updates.nome) {
+      updates.nome = toTitleCase(updates.nome)
+    }
+
     const { data, error } = await supabase
       .from('itens')
       .update({

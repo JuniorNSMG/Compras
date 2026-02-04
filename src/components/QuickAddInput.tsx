@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { itemService } from '@/services/itemService'
 import { searchCacheService, type SearchCacheItem } from '@/services/searchCacheService'
+import { toTitleCase } from '@/utils/textUtils'
 import { useStore } from '@/store/useStore'
 import { ProductIcon } from './ProductIcon'
 import './QuickAddInput.css'
@@ -49,6 +50,9 @@ export function QuickAddInput() {
       unidade = numMatch[2] || undefined
       nome = parts.slice(0, -1).join(' ')
     }
+
+    // Formatar nome em Title Case
+    nome = toTitleCase(nome)
 
     try {
       const newItem = await itemService.createItem(

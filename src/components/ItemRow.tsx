@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react'
 import { itemService } from '@/services/itemService'
 import { historicoComprasService } from '@/services/historicoComprasService'
+import { isLongText } from '@/utils/textUtils'
 import { useStore } from '@/store/useStore'
 import { ItemOptions } from './ItemOptions'
 import { ProductIcon } from './ProductIcon'
@@ -104,7 +105,9 @@ export function ItemRow({ item, animandoSaida = false, compacto = false }: ItemR
         <div className="card-icon">
           <ProductIcon icon={item.icon_name} size={48} />
         </div>
-        <div className="card-nome">{item.nome}</div>
+        <div className={`card-nome ${isLongText(item.nome) ? 'long-text' : ''}`}>
+          {item.nome}
+        </div>
         {item.quantidade && (
           <div className="card-quantidade">
             {item.quantidade}{item.unidade ? ` ${item.unidade}` : ''}

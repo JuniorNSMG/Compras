@@ -63,6 +63,14 @@
   width: 100%;
 }
 
+/* Textos longos (ex: "Refrigerante") - não quebra linha e reduz fonte */
+.card-nome.long-text {
+  font-size: 11px;
+  white-space: nowrap;
+  -webkit-line-clamp: 1;
+  line-height: 1.2;
+}
+
 .item-card.comprado .card-nome {
   text-decoration: line-through;
   color: var(--color-text-light);
