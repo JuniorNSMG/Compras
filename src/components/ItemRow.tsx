@@ -66,6 +66,15 @@ export function ItemRow({ item, animandoSaida = false, compacto = false }: ItemR
     }
   }
 
+  const handleContextMenu = (e: React.MouseEvent) => {
+    // Prevenir menu padrão do browser
+    e.preventDefault()
+    // Abrir modal de opções
+    if (!compacto) {
+      setShowOptions(true)
+    }
+  }
+
   const classNames = [
     'item-card',
     item.comprado && 'comprado',
@@ -77,7 +86,11 @@ export function ItemRow({ item, animandoSaida = false, compacto = false }: ItemR
   if (compacto) {
     return (
       <>
-        <div className="item-row-compacto" onClick={handleToggle}>
+        <div
+          className="item-row-compacto"
+          onClick={handleToggle}
+          onContextMenu={handleContextMenu}
+        >
           <div className="item-icon-inline">
             <ProductIcon icon={item.icon_name} size={20} />
           </div>
@@ -101,6 +114,7 @@ export function ItemRow({ item, animandoSaida = false, compacto = false }: ItemR
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
         onTouchMove={handleTouchMove}
+        onContextMenu={handleContextMenu}
       >
         <div className="card-icon">
           <ProductIcon icon={item.icon_name} size={48} />
