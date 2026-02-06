@@ -151,16 +151,21 @@ export function ListView() {
       // Mesclar itens não comprados + adicionar origem
       const merged: ItemComOrigem[] = []
       results.forEach((itens, idx) => {
+        const lista = listasSelecionadasModoCompras[idx]
+        console.log(`Lista ${lista.nome}: ${itens.length} itens totais`)
+
         itens
           .filter(item => !item.comprado)
           .forEach(item => {
             merged.push({
               ...item,
-              listaOrigem: listasSelecionadasModoCompras[idx]
+              listaOrigem: lista
             })
+            console.log(`Item "${item.nome}" da lista "${lista.nome}"`)
           })
       })
 
+      console.log(`Total de itens agregados: ${merged.length}`)
       setItensAgregados(merged)
     } catch (error) {
       console.error('Erro ao carregar itens agregados:', error)
