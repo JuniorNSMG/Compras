@@ -86,6 +86,17 @@
   font-family: var(--font-body);
 }
 
+.card-preco {
+  font-size: 11px;
+  color: var(--color-primary);
+  font-weight: 700;
+  background: rgba(8, 145, 178, 0.1);
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-md);
+  font-family: var(--font-body);
+  letter-spacing: 0.3px;
+}
+
 /* Versão compacta para lista de comprados */
 .item-row-compacto {
   display: flex;

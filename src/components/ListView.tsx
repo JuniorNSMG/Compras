@@ -11,6 +11,7 @@ import { ItemRow } from './ItemRow'
 import { GerenciarListas } from './GerenciarListas'
 import { ProductIcon } from './ProductIcon'
 import { ORDEM_CATEGORIAS, DEFAULT_ICON } from '@/utils/productIcons'
+import { calcularPrecoTotal, formatarPreco } from '@/services/precoEstimadoService'
 import type { Item, ItemComOrigem } from '@/types'
 import './ListView.css'
 
@@ -26,6 +27,10 @@ export function ListView() {
   const [modoComprasAtivo, setModoComprasAtivo] = useState(false)
   const [listasSelecionadasModoCompras, setListasSelecionadasModoCompras] = useState<any[]>([])
   const [itensAgregados, setItensAgregados] = useState<ItemComOrigem[]>([])
+  const [mostrarPrecos, setMostrarPrecos] = useState(() => {
+    const saved = localStorage.getItem('mostrarPrecos')
+    return saved === 'true'
+  })
   const [frequentementeComprados, setFrequentementeComprados] = useState<HistoricoCompra[]>([])
   const [toastMessage, setToastMessage] = useState<string>('')
   const previousItensRef = useRef<Map<string, boolean>>(new Map())
@@ -152,7 +157,6 @@ export function ListView() {
       const merged: ItemComOrigem[] = []
       results.forEach((itens, idx) => {
         const lista = listasSelecionadasModoCompras[idx]
-        console.log(`Lista ${lista.nome}: ${itens.length} itens totais`)
 
         itens
           .filter(item => !item.comprado)
@@ -161,17 +165,21 @@ export function ListView() {
               ...item,
               listaOrigem: lista
             })
-            console.log(`Item "${item.nome}" da lista "${lista.nome}"`)
           })
       })
 
-      console.log(`Total de itens agregados: ${merged.length}`)
       setItensAgregados(merged)
     } catch (error) {
       console.error('Erro ao carregar itens agregados:', error)
     } finally {
       setSyncing(false)
     }
+  }
+
+  function toggleMostrarPrecos() {
+    const novoValor = !mostrarPrecos
+    setMostrarPrecos(novoValor)
+    localStorage.setItem('mostrarPrecos', novoValor.toString())
   }
 
   async function handleSignOut() {
@@ -358,6 +366,14 @@ export function ListView() {
 
   const nomesListasCompras = listasSelecionadasModoCompras.map(l => l.nome).join(', ')
 
+  // Calcular total estimado
+  const totalEstimado = mostrarPrecos
+    ? itensNaoComprados.reduce((total, item) => {
+        const preco = calcularPrecoTotal(item.preco_estimado, item.quantidade, item.unidade, item.nome)
+        return total + (preco || 0)
+      }, 0)
+    : 0
+
   return (
     <div className="list-view-container container">
       <header className="list-header safe-area-top">
@@ -366,16 +382,25 @@ export function ListView() {
             <button onClick={() => setShowListSelector(!showListSelector)} className="list-title-button">
               <h1>{nomesListasCompras}</h1>
             </button>
-            <button
-              onClick={() => {
-                setModoComprasAtivo(false)
-                setListasSelecionadasModoCompras([])
-                setItensAgregados([])
-              }}
-              className="signout-button"
-            >
-              Voltar
-            </button>
+            <div className="header-actions">
+              <button
+                onClick={toggleMostrarPrecos}
+                className="toggle-preco-button"
+                title={mostrarPrecos ? 'Ocultar preços' : 'Mostrar preços'}
+              >
+                {mostrarPrecos ? '💰' : '💸'}
+              </button>
+              <button
+                onClick={() => {
+                  setModoComprasAtivo(false)
+                  setListasSelecionadasModoCompras([])
+                  setItensAgregados([])
+                }}
+                className="signout-button"
+              >
+                Voltar
+              </button>
+            </div>
           </>
         ) : (
           <>
@@ -383,9 +408,18 @@ export function ListView() {
               <h1>{currentLista?.nome || 'Carregando...'}</h1>
               <span className="dropdown-icon">{showListSelector ? '▲' : '▼'}</span>
             </button>
-            <button onClick={handleSignOut} className="signout-button">
-              Sair
-            </button>
+            <div className="header-actions">
+              <button
+                onClick={toggleMostrarPrecos}
+                className="toggle-preco-button"
+                title={mostrarPrecos ? 'Ocultar preços' : 'Mostrar preços'}
+              >
+                {mostrarPrecos ? '💰' : '💸'}
+              </button>
+              <button onClick={handleSignOut} className="signout-button">
+                Sair
+              </button>
+            </div>
           </>
         )}
       </header>
@@ -427,6 +461,13 @@ export function ListView() {
 
       {!modoComprasAtivo && <QuickAddInput />}
 
+      {mostrarPrecos && totalEstimado > 0 && (
+        <div className="total-estimado-bar">
+          <span className="total-label">Total estimado:</span>
+          <span className="total-valor">{formatarPreco(totalEstimado)}</span>
+        </div>
+      )}
+
       <div ref={containerRef} className="items-container safe-area-bottom">
         {(modoComprasAtivo ? itensAgregados.length === 0 : itens.length === 0) ? (
           <div className="empty-state">
@@ -453,6 +494,7 @@ export function ListView() {
                         item={item}
                         animandoSaida={itemsAnimandoSaida.has(item.id)}
                         badge={modoComprasAtivo ? itemComOrigem.listaOrigem?.nome : undefined}
+                        mostrarPreco={mostrarPrecos}
                         onUpdated={modoComprasAtivo ? loadItensAgregados : undefined}
                       />
                     )

@@ -3,6 +3,7 @@ import type { Item } from '@/types'
 import { getProductIcon, getCategoriaFromNome } from '@/utils/productIcons'
 import { toTitleCase } from '@/utils/textUtils'
 import { customizacaoService } from './customizacaoService'
+import { buscarPrecoEstimado } from './precoEstimadoService'
 
 export const itemService = {
   async getItens(listaId: string): Promise<Item[]> {
@@ -45,6 +46,10 @@ export const itemService = {
       }
     }
 
+    // Buscar preço estimado inicial
+    const precoInfo = buscarPrecoEstimado(nome)
+    const preco_estimado = precoInfo?.preco
+
     const { data, error } = await supabase
       .from('itens')
       .insert({
@@ -55,6 +60,7 @@ export const itemService = {
         unidade,
         icon_name,
         comprado: false,
+        preco_estimado,
       })
       .select()
       .single()

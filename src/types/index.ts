@@ -15,6 +15,7 @@ export interface Item {
   unidade?: string
   icon_name: string
   comprado: boolean
+  preco_estimado?: number
   created_at: string
   updated_at: string
 }

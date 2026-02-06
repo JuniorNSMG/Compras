@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { itemService } from '@/services/itemService'
 import { customizacaoService } from '@/services/customizacaoService'
+import { buscarPrecoEstimado } from '@/services/precoEstimadoService'
 import { useStore } from '@/store/useStore'
 import { ProductIcon } from './ProductIcon'
 import { ORDEM_CATEGORIAS, AVAILABLE_ICONS } from '@/utils/productIcons'
@@ -18,6 +19,9 @@ export function ItemOptions({ item, onClose }: ItemOptionsProps) {
   const [unidade, setUnidade] = useState(item.unidade || '')
   const [categoria, setCategoria] = useState(item.categoria)
   const [iconName, setIconName] = useState(item.icon_name)
+  const [precoEstimado, setPrecoEstimado] = useState(
+    item.preco_estimado?.toString() || buscarPrecoEstimado(item.nome)?.toString() || ''
+  )
   const [salvando, setSalvando] = useState(false)
   const [mostrarIcones, setMostrarIcones] = useState(false)
   const [buscaIcone, setBuscaIcone] = useState('')
@@ -43,6 +47,7 @@ export function ItemOptions({ item, onClose }: ItemOptionsProps) {
     try {
       setSalvando(true)
       const qtd = parseFloat(quantidade) || 1
+      const preco = precoEstimado ? parseFloat(precoEstimado) : undefined
 
       // Atualizar o item
       const updated = await itemService.updateItem(item.id, {
@@ -50,6 +55,7 @@ export function ItemOptions({ item, onClose }: ItemOptionsProps) {
         unidade: unidade.trim() || undefined,
         categoria,
         icon_name: iconName,
+        preco_estimado: preco,
       })
       updateItem(item.id, updated)
 
@@ -186,6 +192,22 @@ export function ItemOptions({ item, onClose }: ItemOptionsProps) {
                 </div>
               </>
             )}
+          </div>
+
+          {/* Preço Estimado */}
+          <div className="input-section">
+            <label>Preço estimado (R$)</label>
+            <input
+              type="number"
+              value={precoEstimado}
+              onChange={(e) => setPrecoEstimado(e.target.value)}
+              placeholder="0.00"
+              min="0"
+              step="0.01"
+              disabled={salvando}
+              className="preco-input"
+            />
+            <p className="hint">Preço por {unidade || 'unidade'}. Deixe vazio para usar estimativa automática.</p>
           </div>
 
           <div className="item-options-actions">

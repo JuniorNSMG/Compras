@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react'
 import { itemService } from '@/services/itemService'
 import { historicoComprasService } from '@/services/historicoComprasService'
+import { calcularPrecoTotal, formatarPrecoCompacto } from '@/services/precoEstimadoService'
 import { isLongText } from '@/utils/textUtils'
 import { useStore } from '@/store/useStore'
 import { ItemOptions } from './ItemOptions'
@@ -13,13 +14,19 @@ interface ItemRowProps {
   animandoSaida?: boolean
   compacto?: boolean
   badge?: string
+  mostrarPreco?: boolean
   onUpdated?: () => void
 }
 
-export function ItemRow({ item, animandoSaida = false, compacto = false, badge, onUpdated }: ItemRowProps) {
+export function ItemRow({ item, animandoSaida = false, compacto = false, badge, mostrarPreco = false, onUpdated }: ItemRowProps) {
   const { user, updateItem } = useStore()
   const [showOptions, setShowOptions] = useState(false)
   const longPressTimer = useRef<NodeJS.Timeout | null>(null)
+
+  // Calcular preço total (quantidade * preço unitário)
+  const precoTotal = mostrarPreco
+    ? calcularPrecoTotal(item.preco_estimado, item.quantidade, item.unidade, item.nome)
+    : null
 
   async function handleToggle() {
     // Atualização otimista - atualiza localmente primeiro para resposta instantânea
@@ -135,6 +142,11 @@ export function ItemRow({ item, animandoSaida = false, compacto = false, badge, 
         {item.quantidade && (
           <div className="card-quantidade">
             {item.quantidade}{item.unidade ? ` ${item.unidade}` : ''}
+          </div>
+        )}
+        {precoTotal !== null && (
+          <div className="card-preco">
+            {formatarPrecoCompacto(precoTotal)}
           </div>
         )}
       </div>
