@@ -390,9 +390,10 @@ export function ListView() {
                 title={mostrarPrecos ? 'Ocultar preços' : 'Mostrar preços'}
               >
                 <Icon
-                  icon={mostrarPrecos ? 'fluent-emoji-flat:coin' : 'fluent-emoji-high-contrast:coin'}
+                  icon={mostrarPrecos ? 'fluent-emoji-flat:heavy-dollar-sign' : 'mdi:currency-usd'}
                   width={26}
                   height={26}
+                  style={mostrarPrecos ? {} : { color: '#999' }}
                 />
               </button>
               <button
@@ -420,9 +421,10 @@ export function ListView() {
                 title={mostrarPrecos ? 'Ocultar preços' : 'Mostrar preços'}
               >
                 <Icon
-                  icon={mostrarPrecos ? 'fluent-emoji-flat:coin' : 'fluent-emoji-high-contrast:coin'}
+                  icon={mostrarPrecos ? 'fluent-emoji-flat:heavy-dollar-sign' : 'mdi:currency-usd'}
                   width={26}
                   height={26}
+                  style={mostrarPrecos ? {} : { color: '#999' }}
                 />
               </button>
               <button onClick={handleSignOut} className="signout-button">
