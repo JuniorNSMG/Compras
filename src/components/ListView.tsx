@@ -13,6 +13,7 @@ import { ProductIcon } from './ProductIcon'
 import { ORDEM_CATEGORIAS, DEFAULT_ICON } from '@/utils/productIcons'
 import { calcularPrecoTotal, formatarPreco } from '@/services/precoEstimadoService'
 import type { Item, ItemComOrigem } from '@/types'
+import { Icon } from '@iconify/react'
 import './ListView.css'
 
 export function ListView() {
@@ -388,7 +389,11 @@ export function ListView() {
                 className="toggle-preco-button"
                 title={mostrarPrecos ? 'Ocultar preços' : 'Mostrar preços'}
               >
-                {mostrarPrecos ? '💰' : '💸'}
+                <Icon
+                  icon={mostrarPrecos ? 'fluent-emoji-flat:coin' : 'fluent-emoji-high-contrast:coin'}
+                  width={20}
+                  height={20}
+                />
               </button>
               <button
                 onClick={() => {
@@ -414,7 +419,11 @@ export function ListView() {
                 className="toggle-preco-button"
                 title={mostrarPrecos ? 'Ocultar preços' : 'Mostrar preços'}
               >
-                {mostrarPrecos ? '💰' : '💸'}
+                <Icon
+                  icon={mostrarPrecos ? 'fluent-emoji-flat:coin' : 'fluent-emoji-high-contrast:coin'}
+                  width={20}
+                  height={20}
+                />
               </button>
               <button onClick={handleSignOut} className="signout-button">
                 Sair

@@ -292,3 +292,28 @@
   padding: 20px;
   font-size: 14px;
 }
+
+/* Campo de preço estimado */
+.preco-input {
+  width: 100%;
+  padding: 14px 16px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 16px;
+  background: white;
+  transition: border-color 0.2s;
+}
+
+.preco-input:focus {
+  outline: none;
+  border-color: #4ade80;
+}
+
+.preco-input:disabled {
+  opacity: 0.5;
+  background: #f5f5f5;
+}
+
+.preco-input::placeholder {
+  color: #999;
+}

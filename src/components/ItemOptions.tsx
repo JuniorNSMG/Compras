@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { itemService } from '@/services/itemService'
 import { customizacaoService } from '@/services/customizacaoService'
 import { buscarPrecoEstimado } from '@/services/precoEstimadoService'
+import { formatarParaInput, converterParaNumero, aplicarMascaraMoeda } from '@/utils/moneyUtils'
 import { useStore } from '@/store/useStore'
 import { ProductIcon } from './ProductIcon'
 import { ORDEM_CATEGORIAS, AVAILABLE_ICONS } from '@/utils/productIcons'
@@ -19,9 +20,8 @@ export function ItemOptions({ item, onClose }: ItemOptionsProps) {
   const [unidade, setUnidade] = useState(item.unidade || '')
   const [categoria, setCategoria] = useState(item.categoria)
   const [iconName, setIconName] = useState(item.icon_name)
-  const [precoEstimado, setPrecoEstimado] = useState(
-    item.preco_estimado?.toString() || buscarPrecoEstimado(item.nome)?.toString() || ''
-  )
+  const precoInicial = item.preco_estimado || buscarPrecoEstimado(item.nome)?.preco
+  const [precoEstimado, setPrecoEstimado] = useState(formatarParaInput(precoInicial))
   const [salvando, setSalvando] = useState(false)
   const [mostrarIcones, setMostrarIcones] = useState(false)
   const [buscaIcone, setBuscaIcone] = useState('')
@@ -47,7 +47,7 @@ export function ItemOptions({ item, onClose }: ItemOptionsProps) {
     try {
       setSalvando(true)
       const qtd = parseFloat(quantidade) || 1
-      const preco = precoEstimado ? parseFloat(precoEstimado) : undefined
+      const preco = converterParaNumero(precoEstimado)
 
       // Atualizar o item
       const updated = await itemService.updateItem(item.id, {
@@ -198,12 +198,11 @@ export function ItemOptions({ item, onClose }: ItemOptionsProps) {
           <div className="input-section">
             <label>Preço estimado (R$)</label>
             <input
-              type="number"
+              type="text"
+              inputMode="decimal"
               value={precoEstimado}
-              onChange={(e) => setPrecoEstimado(e.target.value)}
-              placeholder="0.00"
-              min="0"
-              step="0.01"
+              onChange={(e) => setPrecoEstimado(aplicarMascaraMoeda(e.target.value))}
+              placeholder="0,00"
               disabled={salvando}
               className="preco-input"
             />
