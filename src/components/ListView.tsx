@@ -9,10 +9,9 @@ import { useStore } from '@/store/useStore'
 import { QuickAddInput } from './QuickAddInput'
 import { ItemRow } from './ItemRow'
 import { GerenciarListas } from './GerenciarListas'
-import { ModoCompras } from './ModoCompras'
 import { ProductIcon } from './ProductIcon'
 import { ORDEM_CATEGORIAS, DEFAULT_ICON } from '@/utils/productIcons'
-import type { Item } from '@/types'
+import type { Item, ItemComOrigem } from '@/types'
 import './ListView.css'
 
 export function ListView() {
@@ -23,9 +22,10 @@ export function ListView() {
   const [compradosExpandido, setCompradosExpandido] = useState(false)
   const [frequentesExpandido, setFrequentesExpandido] = useState(false)
   const [mostrarGerenciarListas, setMostrarGerenciarListas] = useState(false)
-  const [mostrarModoCompras, setMostrarModoCompras] = useState(false)
   const [mostrarSeletorModoCompras, setMostrarSeletorModoCompras] = useState(false)
+  const [modoComprasAtivo, setModoComprasAtivo] = useState(false)
   const [listasSelecionadasModoCompras, setListasSelecionadasModoCompras] = useState<any[]>([])
+  const [itensAgregados, setItensAgregados] = useState<ItemComOrigem[]>([])
   const [frequentementeComprados, setFrequentementeComprados] = useState<HistoricoCompra[]>([])
   const [toastMessage, setToastMessage] = useState<string>('')
   const previousItensRef = useRef<Map<string, boolean>>(new Map())
@@ -45,10 +45,16 @@ export function ListView() {
   }, [user])
 
   useEffect(() => {
-    if (currentLista) {
+    if (currentLista && !modoComprasAtivo) {
       loadItens()
     }
-  }, [currentLista])
+  }, [currentLista, modoComprasAtivo])
+
+  useEffect(() => {
+    if (modoComprasAtivo && listasSelecionadasModoCompras.length > 0) {
+      loadItensAgregados()
+    }
+  }, [modoComprasAtivo, listasSelecionadasModoCompras])
 
   async function loadListas() {
     if (!user) return
@@ -124,6 +130,40 @@ export function ListView() {
       await loadFrequentementeComprados()
     } catch (error) {
       console.error('Erro ao carregar itens:', error)
+    } finally {
+      setSyncing(false)
+    }
+  }
+
+  async function loadItensAgregados() {
+    if (listasSelecionadasModoCompras.length === 0) {
+      setItensAgregados([])
+      return
+    }
+
+    try {
+      setSyncing(true)
+      const promises = listasSelecionadasModoCompras.map(lista =>
+        itemService.getItens(lista.id)
+      )
+      const results = await Promise.all(promises)
+
+      // Mesclar itens não comprados + adicionar origem
+      const merged: ItemComOrigem[] = []
+      results.forEach((itens, idx) => {
+        itens
+          .filter(item => !item.comprado)
+          .forEach(item => {
+            merged.push({
+              ...item,
+              listaOrigem: listasSelecionadasModoCompras[idx]
+            })
+          })
+      })
+
+      setItensAgregados(merged)
+    } catch (error) {
+      console.error('Erro ao carregar itens agregados:', error)
     } finally {
       setSyncing(false)
     }
@@ -271,12 +311,17 @@ export function ListView() {
 
   // Separar itens: não comprados + animando (permanecem na categoria), e comprados (vão para seção inferior)
   // Durante animação, item permanece na categoria original
-  const itensNaoComprados = itens.filter(item => !item.comprado || itemsAnimandoSaida.has(item.id))
-  const itensComprados = itens.filter(item => item.comprado && !itemsAnimandoSaida.has(item.id))
+  // No modo compras, usamos itensAgregados (que já vêm apenas não comprados)
+  const itensNaoComprados = modoComprasAtivo
+    ? itensAgregados
+    : itens.filter(item => !item.comprado || itemsAnimandoSaida.has(item.id))
+  const itensComprados = modoComprasAtivo
+    ? []
+    : itens.filter(item => item.comprado && !itemsAnimandoSaida.has(item.id))
 
   // Agrupar itens não comprados por categoria
-  function agruparPorCategoria(items: Item[]) {
-    const grupos: Record<string, Item[]> = {}
+  function agruparPorCategoria(items: Item[] | ItemComOrigem[]) {
+    const grupos: Record<string, (Item | ItemComOrigem)[]> = {}
 
     items.forEach(item => {
       const categoria = item.categoria || 'Outros'
@@ -306,19 +351,41 @@ export function ListView() {
 
   const itensAgrupadosPorCategoria = agruparPorCategoria(itensNaoComprados)
 
+  const nomesListasCompras = listasSelecionadasModoCompras.map(l => l.nome).join(', ')
+
   return (
     <div className="list-view-container container">
       <header className="list-header safe-area-top">
-        <button onClick={() => setShowListSelector(!showListSelector)} className="list-title-button">
-          <h1>{currentLista?.nome || 'Carregando...'}</h1>
-          <span className="dropdown-icon">{showListSelector ? '▲' : '▼'}</span>
-        </button>
-        <button onClick={handleSignOut} className="signout-button">
-          Sair
-        </button>
+        {modoComprasAtivo ? (
+          <>
+            <button onClick={() => setShowListSelector(!showListSelector)} className="list-title-button">
+              <h1>{nomesListasCompras}</h1>
+            </button>
+            <button
+              onClick={() => {
+                setModoComprasAtivo(false)
+                setListasSelecionadasModoCompras([])
+                setItensAgregados([])
+              }}
+              className="signout-button"
+            >
+              Voltar
+            </button>
+          </>
+        ) : (
+          <>
+            <button onClick={() => setShowListSelector(!showListSelector)} className="list-title-button">
+              <h1>{currentLista?.nome || 'Carregando...'}</h1>
+              <span className="dropdown-icon">{showListSelector ? '▲' : '▼'}</span>
+            </button>
+            <button onClick={handleSignOut} className="signout-button">
+              Sair
+            </button>
+          </>
+        )}
       </header>
 
-      {showListSelector && (
+      {showListSelector && !modoComprasAtivo && (
         <div className="list-selector">
           {listas.map(lista => (
             <button
@@ -353,15 +420,15 @@ export function ListView() {
         </div>
       )}
 
-      <QuickAddInput />
+      {!modoComprasAtivo && <QuickAddInput />}
 
       <div ref={containerRef} className="items-container safe-area-bottom">
-        {itens.length === 0 ? (
+        {(modoComprasAtivo ? itensAgregados.length === 0 : itens.length === 0) ? (
           <div className="empty-state">
             <div className="empty-icon">
               <ProductIcon icon={DEFAULT_ICON} size={80} />
             </div>
-            <p>Adicione seu primeiro item</p>
+            <p>{modoComprasAtivo ? 'Nenhum item para comprar' : 'Adicione seu primeiro item'}</p>
           </div>
         ) : (
           <>
@@ -373,19 +440,24 @@ export function ListView() {
                   <span className="categoria-count">({items.length})</span>
                 </div>
                 <div className="items-section">
-                  {items.map(item => (
-                    <ItemRow
-                      key={item.id}
-                      item={item}
-                      animandoSaida={itemsAnimandoSaida.has(item.id)}
-                    />
-                  ))}
+                  {items.map(item => {
+                    const itemComOrigem = item as ItemComOrigem
+                    return (
+                      <ItemRow
+                        key={item.id}
+                        item={item}
+                        animandoSaida={itemsAnimandoSaida.has(item.id)}
+                        badge={modoComprasAtivo ? itemComOrigem.listaOrigem?.nome : undefined}
+                        onUpdated={modoComprasAtivo ? loadItensAgregados : undefined}
+                      />
+                    )
+                  })}
                 </div>
               </div>
             ))}
 
             {/* Seção de comprados (colapsável) */}
-            {itensComprados.length > 0 && (
+            {!modoComprasAtivo && itensComprados.length > 0 && (
               <div ref={compradosSectionRef} className="comprados-section">
                 <button
                   className="comprados-header"
@@ -418,47 +490,49 @@ export function ListView() {
             )}
 
             {/* Seção de Frequentemente Comprado (sempre visível) */}
-            <div ref={frequentesSectionRef} className="frequentes-section">
-              <button
-                className="frequentes-header"
-                onClick={() => setFrequentesExpandido(!frequentesExpandido)}
-              >
-                <span className="frequentes-title">
-                  ⭐ Frequentemente Comprado ({frequentementeComprados.length})
-                </span>
-                <span className="dropdown-icon">
-                  {frequentesExpandido ? '▲' : '▼'}
-                </span>
-              </button>
+            {!modoComprasAtivo && (
+              <div ref={frequentesSectionRef} className="frequentes-section">
+                <button
+                  className="frequentes-header"
+                  onClick={() => setFrequentesExpandido(!frequentesExpandido)}
+                >
+                  <span className="frequentes-title">
+                    ⭐ Frequentemente Comprado ({frequentementeComprados.length})
+                  </span>
+                  <span className="dropdown-icon">
+                    {frequentesExpandido ? '▲' : '▼'}
+                  </span>
+                </button>
 
-              {frequentesExpandido && (
-                <div className="frequentes-list">
-                  {frequentementeComprados.length === 0 ? (
-                    <div className="frequentes-empty">
-                      <p>Seus itens mais comprados aparecerão aqui</p>
-                    </div>
-                  ) : (
-                    frequentementeComprados.map(historico => (
-                      <div
-                        key={historico.id}
-                        className="frequente-item"
-                        onClick={() => handleAdicionarFrequente(historico)}
-                      >
-                        <div className="frequente-icon">
-                          <ProductIcon icon={historico.icon_name} size={20} />
-                        </div>
-                        <div className="frequente-info">
-                          <div className="frequente-nome">{historico.item_nome}</div>
-                          <div className="frequente-stats">
-                            {historico.purchase_count}x comprado
+                {frequentesExpandido && (
+                  <div className="frequentes-list">
+                    {frequentementeComprados.length === 0 ? (
+                      <div className="frequentes-empty">
+                        <p>Seus itens mais comprados aparecerão aqui</p>
+                      </div>
+                    ) : (
+                      frequentementeComprados.map(historico => (
+                        <div
+                          key={historico.id}
+                          className="frequente-item"
+                          onClick={() => handleAdicionarFrequente(historico)}
+                        >
+                          <div className="frequente-icon">
+                            <ProductIcon icon={historico.icon_name} size={20} />
+                          </div>
+                          <div className="frequente-info">
+                            <div className="frequente-nome">{historico.item_nome}</div>
+                            <div className="frequente-stats">
+                              {historico.purchase_count}x comprado
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    ))
-                  )}
-                </div>
-              )}
-            </div>
+                      ))
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
           </>
         )}
       </div>
@@ -509,7 +583,7 @@ export function ListView() {
                 onClick={() => {
                   if (listasSelecionadasModoCompras.length > 0) {
                     setMostrarSeletorModoCompras(false)
-                    setMostrarModoCompras(true)
+                    setModoComprasAtivo(true)
                   }
                 }}
                 className="btn-ok"
@@ -518,19 +592,6 @@ export function ListView() {
                 OK
               </button>
             </div>
-          </div>
-        </div>
-      )}
-
-      {/* Modal de Modo Compras */}
-      {mostrarModoCompras && (
-        <div className="modal-overlay" onClick={() => setMostrarModoCompras(false)}>
-          <div className="modal-fullscreen" onClick={(e) => e.stopPropagation()}>
-            <ModoCompras
-              listas={listasSelecionadasModoCompras}
-              onClose={() => setMostrarModoCompras(false)}
-              onListasUpdated={loadListas}
-            />
           </div>
         </div>
       )}
