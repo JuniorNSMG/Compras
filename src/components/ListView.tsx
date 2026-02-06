@@ -24,6 +24,8 @@ export function ListView() {
   const [frequentesExpandido, setFrequentesExpandido] = useState(false)
   const [mostrarGerenciarListas, setMostrarGerenciarListas] = useState(false)
   const [mostrarModoCompras, setMostrarModoCompras] = useState(false)
+  const [mostrarSeletorModoCompras, setMostrarSeletorModoCompras] = useState(false)
+  const [listasSelecionadasModoCompras, setListasSelecionadasModoCompras] = useState<any[]>([])
   const [frequentementeComprados, setFrequentementeComprados] = useState<HistoricoCompra[]>([])
   const [toastMessage, setToastMessage] = useState<string>('')
   const previousItensRef = useRef<Map<string, boolean>>(new Map())
@@ -342,7 +344,7 @@ export function ListView() {
           <button
             onClick={() => {
               setShowListSelector(false)
-              setMostrarModoCompras(true)
+              setMostrarSeletorModoCompras(true)
             }}
             className="list-option modo-compras"
           >
@@ -471,12 +473,61 @@ export function ListView() {
         />
       )}
 
+      {/* Modal de Seleção para Modo Compras */}
+      {mostrarSeletorModoCompras && (
+        <div className="modal-overlay" onClick={() => setMostrarSeletorModoCompras(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <h2>Selecione as listas</h2>
+            <div className="seletor-listas-checkboxes">
+              {listas.map(lista => (
+                <label key={lista.id} className="checkbox-lista">
+                  <input
+                    type="checkbox"
+                    checked={listasSelecionadasModoCompras.some(l => l.id === lista.id)}
+                    onChange={(e) => {
+                      if (e.target.checked) {
+                        setListasSelecionadasModoCompras([...listasSelecionadasModoCompras, lista])
+                      } else {
+                        setListasSelecionadasModoCompras(
+                          listasSelecionadasModoCompras.filter(l => l.id !== lista.id)
+                        )
+                      }
+                    }}
+                  />
+                  <span>{lista.nome}</span>
+                </label>
+              ))}
+            </div>
+            <div className="modal-actions">
+              <button
+                onClick={() => setMostrarSeletorModoCompras(false)}
+                className="btn-cancelar"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={() => {
+                  if (listasSelecionadasModoCompras.length > 0) {
+                    setMostrarSeletorModoCompras(false)
+                    setMostrarModoCompras(true)
+                  }
+                }}
+                className="btn-ok"
+                disabled={listasSelecionadasModoCompras.length === 0}
+              >
+                OK
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Modal de Modo Compras */}
       {mostrarModoCompras && (
         <div className="modal-overlay" onClick={() => setMostrarModoCompras(false)}>
           <div className="modal-fullscreen" onClick={(e) => e.stopPropagation()}>
             <ModoCompras
-              listas={listas}
+              listas={listasSelecionadasModoCompras}
               onClose={() => setMostrarModoCompras(false)}
               onListasUpdated={loadListas}
             />

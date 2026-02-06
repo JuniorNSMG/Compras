@@ -126,18 +126,17 @@
   font-family: var(--font-body);
 }
 
-/* Badge para Modo Compras */
+/* Badge para Modo Compras - minúsculo e verde */
 .item-badge {
   display: inline-block;
-  margin-left: 8px;
-  padding: 2px 8px;
-  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-cta) 100%);
+  margin-left: 6px;
+  padding: 1px 5px;
+  background: var(--color-cta);
   color: var(--color-white);
-  border-radius: 10px;
-  font-size: 10px;
+  border-radius: 4px;
+  font-size: 8px;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.3px;
+  letter-spacing: 0.2px;
   vertical-align: middle;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }

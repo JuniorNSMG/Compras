@@ -3,7 +3,7 @@ import { itemService } from '@/services/itemService'
 import { ItemRow } from './ItemRow'
 import { ORDEM_CATEGORIAS } from '@/utils/productIcons'
 import type { Lista, ItemComOrigem } from '@/types'
-import './ModoCompras.css'
+import './ListView.css'
 
 interface ModoComprasProps {
   listas: Lista[]
@@ -12,24 +12,22 @@ interface ModoComprasProps {
 }
 
 export function ModoCompras({ listas, onClose, onListasUpdated }: ModoComprasProps) {
-  const [listasSelecionadas, setListasSelecionadas] = useState<Lista[]>(listas)
   const [itensAgregados, setItensAgregados] = useState<ItemComOrigem[]>([])
   const [loading, setLoading] = useState(false)
-  const [mostrarSeletor, setMostrarSeletor] = useState(false)
 
   useEffect(() => {
     loadItens()
-  }, [listasSelecionadas])
+  }, [listas])
 
   async function loadItens() {
-    if (listasSelecionadas.length === 0) {
+    if (listas.length === 0) {
       setItensAgregados([])
       return
     }
 
     try {
       setLoading(true)
-      const promises = listasSelecionadas.map(lista =>
+      const promises = listas.map(lista =>
         itemService.getItens(lista.id)
       )
       const results = await Promise.all(promises)
@@ -42,7 +40,7 @@ export function ModoCompras({ listas, onClose, onListasUpdated }: ModoComprasPro
           .forEach(item => {
             merged.push({
               ...item,
-              listaOrigem: listasSelecionadas[idx]
+              listaOrigem: listas[idx]
             })
           })
       })
@@ -53,24 +51,6 @@ export function ModoCompras({ listas, onClose, onListasUpdated }: ModoComprasPro
     } finally {
       setLoading(false)
     }
-  }
-
-  function toggleLista(lista: Lista) {
-    setListasSelecionadas(prev => {
-      const exists = prev.find(l => l.id === lista.id)
-      if (exists) {
-        // Remover - mas manter pelo menos 1 lista
-        if (prev.length === 1) return prev
-        return prev.filter(l => l.id !== lista.id)
-      } else {
-        // Adicionar
-        return [...prev, lista]
-      }
-    })
-  }
-
-  function contarNaoComprados(lista: Lista): number {
-    return itensAgregados.filter(item => item.listaOrigem.id === lista.id).length
   }
 
   function agruparPorCategoria(items: ItemComOrigem[]) {
@@ -103,64 +83,27 @@ export function ModoCompras({ listas, onClose, onListasUpdated }: ModoComprasPro
   }
 
   const itensAgrupados = agruparPorCategoria(itensAgregados)
-  const totalItens = itensAgregados.length
-
-  const nomesListas = listasSelecionadas.map(l => l.nome).join(', ')
+  const nomesListas = listas.map(l => l.nome).join(', ')
 
   return (
-    <div className="modo-compras-container">
-      <header className="modo-compras-header">
-        <button onClick={onClose} className="btn-voltar">
-          ← Voltar
+    <div className="list-view-container container">
+      <header className="list-header safe-area-top">
+        <button onClick={onClose} className="list-title-button">
+          <h1>{nomesListas}</h1>
         </button>
-        <div className="header-info">
-          <h1 className="modo-compras-title">🛒 Modo Compras</h1>
-          <p className="modo-compras-subtitle">
-            {totalItens} {totalItens === 1 ? 'item' : 'itens'} de {listasSelecionadas.length} {listasSelecionadas.length === 1 ? 'lista' : 'listas'}: {nomesListas}
-          </p>
-        </div>
-        <button
-          onClick={() => setMostrarSeletor(!mostrarSeletor)}
-          className="btn-filtrar"
-          title="Filtrar listas"
-        >
-          ⚙️
+        <button onClick={onClose} className="signout-button">
+          Voltar
         </button>
       </header>
 
-      {mostrarSeletor && (
-        <div className="seletor-compacto">
-          {listas.map(lista => {
-            const selecionada = listasSelecionadas.find(l => l.id === lista.id)
-            const count = contarNaoComprados(lista)
-
-            return (
-              <label key={lista.id} className="lista-checkbox">
-                <input
-                  type="checkbox"
-                  checked={!!selecionada}
-                  onChange={() => toggleLista(lista)}
-                  disabled={listasSelecionadas.length === 1 && !!selecionada}
-                />
-                <span>{lista.nome}</span>
-                {selecionada && count > 0 && (
-                  <span className="count">({count})</span>
-                )}
-              </label>
-            )
-          })}
-        </div>
-      )}
-
-      <div className="modo-compras-content">
+      <div className="items-container safe-area-bottom">
         {loading ? (
-          <div className="loading-state">
+          <div className="empty-state">
             <p>Carregando itens...</p>
           </div>
-        ) : totalItens === 0 ? (
+        ) : itensAgregados.length === 0 ? (
           <div className="empty-state">
-            <p>Todas as compras foram feitas! 🎉</p>
-            <p className="empty-subtitle">Selecione outras listas ou adicione novos itens</p>
+            <p>Nenhum item para comprar</p>
           </div>
         ) : (
           Object.entries(itensAgrupados).map(([categoria, items]) => (
