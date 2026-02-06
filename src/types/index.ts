@@ -33,3 +33,7 @@ export interface ProdutoCustomizacao {
   created_at: string
   updated_at: string
 }
+
+export interface ItemComOrigem extends Item {
+  listaOrigem: Lista
+}

@@ -125,3 +125,19 @@
   flex-shrink: 0;
   font-family: var(--font-body);
 }
+
+/* Badge para Modo Compras */
+.item-badge {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 2px 8px;
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-cta) 100%);
+  color: var(--color-white);
+  border-radius: 10px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  vertical-align: middle;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}

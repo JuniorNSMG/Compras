@@ -12,9 +12,11 @@ interface ItemRowProps {
   item: Item
   animandoSaida?: boolean
   compacto?: boolean
+  badge?: string
+  onUpdated?: () => void
 }
 
-export function ItemRow({ item, animandoSaida = false, compacto = false }: ItemRowProps) {
+export function ItemRow({ item, animandoSaida = false, compacto = false, badge, onUpdated }: ItemRowProps) {
   const { user, updateItem } = useStore()
   const [showOptions, setShowOptions] = useState(false)
   const longPressTimer = useRef<NodeJS.Timeout | null>(null)
@@ -36,6 +38,11 @@ export function ItemRow({ item, animandoSaida = false, compacto = false }: ItemR
           item.icon_name,
           item.categoria
         )
+      }
+
+      // Notificar componente pai se fornecido
+      if (onUpdated) {
+        onUpdated()
       }
     } catch (error) {
       console.error('Erro ao atualizar item:', error)
@@ -121,6 +128,9 @@ export function ItemRow({ item, animandoSaida = false, compacto = false }: ItemR
         </div>
         <div className={`card-nome ${isLongText(item.nome) ? 'long-text' : ''}`}>
           {item.nome}
+          {badge && (
+            <span className="item-badge">{badge}</span>
+          )}
         </div>
         {item.quantidade && (
           <div className="card-quantidade">

@@ -9,6 +9,7 @@ import { useStore } from '@/store/useStore'
 import { QuickAddInput } from './QuickAddInput'
 import { ItemRow } from './ItemRow'
 import { GerenciarListas } from './GerenciarListas'
+import { ModoCompras } from './ModoCompras'
 import { ProductIcon } from './ProductIcon'
 import { ORDEM_CATEGORIAS, DEFAULT_ICON } from '@/utils/productIcons'
 import type { Item } from '@/types'
@@ -22,6 +23,7 @@ export function ListView() {
   const [compradosExpandido, setCompradosExpandido] = useState(false)
   const [frequentesExpandido, setFrequentesExpandido] = useState(false)
   const [mostrarGerenciarListas, setMostrarGerenciarListas] = useState(false)
+  const [mostrarModoCompras, setMostrarModoCompras] = useState(false)
   const [frequentementeComprados, setFrequentementeComprados] = useState<HistoricoCompra[]>([])
   const [toastMessage, setToastMessage] = useState<string>('')
   const previousItensRef = useRef<Map<string, boolean>>(new Map())
@@ -337,6 +339,15 @@ export function ListView() {
           >
             ⚙️ Gerenciar Listas
           </button>
+          <button
+            onClick={() => {
+              setShowListSelector(false)
+              setMostrarModoCompras(true)
+            }}
+            className="list-option modo-compras"
+          >
+            🛒 Modo Compras
+          </button>
         </div>
       )}
 
@@ -458,6 +469,19 @@ export function ListView() {
           onClose={() => setMostrarGerenciarListas(false)}
           onListasUpdated={loadListas}
         />
+      )}
+
+      {/* Modal de Modo Compras */}
+      {mostrarModoCompras && (
+        <div className="modal-overlay" onClick={() => setMostrarModoCompras(false)}>
+          <div className="modal-fullscreen" onClick={(e) => e.stopPropagation()}>
+            <ModoCompras
+              listas={listas}
+              onClose={() => setMostrarModoCompras(false)}
+              onListasUpdated={loadListas}
+            />
+          </div>
+        </div>
       )}
 
       {/* Toast de notificação */}
