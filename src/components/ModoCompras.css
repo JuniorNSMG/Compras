@@ -13,14 +13,15 @@
 .modo-compras-header {
   display: flex;
   align-items: center;
-  gap: var(--space-md);
-  padding: var(--space-lg);
+  gap: var(--space-sm);
+  padding: var(--space-md) var(--space-lg);
   background: var(--color-white);
   border-bottom: 1px solid var(--color-border);
   box-shadow: var(--shadow-sm);
 }
 
-.btn-voltar {
+.btn-voltar,
+.btn-filtrar {
   min-width: 44px;
   min-height: 44px;
   padding: var(--space-sm) var(--space-md);
@@ -35,10 +36,16 @@
   font-family: var(--font-body);
 }
 
-.btn-voltar:hover {
+.btn-voltar:hover,
+.btn-filtrar:hover {
   background: linear-gradient(135deg, rgba(8, 145, 178, 0.05) 0%, rgba(5, 150, 105, 0.05) 100%);
   border-color: var(--color-primary);
   transform: translateX(-2px);
+}
+
+.btn-filtrar {
+  font-size: 18px;
+  padding: var(--space-sm);
 }
 
 .header-info {
@@ -55,90 +62,62 @@
 }
 
 .modo-compras-subtitle {
-  font-size: 13px;
+  font-size: 12px;
   color: var(--color-text-light);
   margin: 0;
   font-family: var(--font-body);
+  line-height: 1.4;
 }
 
-/* Seletor de Listas */
-.seletor-listas {
-  padding: var(--space-lg);
+/* Seletor Compacto */
+.seletor-compacto {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  padding: var(--space-md);
   background: var(--color-white);
   border-bottom: 1px solid var(--color-border);
 }
 
-.seletor-title {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--color-text);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin: 0 0 var(--space-md) 0;
-  font-family: var(--font-heading);
-}
-
-.listas-chips {
-  display: flex;
-  gap: var(--space-sm);
-  flex-wrap: wrap;
-}
-
-.lista-chip {
+.lista-checkbox {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 8px 14px;
+  gap: var(--space-sm);
+  padding: var(--space-xs) var(--space-sm);
   background: var(--color-white);
-  border: 2px solid var(--color-border);
-  border-radius: var(--radius-full);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
   font-size: 14px;
   font-weight: 500;
   color: var(--color-text);
   cursor: pointer;
   transition: all var(--transition-base);
   font-family: var(--font-body);
-  min-height: 38px;
+  min-height: 40px;
 }
 
-.lista-chip:hover:not(:disabled) {
+.lista-checkbox:hover {
   background: linear-gradient(135deg, rgba(8, 145, 178, 0.05) 0%, rgba(5, 150, 105, 0.05) 100%);
   border-color: var(--color-primary);
-  transform: translateY(-1px);
 }
 
-.lista-chip.selecionada {
-  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-cta) 100%);
-  border-color: var(--color-primary);
-  color: var(--color-white);
+.lista-checkbox input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  accent-color: var(--color-primary);
 }
 
-.lista-chip:disabled {
-  opacity: 0.6;
+.lista-checkbox input[type="checkbox"]:disabled {
+  opacity: 0.5;
   cursor: not-allowed;
 }
 
-.chip-check {
-  font-weight: 700;
-  font-size: 16px;
-  line-height: 1;
-}
-
-.chip-nome {
-  font-weight: 500;
-}
-
-.chip-count {
-  min-width: 22px;
-  height: 22px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(255, 255, 255, 0.3);
-  border-radius: var(--radius-full);
+.lista-checkbox .count {
+  margin-left: auto;
   font-size: 12px;
+  color: var(--color-text-light);
   font-weight: 600;
-  padding: 0 6px;
 }
 
 /* Conteúdo */
@@ -218,28 +197,25 @@
 /* Responsive */
 @media (max-width: 768px) {
   .modo-compras-header {
-    padding: var(--space-md);
+    padding: var(--space-sm) var(--space-md);
+    gap: 6px;
   }
 
   .modo-compras-title {
-    font-size: 18px;
+    font-size: 16px;
   }
 
   .modo-compras-subtitle {
-    font-size: 12px;
+    font-size: 11px;
   }
 
-  .seletor-listas {
-    padding: var(--space-md);
+  .seletor-compacto {
+    padding: var(--space-sm) var(--space-md);
   }
 
-  .listas-chips {
-    gap: 8px;
-  }
-
-  .lista-chip {
+  .lista-checkbox {
     font-size: 13px;
-    padding: 6px 12px;
+    padding: var(--space-xs);
     min-height: 36px;
   }
 
@@ -251,9 +227,16 @@
     font-size: 15px;
   }
 
-  .btn-voltar {
+  .btn-voltar,
+  .btn-filtrar {
     font-size: 13px;
     padding: var(--space-xs) var(--space-sm);
+    min-width: 40px;
+    min-height: 40px;
+  }
+
+  .btn-filtrar {
+    font-size: 16px;
   }
 }
 
@@ -280,7 +263,8 @@
   }
 
   .btn-voltar:hover,
-  .lista-chip:hover:not(:disabled) {
+  .btn-filtrar:hover,
+  .lista-checkbox:hover {
     transform: none;
   }
 }

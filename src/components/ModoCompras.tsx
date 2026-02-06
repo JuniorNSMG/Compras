@@ -15,6 +15,7 @@ export function ModoCompras({ listas, onClose, onListasUpdated }: ModoComprasPro
   const [listasSelecionadas, setListasSelecionadas] = useState<Lista[]>(listas)
   const [itensAgregados, setItensAgregados] = useState<ItemComOrigem[]>([])
   const [loading, setLoading] = useState(false)
+  const [mostrarSeletor, setMostrarSeletor] = useState(false)
 
   useEffect(() => {
     loadItens()
@@ -104,6 +105,8 @@ export function ModoCompras({ listas, onClose, onListasUpdated }: ModoComprasPro
   const itensAgrupados = agruparPorCategoria(itensAgregados)
   const totalItens = itensAgregados.length
 
+  const nomesListas = listasSelecionadas.map(l => l.nome).join(', ')
+
   return (
     <div className="modo-compras-container">
       <header className="modo-compras-header">
@@ -113,35 +116,41 @@ export function ModoCompras({ listas, onClose, onListasUpdated }: ModoComprasPro
         <div className="header-info">
           <h1 className="modo-compras-title">🛒 Modo Compras</h1>
           <p className="modo-compras-subtitle">
-            {totalItens} {totalItens === 1 ? 'item' : 'itens'} para comprar
+            {totalItens} {totalItens === 1 ? 'item' : 'itens'} de {listasSelecionadas.length} {listasSelecionadas.length === 1 ? 'lista' : 'listas'}: {nomesListas}
           </p>
         </div>
+        <button
+          onClick={() => setMostrarSeletor(!mostrarSeletor)}
+          className="btn-filtrar"
+          title="Filtrar listas"
+        >
+          ⚙️
+        </button>
       </header>
 
-      <div className="seletor-listas">
-        <h3 className="seletor-title">Selecione as listas:</h3>
-        <div className="listas-chips">
+      {mostrarSeletor && (
+        <div className="seletor-compacto">
           {listas.map(lista => {
             const selecionada = listasSelecionadas.find(l => l.id === lista.id)
             const count = contarNaoComprados(lista)
 
             return (
-              <button
-                key={lista.id}
-                onClick={() => toggleLista(lista)}
-                className={`lista-chip ${selecionada ? 'selecionada' : ''}`}
-                disabled={listasSelecionadas.length === 1 && !!selecionada}
-              >
-                <span className="chip-check">{selecionada ? '✓' : ''}</span>
-                <span className="chip-nome">{lista.nome}</span>
+              <label key={lista.id} className="lista-checkbox">
+                <input
+                  type="checkbox"
+                  checked={!!selecionada}
+                  onChange={() => toggleLista(lista)}
+                  disabled={listasSelecionadas.length === 1 && !!selecionada}
+                />
+                <span>{lista.nome}</span>
                 {selecionada && count > 0 && (
-                  <span className="chip-count">{count}</span>
+                  <span className="count">({count})</span>
                 )}
-              </button>
+              </label>
             )
           })}
         </div>
-      </div>
+      )}
 
       <div className="modo-compras-content">
         {loading ? (
