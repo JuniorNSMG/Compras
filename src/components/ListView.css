@@ -53,7 +53,7 @@
 }
 
 .toggle-preco-button {
-  padding: var(--space-sm);
+  padding: 10px;
   border-radius: var(--radius-md);
   transition: all var(--transition-base);
   min-width: 44px;
@@ -62,18 +62,17 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  background: var(--color-white);
-  border: 1px solid var(--color-border);
+  background: transparent;
+  border: none;
 }
 
 .toggle-preco-button:hover {
-  background-color: rgba(8, 145, 178, 0.1);
-  border-color: var(--color-primary);
-  transform: scale(1.05);
+  background-color: rgba(8, 145, 178, 0.15);
+  transform: scale(1.1);
 }
 
 .toggle-preco-button:active {
-  transform: scale(0.95);
+  transform: scale(0.9);
 }
 
 .signout-button {

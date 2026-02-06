@@ -391,8 +391,8 @@ export function ListView() {
               >
                 <Icon
                   icon={mostrarPrecos ? 'fluent-emoji-flat:coin' : 'fluent-emoji-high-contrast:coin'}
-                  width={20}
-                  height={20}
+                  width={26}
+                  height={26}
                 />
               </button>
               <button
@@ -421,8 +421,8 @@ export function ListView() {
               >
                 <Icon
                   icon={mostrarPrecos ? 'fluent-emoji-flat:coin' : 'fluent-emoji-high-contrast:coin'}
-                  width={20}
-                  height={20}
+                  width={26}
+                  height={26}
                 />
               </button>
               <button onClick={handleSignOut} className="signout-button">
