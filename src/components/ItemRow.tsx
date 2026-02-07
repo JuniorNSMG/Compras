@@ -132,12 +132,12 @@ export function ItemRow({ item, animandoSaida = false, compacto = false, badge, 
       >
         <div className="card-icon">
           <ProductIcon icon={item.icon_name} size={48} />
+          {badge && (
+            <span className="card-badge-overlay">{badge}</span>
+          )}
         </div>
         <div className={`card-nome ${isLongText(item.nome) ? 'long-text' : ''}`}>
           {item.nome}
-          {badge && (
-            <span className="item-badge">{badge}</span>
-          )}
         </div>
         {item.quantidade && (
           <div className="card-quantidade">
