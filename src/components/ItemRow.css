@@ -52,8 +52,9 @@
 /* Badge overlay no modo compras - aparece em cima do ícone */
 .card-badge-overlay {
   position: absolute;
-  top: -4px;
-  right: -4px;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
   padding: 2px 6px;
   background: var(--color-cta);
   color: var(--color-white);
