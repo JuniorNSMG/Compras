@@ -6,9 +6,9 @@ import { historicoComprasService, type HistoricoCompra } from '@/services/histor
 import { searchCacheService } from '@/services/searchCacheService'
 import { preferencesService } from '@/services/preferencesService'
 import { useStore } from '@/store/useStore'
-import { QuickAddInput } from './QuickAddInput'
 import { ItemRow } from './ItemRow'
 import { GerenciarListas } from './GerenciarListas'
+import { AdicionarItemModal } from './AdicionarItemModal'
 import { ProductIcon } from './ProductIcon'
 import { ORDEM_CATEGORIAS, DEFAULT_ICON } from '@/utils/productIcons'
 import { calcularPrecoTotal, formatarPreco } from '@/services/precoEstimadoService'
@@ -35,6 +35,7 @@ export function ListView() {
   const [frequentementeComprados, setFrequentementeComprados] = useState<HistoricoCompra[]>([])
   const [toastMessage, setToastMessage] = useState<string>('')
   const [categoriaSelecionada, setCategoriaSelecionada] = useState<string>('Todas')
+  const [mostrarModalAdicionar, setMostrarModalAdicionar] = useState(false)
   const previousItensRef = useRef<Map<string, boolean>>(new Map())
   const containerRef = useRef<HTMLDivElement>(null)
   const scrollPositionRef = useRef<number>(0)
@@ -445,8 +446,6 @@ export function ListView() {
         </div>
       )}
 
-      {!modoComprasAtivo && <QuickAddInput />}
-
       {mostrarPrecos && totalEstimado > 0 && (
         <div className="total-estimado-bar">
           <span className="total-label">Total estimado:</span>
@@ -491,17 +490,12 @@ export function ListView() {
           </div>
         ) : (
           <>
-            {/* Itens não comprados agrupados por categoria (inclui itens animando) */}
-            {Object.entries(itensAgrupadosPorCategoria)
-              .filter(([categoria]) => categoriaSelecionada === 'Todas' || categoria === categoriaSelecionada)
-              .map(([categoria, items]) => (
-              <div key={categoria} className="categoria-section">
-                <div className="categoria-header">
-                  <h3>{categoria}</h3>
-                  <span className="categoria-count">({items.length})</span>
-                </div>
-                <div className="items-section">
-                  {items.map(item => {
+            {/* Itens não comprados agrupados por categoria (sem cabeçalhos) */}
+            <div className="items-section">
+              {Object.entries(itensAgrupadosPorCategoria)
+                .filter(([categoria]) => categoriaSelecionada === 'Todas' || categoria === categoriaSelecionada)
+                .flatMap(([_categoria, items]) =>
+                  items.map(item => {
                     const itemComOrigem = item as ItemComOrigem
                     return (
                       <ItemRow
@@ -513,10 +507,9 @@ export function ListView() {
                         onUpdated={modoComprasAtivo ? loadItensAgregados : undefined}
                       />
                     )
-                  })}
-                </div>
-              </div>
-            ))}
+                  })
+                )}
+            </div>
 
             {/* Seção de comprados (colapsável) */}
             {!modoComprasAtivo && itensComprados.length > 0 && (
@@ -551,7 +544,7 @@ export function ListView() {
               </div>
             )}
 
-            {/* Seção de Frequentemente Comprado (sempre visível) */}
+            {/* Seção de Frequentemente Comprado */}
             {!modoComprasAtivo && (
               <div ref={frequentesSectionRef} className="frequentes-section">
                 <button
@@ -665,6 +658,13 @@ export function ListView() {
         </div>
       )}
 
+      {/* Modal de Adicionar Item */}
+      {mostrarModalAdicionar && (
+        <AdicionarItemModal
+          onClose={() => setMostrarModalAdicionar(false)}
+        />
+      )}
+
       {/* Floating Navigation Bar */}
       <nav className="floating-nav">
         <button
@@ -685,18 +685,18 @@ export function ListView() {
 
         <button
           className="nav-fab"
-          onClick={toggleMostrarPrecos}
-          title={mostrarPrecos ? 'Ocultar preços' : 'Mostrar preços'}
+          onClick={() => setMostrarModalAdicionar(true)}
+          title="Adicionar item"
         >
           <Icon icon="ic:round-add" width={28} height={28} />
         </button>
 
         <button
-          className="nav-button"
-          onClick={() => setMostrarGerenciarListas(true)}
-          title="Gerenciar"
+          className={`nav-button ${mostrarPrecos ? 'active' : ''}`}
+          onClick={toggleMostrarPrecos}
+          title={mostrarPrecos ? 'Ocultar preços' : 'Mostrar preços'}
         >
-          <Icon icon="ic:round-menu" width={24} height={24} />
+          <Icon icon="ic:round-attach-money" width={24} height={24} />
         </button>
 
         <button

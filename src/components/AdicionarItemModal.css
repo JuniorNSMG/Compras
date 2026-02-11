@@ -1,0 +1,204 @@
+/* Modal Overlay */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(23, 30, 25, 0.6);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 2000;
+  animation: fadeIn 0.25s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Modal Container */
+.modal-adicionar {
+  background: var(--color-white);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  padding: var(--space-2xl) var(--space-xl) var(--space-3xl) var(--space-xl);
+  width: 100%;
+  max-width: 600px;
+  max-height: 85vh;
+  overflow-y: auto;
+  box-shadow: 0 -12px 48px rgba(0, 0, 0, 0.15);
+  animation: slideUp 0.25s ease-in-out;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+/* Modal Header */
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-xl);
+}
+
+.modal-header h2 {
+  font-size: var(--text-subheading);
+  font-weight: 900;
+  color: var(--color-charcoal);
+  margin: 0;
+}
+
+.modal-close {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(183, 198, 194, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-charcoal);
+  transition: all var(--transition-base);
+}
+
+.modal-close:hover {
+  background: rgba(183, 198, 194, 0.3);
+  transform: rotate(90deg);
+}
+
+/* Modal Form */
+.modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  margin-bottom: var(--space-xl);
+}
+
+.modal-input {
+  width: 100%;
+  padding: var(--space-lg) var(--space-xl);
+  background: rgba(183, 198, 194, 0.1);
+  border: 2px solid rgba(183, 198, 194, 0.25);
+  border-radius: var(--radius-md);
+  font-size: 18px;
+  font-weight: 600;
+  font-family: var(--font-body);
+  color: var(--color-charcoal);
+  transition: all var(--transition-base);
+}
+
+.modal-input::placeholder {
+  color: var(--color-gray-green);
+  font-weight: 400;
+}
+
+.modal-input:focus {
+  outline: none;
+  border-color: var(--color-vibrant-red);
+  background: var(--color-white);
+  box-shadow: 0 4px 16px rgba(202, 0, 19, 0.1);
+}
+
+.modal-submit {
+  width: 100%;
+  padding: var(--space-lg);
+  background: var(--color-vibrant-red);
+  color: var(--color-white);
+  border-radius: var(--radius-md);
+  font-size: 16px;
+  font-weight: 700;
+  font-family: var(--font-body);
+  transition: all var(--transition-base);
+  box-shadow: var(--shadow-red);
+}
+
+.modal-submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px -6px rgba(202, 0, 19, 0.5);
+}
+
+.modal-submit:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow-red);
+}
+
+/* Suggestions */
+.modal-suggestions {
+  margin-top: var(--space-xl);
+}
+
+.suggestions-label {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--color-gray-green);
+  margin-bottom: var(--space-md);
+}
+
+.suggestions-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-md);
+}
+
+.suggestion-card {
+  background: var(--color-white);
+  border: 1px solid rgba(183, 198, 194, 0.25);
+  border-radius: var(--radius-sm);
+  padding: var(--space-lg) var(--space-md);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-sm);
+  transition: all var(--transition-base);
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+}
+
+.suggestion-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--color-vibrant-red);
+  box-shadow: var(--shadow-md);
+}
+
+.suggestion-card:active {
+  transform: scale(0.95);
+}
+
+.suggestion-icon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(183, 198, 194, 0.1);
+  border-radius: 50%;
+}
+
+.suggestion-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-charcoal);
+  text-align: center;
+  line-height: 1.2;
+  word-break: break-word;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .suggestions-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

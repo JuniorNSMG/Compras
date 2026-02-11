@@ -304,10 +304,11 @@
   flex: 1;
   overflow-y: auto;
   overflow-anchor: none;
+  padding-bottom: 100px;
 }
 
 .items-section {
-  background: white;
+  background: var(--color-off-white);
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
   gap: 10px;
@@ -700,6 +701,11 @@
 
 .nav-button:active {
   transform: scale(0.95);
+}
+
+.nav-button.active {
+  background: rgba(202, 0, 19, 0.15);
+  color: var(--color-vibrant-red);
 }
 
 /* Floating Action Button (FAB) */
