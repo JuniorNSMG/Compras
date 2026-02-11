@@ -8,10 +8,11 @@
   background: rgba(23, 30, 25, 0.6);
   backdrop-filter: blur(8px);
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: center;
   z-index: 2000;
   animation: fadeIn 0.25s ease-in-out;
+  padding: var(--space-xl);
 }
 
 @keyframes fadeIn {
@@ -26,14 +27,14 @@
 /* Modal Container */
 .modal-adicionar {
   background: var(--color-white);
-  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-  padding: var(--space-2xl) var(--space-xl) var(--space-3xl) var(--space-xl);
+  border-radius: var(--radius-lg);
+  padding: var(--space-2xl) var(--space-xl);
   width: 100%;
   max-width: 600px;
-  max-height: 70vh;
+  max-height: 80vh;
   overflow-y: auto;
-  box-shadow: 0 -12px 48px rgba(0, 0, 0, 0.15);
-  animation: slideUp 0.25s ease-in-out;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.2);
+  animation: modalScaleIn 0.25s cubic-bezier(0.68, -0.55, 0.265, 1.55);
   display: flex;
   flex-direction: column;
 }
@@ -41,16 +42,18 @@
 /* Para iPhone: reduz ainda mais quando teclado aparecer */
 @supports (-webkit-touch-callout: none) {
   .modal-adicionar {
-    max-height: 60vh;
+    max-height: 70vh;
   }
 }
 
-@keyframes slideUp {
+@keyframes modalScaleIn {
   from {
-    transform: translateY(100%);
+    transform: scale(0.8);
+    opacity: 0;
   }
   to {
-    transform: translateY(0);
+    transform: scale(1);
+    opacity: 1;
   }
 }
 
@@ -219,7 +222,7 @@
 /* Toast Notification */
 .toast-notification {
   position: fixed;
-  bottom: 120px;
+  top: 20px;
   left: 50%;
   transform: translateX(-50%);
   background: linear-gradient(135deg, #10b981 0%, #059669 100%);
@@ -273,7 +276,7 @@
 
 @keyframes toastSlideIn {
   from {
-    transform: translateX(-50%) translateY(100px);
+    transform: translateX(-50%) translateY(-100px);
     opacity: 0;
   }
   to {
