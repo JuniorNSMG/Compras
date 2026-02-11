@@ -726,6 +726,7 @@ export function ListView() {
           onClose={() => setMostrarModalConfiguracoes(false)}
           mostrarPrecos={mostrarPrecos}
           onTogglePrecos={toggleMostrarPrecos}
+          onModoCompras={() => setMostrarSeletorModoCompras(true)}
         />
       )}
     </div>

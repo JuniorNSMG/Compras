@@ -8,9 +8,10 @@ interface ConfiguracoesModalProps {
   onClose: () => void
   mostrarPrecos: boolean
   onTogglePrecos: () => void
+  onModoCompras: () => void
 }
 
-export function ConfiguracoesModal({ onClose, mostrarPrecos, onTogglePrecos }: ConfiguracoesModalProps) {
+export function ConfiguracoesModal({ onClose, mostrarPrecos, onTogglePrecos, onModoCompras }: ConfiguracoesModalProps) {
   const { user } = useStore()
   const [mostrarConfirmacao, setMostrarConfirmacao] = useState(false)
 
@@ -72,6 +73,31 @@ export function ConfiguracoesModal({ onClose, mostrarPrecos, onTogglePrecos }: C
               <span className="toggle-slider"></span>
             </label>
           </div>
+        </div>
+
+        <div className="config-divider"></div>
+
+        <div className="config-section">
+          <h3>Compras</h3>
+
+          <button
+            className="config-option config-option-button"
+            onClick={() => {
+              onModoCompras()
+              onClose()
+            }}
+          >
+            <div className="config-option-info">
+              <div className="config-option-label">
+                <Icon icon="ic:round-shopping-cart" width={20} height={20} />
+                Modo Compras
+              </div>
+              <div className="config-option-description">
+                Visualize itens de todas as suas listas
+              </div>
+            </div>
+            <Icon icon="ic:round-chevron-right" width={20} height={20} />
+          </button>
         </div>
 
         <div className="config-divider"></div>

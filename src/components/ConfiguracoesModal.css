@@ -115,6 +115,23 @@
   color: var(--color-gray-green);
 }
 
+/* Clickable config option button */
+.config-option-button {
+  cursor: pointer;
+  transition: all var(--transition-base);
+  border: 1px solid rgba(183, 198, 194, 0.2);
+}
+
+.config-option-button:hover {
+  background: var(--color-white);
+  border-color: var(--color-vibrant-red);
+  transform: translateX(2px);
+}
+
+.config-option-button:active {
+  transform: translateX(0) scale(0.98);
+}
+
 /* Toggle Switch */
 .toggle-switch {
   position: relative;
