@@ -154,7 +154,7 @@ export function AdicionarItemModal({ onClose }: AdicionarItemModalProps) {
       {itemAdicionado && (
         <div className="toast-notification">
           <div className="toast-icon">
-            <Icon icon="ic:round-check-circle" width={24} height={24} />
+            <Icon icon="ic:round-check-circle" width={20} height={20} />
           </div>
           <div className="toast-content">
             <span className="toast-label">Item adicionado</span>
