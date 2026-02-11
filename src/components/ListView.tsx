@@ -12,6 +12,7 @@ import { AdicionarItemModal } from './AdicionarItemModal'
 import { ProductIcon } from './ProductIcon'
 import { ORDEM_CATEGORIAS, DEFAULT_ICON } from '@/utils/productIcons'
 import { calcularPrecoTotal, formatarPreco } from '@/services/precoEstimadoService'
+import { obterFraseDoDia } from '@/data/frasesMotivacionais'
 import type { Item, ItemComOrigem } from '@/types'
 import { Icon } from '@iconify/react'
 import './ListView.css'
@@ -30,7 +31,7 @@ export function ListView() {
   const [itensAgregados, setItensAgregados] = useState<ItemComOrigem[]>([])
   const [mostrarPrecos, setMostrarPrecos] = useState(() => {
     const saved = localStorage.getItem('mostrarPrecos')
-    return saved === 'true'
+    return saved === 'true' ? true : false
   })
   const [frequentementeComprados, setFrequentementeComprados] = useState<HistoricoCompra[]>([])
   const [toastMessage, setToastMessage] = useState<string>('')
@@ -383,27 +384,33 @@ export function ListView() {
     return 'BOA NOITE'
   }
 
-  // Obter primeira palavra do nome do usuário ou email
-  function getUserFirstName() {
-    if (!user?.email) return 'Usuário'
-    const emailUser = user.email.split('@')[0]
-    // Capitalizar primeira letra
-    return emailUser.charAt(0).toUpperCase() + emailUser.slice(1)
+  // Obter emoji baseado na hora
+  function getGreetingEmoji() {
+    const hour = new Date().getHours()
+    if (hour < 12) return '☀️'
+    if (hour < 18) return '👋'
+    return '🌙'
   }
+
+  // Obter frase motivacional do dia
+  const fraseDoDia = obterFraseDoDia()
 
   return (
     <div className="list-view-container container">
       <header className="list-header safe-area-top">
         <div className="header-greeting">
           <div className="greeting-label">
-            <span>☀️</span>
+            <span>{getGreetingEmoji()}</span>
             {getGreeting()}
           </div>
-          <h1 className="greeting-name">Olá, {getUserFirstName()}!</h1>
+          <p className="greeting-frase">
+            "{fraseDoDia.texto}"
+            <span className="frase-autor">— {fraseDoDia.autor}</span>
+          </p>
         </div>
         <div className="header-profile" onClick={() => setShowListSelector(!showListSelector)}>
           <div className="profile-image">
-            {getUserFirstName().charAt(0).toUpperCase()}
+            🛒
           </div>
           {(itensNaoComprados.length > 0 || modoComprasAtivo) && (
             <div className="notification-badge"></div>
