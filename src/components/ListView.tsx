@@ -1,7 +1,6 @@
 import { useEffect, useState, useRef } from 'react'
 import { itemService } from '@/services/itemService'
 import { listService } from '@/services/listService'
-import { authService } from '@/services/authService'
 import { historicoComprasService, type HistoricoCompra } from '@/services/historicoComprasService'
 import { searchCacheService } from '@/services/searchCacheService'
 import { preferencesService } from '@/services/preferencesService'
@@ -9,6 +8,8 @@ import { useStore } from '@/store/useStore'
 import { ItemRow } from './ItemRow'
 import { GerenciarListas } from './GerenciarListas'
 import { AdicionarItemModal } from './AdicionarItemModal'
+import { PesquisarItensModal } from './PesquisarItensModal'
+import { ConfiguracoesModal } from './ConfiguracoesModal'
 import { ProductIcon } from './ProductIcon'
 import { ORDEM_CATEGORIAS, DEFAULT_ICON } from '@/utils/productIcons'
 import { calcularPrecoTotal, formatarPreco } from '@/services/precoEstimadoService'
@@ -19,7 +20,6 @@ import './ListView.css'
 
 export function ListView() {
   const { user, currentLista, itens, setCurrentLista, setItens, setSyncing } = useStore()
-  const [showListSelector, setShowListSelector] = useState(false)
   const [listas, setListas] = useState<any[]>([])
   const [itemsAnimandoSaida, setItemsAnimandoSaida] = useState<Set<string>>(new Set())
   const [compradosExpandido, setCompradosExpandido] = useState(false)
@@ -37,6 +37,8 @@ export function ListView() {
   const [toastMessage, setToastMessage] = useState<string>('')
   const [categoriaSelecionada, setCategoriaSelecionada] = useState<string>('Todas')
   const [mostrarModalAdicionar, setMostrarModalAdicionar] = useState(false)
+  const [mostrarModalPesquisar, setMostrarModalPesquisar] = useState(false)
+  const [mostrarModalConfiguracoes, setMostrarModalConfiguracoes] = useState(false)
   const [fraseMotivacional, setFraseMotivacional] = useState(() => obterFraseAleatoria())
   const previousItensRef = useRef<Map<string, boolean>>(new Map())
   const containerRef = useRef<HTMLDivElement>(null)
@@ -199,12 +201,6 @@ export function ListView() {
     const novoValor = !mostrarPrecos
     setMostrarPrecos(novoValor)
     localStorage.setItem('mostrarPrecos', novoValor.toString())
-  }
-
-  async function handleSignOut() {
-    if (confirm('Deseja sair?')) {
-      await authService.signOut()
-    }
   }
 
   async function handleLimparComprados() {
@@ -407,6 +403,32 @@ export function ListView() {
     return '🌙'
   }
 
+  // Função para voltar à lista padrão
+  async function voltarListaPadrao() {
+    if (!user) return
+
+    // Desativar modo compras se estiver ativo
+    if (modoComprasAtivo) {
+      setModoComprasAtivo(false)
+      setListasSelecionadasModoCompras([])
+    }
+
+    // Desativar total estimado
+    if (mostrarPrecos) {
+      setMostrarPrecos(false)
+      localStorage.setItem('mostrarPrecos', 'false')
+    }
+
+    // Carregar lista padrão
+    const defaultListId = preferencesService.getDefaultListId(user.id)
+    if (defaultListId) {
+      const defaultLista = listas.find(l => l.id === defaultListId)
+      if (defaultLista && defaultLista.id !== currentLista?.id) {
+        setCurrentLista(defaultLista)
+      }
+    }
+  }
+
   return (
     <div className="list-view-container container">
       <header className="list-header safe-area-top">
@@ -420,50 +442,7 @@ export function ListView() {
             <span className="frase-autor">— {fraseMotivacional.autor}</span>
           </p>
         </div>
-        <div className="header-profile" onClick={() => setShowListSelector(!showListSelector)}>
-          <div className="profile-image">
-            🛒
-          </div>
-          {(itensNaoComprados.length > 0 || modoComprasAtivo) && (
-            <div className="notification-badge"></div>
-          )}
-        </div>
       </header>
-
-      {showListSelector && !modoComprasAtivo && (
-        <div className="list-selector">
-          {listas.map(lista => (
-            <button
-              key={lista.id}
-              onClick={() => {
-                setCurrentLista(lista)
-                setShowListSelector(false)
-              }}
-              className={`list-option ${lista.id === currentLista?.id ? 'active' : ''}`}
-            >
-              {lista.nome}
-            </button>
-          ))}
-          <button
-            onClick={() => {
-              setShowListSelector(false)
-              setMostrarGerenciarListas(true)
-            }}
-            className="list-option gerenciar"
-          >
-            ⚙️ Gerenciar Listas
-          </button>
-          <button
-            onClick={() => {
-              setShowListSelector(false)
-              setMostrarSeletorModoCompras(true)
-            }}
-            className="list-option modo-compras"
-          >
-            🛒 Modo Compras
-          </button>
-        </div>
-      )}
 
       {mostrarPrecos && totalEstimado > 0 && (
         <div className="total-estimado-bar">
@@ -517,14 +496,15 @@ export function ListView() {
                   items.map(item => {
                     const itemComOrigem = item as ItemComOrigem
                     return (
-                      <ItemRow
-                        key={item.id}
-                        item={item}
-                        animandoSaida={itemsAnimandoSaida.has(item.id)}
-                        badge={modoComprasAtivo ? itemComOrigem.listaOrigem?.nome : undefined}
-                        mostrarPreco={mostrarPrecos}
-                        onUpdated={modoComprasAtivo ? loadItensAgregados : undefined}
-                      />
+                      <div key={item.id} id={`item-${item.id}`}>
+                        <ItemRow
+                          item={item}
+                          animandoSaida={itemsAnimandoSaida.has(item.id)}
+                          badge={modoComprasAtivo ? itemComOrigem.listaOrigem?.nome : undefined}
+                          mostrarPreco={mostrarPrecos}
+                          onUpdated={modoComprasAtivo ? loadItensAgregados : undefined}
+                        />
+                      </div>
                     )
                   })
                 )}
@@ -688,7 +668,7 @@ export function ListView() {
       <nav className="floating-nav">
         <button
           className="nav-button"
-          onClick={() => setShowListSelector(!showListSelector)}
+          onClick={voltarListaPadrao}
           title="Início"
         >
           <Icon icon="ic:round-home" width={24} height={24} />
@@ -696,8 +676,8 @@ export function ListView() {
 
         <button
           className="nav-button"
-          onClick={() => setMostrarSeletorModoCompras(true)}
-          title="Buscar"
+          onClick={() => setMostrarModalPesquisar(true)}
+          title="Pesquisar itens"
         >
           <Icon icon="ic:round-search" width={24} height={24} />
         </button>
@@ -711,21 +691,37 @@ export function ListView() {
         </button>
 
         <button
-          className={`nav-button ${mostrarPrecos ? 'active' : ''}`}
-          onClick={toggleMostrarPrecos}
-          title={mostrarPrecos ? 'Ocultar preços' : 'Mostrar preços'}
+          className="nav-button"
+          onClick={() => setMostrarGerenciarListas(true)}
+          title="Gerenciar listas"
         >
-          <Icon icon="ic:round-attach-money" width={24} height={24} />
+          <Icon icon="ic:round-list" width={24} height={24} />
         </button>
 
         <button
           className="nav-button"
-          onClick={handleSignOut}
-          title="Perfil"
+          onClick={() => setMostrarModalConfiguracoes(true)}
+          title="Configurações"
         >
           <Icon icon="ic:round-person" width={24} height={24} />
         </button>
       </nav>
+
+      {/* Modal de Pesquisa */}
+      {mostrarModalPesquisar && (
+        <PesquisarItensModal
+          onClose={() => setMostrarModalPesquisar(false)}
+        />
+      )}
+
+      {/* Modal de Configurações */}
+      {mostrarModalConfiguracoes && (
+        <ConfiguracoesModal
+          onClose={() => setMostrarModalConfiguracoes(false)}
+          mostrarPrecos={mostrarPrecos}
+          onTogglePrecos={toggleMostrarPrecos}
+        />
+      )}
     </div>
   )
 }

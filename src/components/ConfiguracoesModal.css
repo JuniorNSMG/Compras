@@ -1,0 +1,307 @@
+.modal-configuracoes {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  max-height: 85vh;
+  background: var(--color-white);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  padding: var(--space-2xl) var(--space-xl) var(--space-3xl) var(--space-xl);
+  box-shadow: 0 -12px 48px rgba(0, 0, 0, 0.15);
+  animation: slideUp 0.3s ease-out;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+}
+
+.config-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.config-section h3 {
+  font-size: 13px;
+  font-weight: 700;
+  font-family: var(--font-heading);
+  color: var(--color-gray-green);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0;
+}
+
+.config-user-info {
+  display: flex;
+  align-items: center;
+  gap: var(--space-lg);
+  padding: var(--space-lg);
+  background: var(--color-off-white);
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(183, 198, 194, 0.2);
+}
+
+.user-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--color-charcoal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-white);
+  flex-shrink: 0;
+}
+
+.user-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.user-email {
+  font-size: 15px;
+  font-weight: 700;
+  font-family: var(--font-body);
+  color: var(--color-charcoal);
+}
+
+.user-status {
+  font-size: 12px;
+  font-weight: 600;
+  font-family: var(--font-body);
+  color: var(--color-gray-green);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.config-divider {
+  height: 1px;
+  background: rgba(183, 198, 194, 0.2);
+}
+
+.config-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  padding: var(--space-md);
+  background: var(--color-off-white);
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(183, 198, 194, 0.2);
+}
+
+.config-option-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.config-option-label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-size: 15px;
+  font-weight: 600;
+  font-family: var(--font-body);
+  color: var(--color-charcoal);
+}
+
+.config-option-description {
+  font-size: 12px;
+  font-weight: 500;
+  font-family: var(--font-body);
+  color: var(--color-gray-green);
+}
+
+/* Toggle Switch */
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 52px;
+  height: 28px;
+  flex-shrink: 0;
+}
+
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(183, 198, 194, 0.3);
+  transition: all var(--transition-base);
+  border-radius: 28px;
+}
+
+.toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 4px;
+  bottom: 4px;
+  background-color: var(--color-white);
+  transition: all var(--transition-base);
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.toggle-switch input:checked + .toggle-slider {
+  background-color: var(--color-vibrant-red);
+}
+
+.toggle-switch input:checked + .toggle-slider:before {
+  transform: translateX(24px);
+}
+
+.toggle-switch input:focus + .toggle-slider {
+  box-shadow: 0 0 0 2px rgba(202, 0, 19, 0.2);
+}
+
+/* Botão de sair */
+.btn-sair {
+  width: 100%;
+  padding: var(--space-lg);
+  background: transparent;
+  border: 2px solid var(--color-vibrant-red);
+  border-radius: var(--radius-md);
+  color: var(--color-vibrant-red);
+  font-size: 15px;
+  font-weight: 700;
+  font-family: var(--font-body);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.btn-sair:hover {
+  background: var(--color-vibrant-red);
+  color: var(--color-white);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-red);
+}
+
+.btn-sair:active {
+  transform: translateY(0);
+}
+
+/* Confirmação de saída */
+.confirmacao-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(23, 30, 25, 0.8);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-xl);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.confirmacao-card {
+  background: var(--color-white);
+  padding: var(--space-2xl);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  max-width: 320px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  animation: scaleIn 0.2s ease-out;
+}
+
+.confirmacao-card h3 {
+  font-size: 18px;
+  font-weight: 800;
+  font-family: var(--font-heading);
+  color: var(--color-charcoal);
+  margin: 0;
+}
+
+.confirmacao-card p {
+  font-size: 14px;
+  font-weight: 500;
+  font-family: var(--font-body);
+  color: var(--color-gray-green);
+  margin: 0;
+}
+
+.confirmacao-actions {
+  display: flex;
+  gap: var(--space-md);
+  margin-top: var(--space-md);
+}
+
+.confirmacao-actions button {
+  flex: 1;
+  padding: var(--space-md) var(--space-lg);
+  border-radius: var(--radius-md);
+  font-size: 15px;
+  font-weight: 700;
+  font-family: var(--font-body);
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.confirmacao-actions .btn-cancelar {
+  background: var(--color-off-white);
+  border: 1px solid rgba(183, 198, 194, 0.3);
+  color: var(--color-charcoal);
+}
+
+.confirmacao-actions .btn-cancelar:hover {
+  background: rgba(183, 198, 194, 0.2);
+}
+
+.confirmacao-actions .btn-confirmar {
+  background: var(--color-vibrant-red);
+  border: none;
+  color: var(--color-white);
+  box-shadow: var(--shadow-red);
+}
+
+.confirmacao-actions .btn-confirmar:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px -6px rgba(202, 0, 19, 0.5);
+}
+
+.confirmacao-actions .btn-confirmar:active {
+  transform: translateY(0);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
