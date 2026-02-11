@@ -562,14 +562,6 @@
   font-family: var(--font-body);
 }
 
-.frequente-stats {
-  font-size: 11px;
-  color: var(--color-gray-green);
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.3px;
-}
-
 .frequentes-empty {
   padding: 20px;
   text-align: center;

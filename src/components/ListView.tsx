@@ -576,9 +576,6 @@ export function ListView() {
                           </div>
                           <div className="frequente-info">
                             <div className="frequente-nome">{historico.item_nome}</div>
-                            <div className="frequente-stats">
-                              {historico.purchase_count}x comprado
-                            </div>
                           </div>
                         </div>
                       ))
