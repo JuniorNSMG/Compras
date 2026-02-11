@@ -47,6 +47,19 @@
   display: flex;
   flex-direction: column;
   gap: 6px;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  padding: var(--space-sm);
+  border-radius: var(--radius-sm);
+}
+
+.greeting-frase:hover {
+  background: rgba(183, 198, 194, 0.1);
+  transform: translateX(2px);
+}
+
+.greeting-frase:active {
+  transform: scale(0.98);
 }
 
 .frase-autor {
@@ -382,9 +395,12 @@
 
 /* Seção de comprados (colapsável) */
 .comprados-section {
-  margin-top: var(--space-lg);
+  margin-top: var(--space-xl);
   background: var(--color-white);
-  border-top: 2px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid rgba(183, 198, 194, 0.2);
 }
 
 .comprados-header {
@@ -392,8 +408,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--space-md);
-  background: rgba(8, 145, 178, 0.03);
+  padding: var(--space-lg);
+  background: rgba(183, 198, 194, 0.08);
   border: none;
   text-align: left;
   transition: all var(--transition-base);
@@ -402,53 +418,68 @@
 }
 
 .comprados-header:hover {
-  background-color: rgba(8, 145, 178, 0.08);
+  background-color: rgba(183, 198, 194, 0.15);
+  transform: translateX(2px);
+}
+
+.comprados-header:active {
+  transform: scale(0.99);
 }
 
 .comprados-title {
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--color-text);
+  font-size: 16px;
+  font-weight: 800;
+  font-family: var(--font-heading);
+  color: var(--color-charcoal);
   display: flex;
   align-items: center;
   gap: var(--space-sm);
+  letter-spacing: 0.3px;
 }
 
 .comprados-list {
-  background: white;
-  border-top: 1px solid #e8e8e8;
+  background: var(--color-white);
+  border-top: 1px solid rgba(183, 198, 194, 0.2);
 }
 
 .limpar-comprados-button {
   width: calc(100% - 30px);
   margin: var(--space-md);
-  padding: var(--space-md);
-  background: var(--color-error);
+  padding: var(--space-lg);
+  background: var(--color-vibrant-red);
   color: var(--color-white);
   border: none;
   border-radius: var(--radius-md);
   font-size: 15px;
-  font-weight: 600;
+  font-weight: 700;
+  font-family: var(--font-body);
   display: flex;
   align-items: center;
   justify-content: center;
   gap: var(--space-sm);
   transition: all var(--transition-base);
   cursor: pointer;
-  font-family: var(--font-body);
+  box-shadow: var(--shadow-red);
 }
 
 .limpar-comprados-button:hover {
-  background-color: #B91C1C;
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px -6px rgba(202, 0, 19, 0.5);
+}
+
+.limpar-comprados-button:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow-red);
 }
 
 /* Seção de frequentemente comprado */
 .frequentes-section {
-  margin-top: var(--space-lg);
+  margin-top: var(--space-xl);
   background: var(--color-white);
-  border-top: 2px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid rgba(183, 198, 194, 0.2);
 }
 
 .frequentes-header {
@@ -456,8 +487,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--space-md);
-  background: rgba(5, 150, 105, 0.03);
+  padding: var(--space-lg);
+  background: rgba(183, 198, 194, 0.08);
   border: none;
   text-align: left;
   transition: all var(--transition-base);
@@ -466,36 +497,47 @@
 }
 
 .frequentes-header:hover {
-  background-color: rgba(5, 150, 105, 0.08);
+  background-color: rgba(183, 198, 194, 0.15);
+  transform: translateX(2px);
+}
+
+.frequentes-header:active {
+  transform: scale(0.99);
 }
 
 .frequentes-title {
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--color-text);
+  font-size: 16px;
+  font-weight: 800;
+  font-family: var(--font-heading);
+  color: var(--color-charcoal);
   display: flex;
   align-items: center;
   gap: var(--space-sm);
+  letter-spacing: 0.3px;
 }
 
 .frequentes-list {
-  background: white;
-  border-top: 1px solid #e8e8e8;
+  background: var(--color-white);
+  border-top: 1px solid rgba(183, 198, 194, 0.2);
 }
 
 .frequente-item {
   display: flex;
   align-items: center;
   gap: var(--space-md);
-  padding: var(--space-md);
-  border-bottom: 1px solid var(--color-border);
+  padding: var(--space-lg);
+  border-bottom: 1px solid rgba(183, 198, 194, 0.15);
   cursor: pointer;
   transition: all var(--transition-base);
 }
 
 .frequente-item:hover {
-  background-color: rgba(5, 150, 105, 0.05);
-  transform: translateX(2px);
+  background-color: rgba(202, 0, 19, 0.05);
+  transform: translateX(4px);
+}
+
+.frequente-item:active {
+  transform: scale(0.98);
 }
 
 .frequente-icon {
@@ -515,15 +557,17 @@
 
 .frequente-nome {
   font-size: 15px;
-  color: var(--color-text);
-  font-weight: 500;
+  color: var(--color-charcoal);
+  font-weight: 600;
   font-family: var(--font-body);
 }
 
 .frequente-stats {
-  font-size: 12px;
-  color: var(--color-cta);
-  font-weight: 600;
+  font-size: 11px;
+  color: var(--color-gray-green);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
 }
 
 .frequentes-empty {

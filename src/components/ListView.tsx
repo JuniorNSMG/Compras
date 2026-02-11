@@ -37,7 +37,7 @@ export function ListView() {
   const [toastMessage, setToastMessage] = useState<string>('')
   const [categoriaSelecionada, setCategoriaSelecionada] = useState<string>('Todas')
   const [mostrarModalAdicionar, setMostrarModalAdicionar] = useState(false)
-  const [fraseMotivacional] = useState(() => obterFraseAleatoria())
+  const [fraseMotivacional, setFraseMotivacional] = useState(() => obterFraseAleatoria())
   const previousItensRef = useRef<Map<string, boolean>>(new Map())
   const containerRef = useRef<HTMLDivElement>(null)
   const scrollPositionRef = useRef<number>(0)
@@ -65,6 +65,20 @@ export function ListView() {
       loadItensAgregados()
     }
   }, [modoComprasAtivo, listasSelecionadasModoCompras])
+
+  // Trocar frase automaticamente a cada 2 minutos
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setFraseMotivacional(obterFraseAleatoria())
+    }, 120000) // 2 minutos = 120000ms
+
+    return () => clearInterval(interval)
+  }, [])
+
+  // Função para trocar frase ao clicar
+  function trocarFrase() {
+    setFraseMotivacional(obterFraseAleatoria())
+  }
 
   async function loadListas() {
     if (!user) return
@@ -401,7 +415,7 @@ export function ListView() {
             <span>{getGreetingEmoji()}</span>
             {getGreeting()}
           </div>
-          <p className="greeting-frase">
+          <p className="greeting-frase" onClick={trocarFrase}>
             "{fraseMotivacional.texto}"
             <span className="frase-autor">— {fraseMotivacional.autor}</span>
           </p>
