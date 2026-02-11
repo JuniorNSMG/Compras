@@ -150,57 +150,7 @@ export function GerenciarListas({ listas, userId, currentListaId, onClose, onLis
         </header>
 
         <div className="modal-body">
-          {/* Criar nova lista */}
-          <div className="criar-lista-section">
-            <h3>Nova Lista</h3>
-            <div className="input-group">
-              <input
-                type="text"
-                value={novoNome}
-                onChange={(e) => setNovoNome(e.target.value)}
-                placeholder="Nome da lista..."
-                onKeyDown={(e) => e.key === 'Enter' && handleCriar()}
-                disabled={salvando}
-                aria-label="Nome da nova lista"
-              />
-              <button
-                onClick={handleCriar}
-                disabled={!novoNome.trim() || salvando}
-                className="btn-primary"
-                type="button"
-              >
-                {salvando ? 'Criando...' : 'Criar'}
-              </button>
-            </div>
-          </div>
-
-          {/* Adicionar lista por código */}
-          <div className="criar-lista-section codigo-section">
-            <h3>Adicionar Lista por Código</h3>
-            <div className="input-group">
-              <input
-                type="text"
-                value={codigo}
-                onChange={(e) => setCodigo(e.target.value.toUpperCase())}
-                placeholder="Digite o código (6 caracteres)..."
-                maxLength={6}
-                onKeyDown={(e) => e.key === 'Enter' && handleUsarCodigo()}
-                disabled={salvando}
-                aria-label="Código de compartilhamento"
-                style={{ fontFamily: 'monospace', letterSpacing: '2px' }}
-              />
-              <button
-                onClick={handleUsarCodigo}
-                disabled={codigo.trim().length !== 6 || salvando}
-                className="btn-primary"
-                type="button"
-              >
-                {salvando ? 'Adicionando...' : 'Adicionar'}
-              </button>
-            </div>
-          </div>
-
-          {/* Lista de listas existentes */}
+          {/* Lista de listas existentes - PRIMEIRO */}
           <div className="listas-existentes">
             <h3>Minhas Listas ({listas.length})</h3>
             <div className="listas-list">
@@ -241,18 +191,24 @@ export function GerenciarListas({ listas, userId, currentListaId, onClose, onLis
                     </div>
                   ) : (
                     <>
-                      <span
-                        className={`lista-nome ${currentListaId === lista.id ? 'lista-ativa' : ''}`}
+                      <div
+                        className="lista-info"
                         onClick={() => handleSelectLista(lista)}
                       >
-                        {lista.nome}
-                        {listaPadraoId === lista.id && (
-                          <span className="badge-padrao" title="Lista padrão">Padrão</span>
+                        <span className={`lista-nome ${currentListaId === lista.id ? 'lista-ativa' : ''}`}>
+                          {lista.nome}
+                        </span>
+                        {(listaPadraoId === lista.id || currentListaId === lista.id) && (
+                          <div className="lista-badges">
+                            {listaPadraoId === lista.id && (
+                              <span className="badge-padrao" title="Lista padrão">Padrão</span>
+                            )}
+                            {currentListaId === lista.id && (
+                              <span className="badge-ativa" title="Lista atual">Ativa</span>
+                            )}
+                          </div>
                         )}
-                        {currentListaId === lista.id && (
-                          <span className="badge-ativa" title="Lista atual">Ativa</span>
-                        )}
-                      </span>
+                      </div>
                       <div className="lista-actions">
                         <button
                           onClick={() => handleTogglePadrao(lista.id)}
@@ -296,6 +252,56 @@ export function GerenciarListas({ listas, userId, currentListaId, onClose, onLis
                   )}
                 </div>
               ))}
+            </div>
+          </div>
+
+          {/* Criar nova lista - SEGUNDO */}
+          <div className="criar-lista-section">
+            <h3>Nova Lista</h3>
+            <div className="input-group">
+              <input
+                type="text"
+                value={novoNome}
+                onChange={(e) => setNovoNome(e.target.value)}
+                placeholder="Nome da lista..."
+                onKeyDown={(e) => e.key === 'Enter' && handleCriar()}
+                disabled={salvando}
+                aria-label="Nome da nova lista"
+              />
+              <button
+                onClick={handleCriar}
+                disabled={!novoNome.trim() || salvando}
+                className="btn-primary"
+                type="button"
+              >
+                {salvando ? 'Criando...' : 'Criar'}
+              </button>
+            </div>
+          </div>
+
+          {/* Adicionar lista por código - TERCEIRO */}
+          <div className="criar-lista-section codigo-section">
+            <h3>Adicionar Lista por Código</h3>
+            <div className="input-group">
+              <input
+                type="text"
+                value={codigo}
+                onChange={(e) => setCodigo(e.target.value.toUpperCase())}
+                placeholder="Digite o código (6 caracteres)..."
+                maxLength={6}
+                onKeyDown={(e) => e.key === 'Enter' && handleUsarCodigo()}
+                disabled={salvando}
+                aria-label="Código de compartilhamento"
+                style={{ fontFamily: 'monospace', letterSpacing: '2px' }}
+              />
+              <button
+                onClick={handleUsarCodigo}
+                disabled={codigo.trim().length !== 6 || salvando}
+                className="btn-primary"
+                type="button"
+              >
+                {salvando ? 'Adicionando...' : 'Adicionar'}
+              </button>
             </div>
           </div>
         </div>
