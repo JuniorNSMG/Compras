@@ -1,49 +1,64 @@
 /* Design System - Compras App */
-@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;500;600;700&family=Rubik:wght@300;400;500;600;700&display=swap');
+/* Sophisticated Playful - Parenting & Health Focused Design */
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');
 
 :root {
-  /* Color Palette */
-  --color-primary: #0891B2;
-  --color-secondary: #22D3EE;
-  --color-cta: #059669;
-  --color-background: #ECFEFF;
-  --color-text: #164E63;
-  --color-text-light: #64748B;
-  --color-white: #FFFFFF;
-  --color-border: #E2E8F0;
+  /* Color Palette - Sophisticated Playful */
+  --color-charcoal: #171e19;
+  --color-vibrant-red: #ca0013;
+  --color-gray-green: #b7c6c2;
+  --color-off-white: #eeebe3;
+  --color-white: #ffffff;
+
+  /* Semantic Colors (mapped to new palette) */
+  --color-primary: #b7c6c2;
+  --color-secondary: #ca0013;
+  --color-cta: #ca0013;
+  --color-background: #eeebe3;
+  --color-text: #171e19;
+  --color-text-light: #b7c6c2;
+  --color-border: #b7c6c2;
   --color-success: #059669;
-  --color-error: #DC2626;
+  --color-error: #ca0013;
   --color-warning: #F59E0B;
 
   /* Spacing */
   --space-xs: 4px;
   --space-sm: 8px;
-  --space-md: 16px;
-  --space-lg: 24px;
-  --space-xl: 32px;
-  --space-2xl: 48px;
-  --space-3xl: 64px;
+  --space-md: 12px;
+  --space-lg: 16px;
+  --space-xl: 24px;
+  --space-2xl: 40px;
+  --space-3xl: 56px;
 
-  /* Shadows - Flat Design (minimal) */
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 2px 4px rgba(0, 0, 0, 0.06);
-  --shadow-lg: 0 4px 8px rgba(0, 0, 0, 0.08);
+  /* Shadows - Soft & Sophisticated */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 8px 24px -8px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 20px 50px -12px rgba(0, 0, 0, 0.08);
+  --shadow-red: 0 8px 16px -4px rgba(202, 0, 19, 0.3);
 
-  /* Typography */
-  --font-heading: 'Rubik', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --font-body: 'Nunito Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  /* Typography - Nunito Family */
+  --font-heading: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-body: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 
-  /* Border Radius */
-  --radius-sm: 6px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
-  --radius-xl: 16px;
+  /* Font Sizes */
+  --text-heading: 32px;
+  --text-subheading: 20px;
+  --text-body: 16px;
+  --text-small: 14px;
+  --text-label: 10px;
+
+  /* Border Radius - Soft but Modern */
+  --radius-sm: 16px;
+  --radius-md: 24px;
+  --radius-lg: 40px;
+  --radius-xl: 56px;
   --radius-full: 9999px;
 
   /* Transitions */
-  --transition-fast: 150ms ease;
-  --transition-base: 200ms ease;
-  --transition-slow: 300ms ease;
+  --transition-fast: 150ms ease-in-out;
+  --transition-base: 250ms ease-in-out;
+  --transition-slow: 350ms ease-in-out;
 }
 
 /* Global Styles */
@@ -53,18 +68,29 @@
 
 body {
   font-family: var(--font-body);
-  color: var(--color-text);
-  background-color: var(--color-background);
-  line-height: 1.6;
+  color: var(--color-charcoal);
+  background-color: var(--color-off-white);
+  line-height: 1.5;
+  font-weight: 400;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading);
-  font-weight: 600;
+  font-weight: 900;
   line-height: 1.2;
-  color: var(--color-text);
+  color: var(--color-charcoal);
+}
+
+h1 {
+  font-size: var(--text-heading);
+  font-weight: 900;
+}
+
+h2 {
+  font-size: var(--text-subheading);
+  font-weight: 900;
 }
 
 button {

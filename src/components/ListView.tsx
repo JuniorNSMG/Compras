@@ -34,6 +34,7 @@ export function ListView() {
   })
   const [frequentementeComprados, setFrequentementeComprados] = useState<HistoricoCompra[]>([])
   const [toastMessage, setToastMessage] = useState<string>('')
+  const [categoriaSelecionada, setCategoriaSelecionada] = useState<string>('Todas')
   const previousItensRef = useRef<Map<string, boolean>>(new Map())
   const containerRef = useRef<HTMLDivElement>(null)
   const scrollPositionRef = useRef<number>(0)
@@ -365,8 +366,6 @@ export function ListView() {
 
   const itensAgrupadosPorCategoria = agruparPorCategoria(itensNaoComprados)
 
-  const nomesListasCompras = listasSelecionadasModoCompras.map(l => l.nome).join(', ')
-
   // Calcular total estimado
   const totalEstimado = mostrarPrecos
     ? itensNaoComprados.reduce((total, item) => {
@@ -375,64 +374,40 @@ export function ListView() {
       }, 0)
     : 0
 
+  // Função para obter saudação baseada na hora do dia
+  function getGreeting() {
+    const hour = new Date().getHours()
+    if (hour < 12) return 'BOM DIA'
+    if (hour < 18) return 'BOA TARDE'
+    return 'BOA NOITE'
+  }
+
+  // Obter primeira palavra do nome do usuário ou email
+  function getUserFirstName() {
+    if (!user?.email) return 'Usuário'
+    const emailUser = user.email.split('@')[0]
+    // Capitalizar primeira letra
+    return emailUser.charAt(0).toUpperCase() + emailUser.slice(1)
+  }
+
   return (
     <div className="list-view-container container">
       <header className="list-header safe-area-top">
-        {modoComprasAtivo ? (
-          <>
-            <button onClick={() => setShowListSelector(!showListSelector)} className="list-title-button">
-              <h1>{nomesListasCompras}</h1>
-            </button>
-            <div className="header-actions">
-              <button
-                onClick={toggleMostrarPrecos}
-                className="toggle-preco-button"
-                title={mostrarPrecos ? 'Ocultar preços' : 'Mostrar preços'}
-              >
-                <Icon
-                  icon="mdi:currency-usd"
-                  width={26}
-                  height={26}
-                  style={{ color: mostrarPrecos ? 'var(--color-primary)' : '#999' }}
-                />
-              </button>
-              <button
-                onClick={() => {
-                  setModoComprasAtivo(false)
-                  setListasSelecionadasModoCompras([])
-                  setItensAgregados([])
-                }}
-                className="signout-button"
-              >
-                Voltar
-              </button>
-            </div>
-          </>
-        ) : (
-          <>
-            <button onClick={() => setShowListSelector(!showListSelector)} className="list-title-button">
-              <h1>{currentLista?.nome || 'Carregando...'}</h1>
-              <span className="dropdown-icon">{showListSelector ? '▲' : '▼'}</span>
-            </button>
-            <div className="header-actions">
-              <button
-                onClick={toggleMostrarPrecos}
-                className="toggle-preco-button"
-                title={mostrarPrecos ? 'Ocultar preços' : 'Mostrar preços'}
-              >
-                <Icon
-                  icon="mdi:currency-usd"
-                  width={26}
-                  height={26}
-                  style={{ color: mostrarPrecos ? 'var(--color-primary)' : '#999' }}
-                />
-              </button>
-              <button onClick={handleSignOut} className="signout-button">
-                Sair
-              </button>
-            </div>
-          </>
-        )}
+        <div className="header-greeting">
+          <div className="greeting-label">
+            <span>☀️</span>
+            {getGreeting()}
+          </div>
+          <h1 className="greeting-name">Olá, {getUserFirstName()}!</h1>
+        </div>
+        <div className="header-profile" onClick={() => setShowListSelector(!showListSelector)}>
+          <div className="profile-image">
+            {getUserFirstName().charAt(0).toUpperCase()}
+          </div>
+          {(itensNaoComprados.length > 0 || modoComprasAtivo) && (
+            <div className="notification-badge"></div>
+          )}
+        </div>
       </header>
 
       {showListSelector && !modoComprasAtivo && (
@@ -479,6 +454,33 @@ export function ListView() {
         </div>
       )}
 
+      {/* Horizontal Category Selector */}
+      {!modoComprasAtivo && Object.keys(itensAgrupadosPorCategoria).length > 0 && (
+        <div className="category-scroll-container">
+          <button
+            className={`category-pill ${categoriaSelecionada === 'Todas' ? 'active' : ''}`}
+            onClick={() => setCategoriaSelecionada('Todas')}
+          >
+            {categoriaSelecionada === 'Todas' && (
+              <div className="category-badge">{itensNaoComprados.length}</div>
+            )}
+            <span className="category-label">Todas</span>
+          </button>
+          {Object.entries(itensAgrupadosPorCategoria).map(([categoria, items]) => (
+            <button
+              key={categoria}
+              className={`category-pill ${categoriaSelecionada === categoria ? 'active' : ''}`}
+              onClick={() => setCategoriaSelecionada(categoria)}
+            >
+              {categoriaSelecionada === categoria && (
+                <div className="category-badge">{items.length}</div>
+              )}
+              <span className="category-label">{categoria}</span>
+            </button>
+          ))}
+        </div>
+      )}
+
       <div ref={containerRef} className="items-container safe-area-bottom">
         {(modoComprasAtivo ? itensAgregados.length === 0 : itens.length === 0) ? (
           <div className="empty-state">
@@ -490,7 +492,9 @@ export function ListView() {
         ) : (
           <>
             {/* Itens não comprados agrupados por categoria (inclui itens animando) */}
-            {Object.entries(itensAgrupadosPorCategoria).map(([categoria, items]) => (
+            {Object.entries(itensAgrupadosPorCategoria)
+              .filter(([categoria]) => categoriaSelecionada === 'Todas' || categoria === categoriaSelecionada)
+              .map(([categoria, items]) => (
               <div key={categoria} className="categoria-section">
                 <div className="categoria-header">
                   <h3>{categoria}</h3>
@@ -660,6 +664,49 @@ export function ListView() {
           {toastMessage}
         </div>
       )}
+
+      {/* Floating Navigation Bar */}
+      <nav className="floating-nav">
+        <button
+          className="nav-button"
+          onClick={() => setShowListSelector(!showListSelector)}
+          title="Início"
+        >
+          <Icon icon="ic:round-home" width={24} height={24} />
+        </button>
+
+        <button
+          className="nav-button"
+          onClick={() => setMostrarSeletorModoCompras(true)}
+          title="Buscar"
+        >
+          <Icon icon="ic:round-search" width={24} height={24} />
+        </button>
+
+        <button
+          className="nav-fab"
+          onClick={toggleMostrarPrecos}
+          title={mostrarPrecos ? 'Ocultar preços' : 'Mostrar preços'}
+        >
+          <Icon icon="ic:round-add" width={28} height={28} />
+        </button>
+
+        <button
+          className="nav-button"
+          onClick={() => setMostrarGerenciarListas(true)}
+          title="Gerenciar"
+        >
+          <Icon icon="ic:round-menu" width={24} height={24} />
+        </button>
+
+        <button
+          className="nav-button"
+          onClick={handleSignOut}
+          title="Perfil"
+        >
+          <Icon icon="ic:round-person" width={24} height={24} />
+        </button>
+      </nav>
     </div>
   )
 }
