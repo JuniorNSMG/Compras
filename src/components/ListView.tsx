@@ -596,8 +596,14 @@ export function ListView() {
         <GerenciarListas
           listas={listas}
           userId={user.id}
+          currentListaId={currentLista?.id}
           onClose={() => setMostrarGerenciarListas(false)}
           onListasUpdated={loadListas}
+          onSelectLista={(lista) => {
+            setCurrentLista(lista)
+            setModoComprasAtivo(false)
+            setListasSelecionadasModoCompras([])
+          }}
         />
       )}
 

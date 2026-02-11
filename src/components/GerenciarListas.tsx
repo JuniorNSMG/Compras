@@ -9,11 +9,13 @@ import './GerenciarListas.css'
 interface GerenciarListasProps {
   listas: Lista[]
   userId: string
+  currentListaId?: string
   onClose: () => void
   onListasUpdated: () => void
+  onSelectLista?: (lista: Lista) => void
 }
 
-export function GerenciarListas({ listas, userId, onClose, onListasUpdated }: GerenciarListasProps) {
+export function GerenciarListas({ listas, userId, currentListaId, onClose, onListasUpdated, onSelectLista }: GerenciarListasProps) {
   const [novoNome, setNovoNome] = useState('')
   const [codigo, setCodigo] = useState('')
   const [editandoId, setEditandoId] = useState<string | null>(null)
@@ -125,6 +127,13 @@ export function GerenciarListas({ listas, userId, onClose, onListasUpdated }: Ge
     }
   }
 
+  function handleSelectLista(lista: Lista) {
+    if (onSelectLista) {
+      onSelectLista(lista)
+      onClose()
+    }
+  }
+
   return (
     <div className="modal-overlay" onClick={onClose} role="dialog" aria-modal="true" aria-labelledby="modal-title">
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
@@ -232,10 +241,16 @@ export function GerenciarListas({ listas, userId, onClose, onListasUpdated }: Ge
                     </div>
                   ) : (
                     <>
-                      <span className="lista-nome">
+                      <span
+                        className={`lista-nome ${currentListaId === lista.id ? 'lista-ativa' : ''}`}
+                        onClick={() => handleSelectLista(lista)}
+                      >
                         {lista.nome}
                         {listaPadraoId === lista.id && (
                           <span className="badge-padrao" title="Lista padrão">Padrão</span>
+                        )}
+                        {currentListaId === lista.id && (
+                          <span className="badge-ativa" title="Lista atual">Ativa</span>
                         )}
                       </span>
                       <div className="lista-actions">

@@ -30,10 +30,19 @@
   padding: var(--space-2xl) var(--space-xl) var(--space-3xl) var(--space-xl);
   width: 100%;
   max-width: 600px;
-  max-height: 85vh;
+  max-height: 70vh;
   overflow-y: auto;
   box-shadow: 0 -12px 48px rgba(0, 0, 0, 0.15);
   animation: slideUp 0.25s ease-in-out;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Para iPhone: reduz ainda mais quando teclado aparecer */
+@supports (-webkit-touch-callout: none) {
+  .modal-adicionar {
+    max-height: 60vh;
+  }
 }
 
 @keyframes slideUp {
@@ -83,6 +92,7 @@
   flex-direction: column;
   gap: var(--space-lg);
   margin-bottom: var(--space-xl);
+  flex-shrink: 0;
 }
 
 .modal-input {
@@ -136,6 +146,9 @@
 /* Suggestions */
 .modal-suggestions {
   margin-top: var(--space-xl);
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
 }
 
 .suggestions-label {
