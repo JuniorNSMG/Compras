@@ -12,7 +12,7 @@ import { AdicionarItemModal } from './AdicionarItemModal'
 import { ProductIcon } from './ProductIcon'
 import { ORDEM_CATEGORIAS, DEFAULT_ICON } from '@/utils/productIcons'
 import { calcularPrecoTotal, formatarPreco } from '@/services/precoEstimadoService'
-import { obterFraseDoDia } from '@/data/frasesMotivacionais'
+import { obterFraseAleatoria } from '@/data/frasesMotivacionais'
 import type { Item, ItemComOrigem } from '@/types'
 import { Icon } from '@iconify/react'
 import './ListView.css'
@@ -37,6 +37,7 @@ export function ListView() {
   const [toastMessage, setToastMessage] = useState<string>('')
   const [categoriaSelecionada, setCategoriaSelecionada] = useState<string>('Todas')
   const [mostrarModalAdicionar, setMostrarModalAdicionar] = useState(false)
+  const [fraseMotivacional] = useState(() => obterFraseAleatoria())
   const previousItensRef = useRef<Map<string, boolean>>(new Map())
   const containerRef = useRef<HTMLDivElement>(null)
   const scrollPositionRef = useRef<number>(0)
@@ -392,9 +393,6 @@ export function ListView() {
     return '🌙'
   }
 
-  // Obter frase motivacional do dia
-  const fraseDoDia = obterFraseDoDia()
-
   return (
     <div className="list-view-container container">
       <header className="list-header safe-area-top">
@@ -404,8 +402,8 @@ export function ListView() {
             {getGreeting()}
           </div>
           <p className="greeting-frase">
-            "{fraseDoDia.texto}"
-            <span className="frase-autor">— {fraseDoDia.autor}</span>
+            "{fraseMotivacional.texto}"
+            <span className="frase-autor">— {fraseMotivacional.autor}</span>
           </p>
         </div>
         <div className="header-profile" onClick={() => setShowListSelector(!showListSelector)}>

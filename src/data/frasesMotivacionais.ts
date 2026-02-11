@@ -137,10 +137,8 @@ export const FRASES_MOTIVACIONAIS: FraseMotivacional[] = [
   { texto: "Tempo é o bem mais precioso.", autor: "Anônimo" },
 ]
 
-// Função para obter uma frase aleatória baseada no dia
-export function obterFraseDoDia(): FraseMotivacional {
-  const hoje = new Date()
-  const diaDoAno = Math.floor((hoje.getTime() - new Date(hoje.getFullYear(), 0, 0).getTime()) / 86400000)
-  const indice = diaDoAno % FRASES_MOTIVACIONAIS.length
+// Função para obter uma frase aleatória
+export function obterFraseAleatoria(): FraseMotivacional {
+  const indice = Math.floor(Math.random() * FRASES_MOTIVACIONAIS.length)
   return FRASES_MOTIVACIONAIS[indice]
 }
