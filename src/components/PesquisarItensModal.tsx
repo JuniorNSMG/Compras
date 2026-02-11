@@ -15,10 +15,6 @@ export function PesquisarItensModal({ onClose }: PesquisarItensModalProps) {
   const inputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
-    inputRef.current?.focus()
-  }, [])
-
-  useEffect(() => {
     if (termoPesquisa.trim() === '') {
       setResultados(itens)
     } else {

@@ -19,11 +19,6 @@ export function AdicionarItemModal({ onClose }: AdicionarItemModalProps) {
   const { currentLista, addItem, user } = useStore()
 
   useEffect(() => {
-    // Auto-focus no input quando o modal abre
-    inputRef.current?.focus()
-  }, [])
-
-  useEffect(() => {
     if (input.length >= 1) {
       loadSuggestions()
     } else {
@@ -82,7 +77,6 @@ export function AdicionarItemModal({ onClose }: AdicionarItemModalProps) {
 
       setInput('')
       setShowSuggestions(false)
-      inputRef.current?.focus()
     } catch (error) {
       console.error('Erro ao adicionar item:', error)
     }
