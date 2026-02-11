@@ -100,68 +100,66 @@ export function AdicionarItemModal({ onClose }: AdicionarItemModalProps) {
   }
 
   return (
-    <>
-      <div className="modal-overlay" onClick={handleBackdropClick}>
-        <div className="modal-adicionar">
-          <div className="modal-header">
-            <h2>Adicionar Item</h2>
-            <button className="modal-close" onClick={onClose}>
-              <Icon icon="ic:round-close" width={24} height={24} />
-            </button>
-          </div>
-
-          <form onSubmit={handleSubmit} className="modal-form">
-            <input
-              ref={inputRef}
-              type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder="Digite o nome do item..."
-              className="modal-input"
-              autoComplete="off"
-            />
-
-            {input && (
-              <button type="submit" className="modal-submit">
-                Adicionar
-              </button>
-            )}
-          </form>
-
-          {showSuggestions && suggestions.length > 0 && (
-            <div className="modal-suggestions">
-              <div className="suggestions-label">Sugestões</div>
-              <div className="suggestions-grid">
-                {suggestions.slice(0, 6).map((suggestion, index) => (
-                  <button
-                    key={`${suggestion.nome}-${index}`}
-                    onClick={() => handleSuggestionClick(suggestion)}
-                    className="suggestion-card"
-                  >
-                    <div className="suggestion-icon">
-                      <ProductIcon icon={suggestion.icon_name} size={32} />
-                    </div>
-                    <span className="suggestion-name">{suggestion.nome}</span>
-                  </button>
-                ))}
-              </div>
+    <div className="modal-overlay" onClick={handleBackdropClick}>
+      <div className="modal-adicionar">
+        {/* Notificação de item adicionado */}
+        {itemAdicionado && (
+          <div className="toast-notification">
+            <div className="toast-icon">
+              <Icon icon="ic:round-check-circle" width={20} height={20} />
             </div>
-          )}
-        </div>
-      </div>
+            <div className="toast-content">
+              <span className="toast-label">Item adicionado</span>
+              <span className="toast-item-name">{itemAdicionado}</span>
+            </div>
+          </div>
+        )}
 
-      {/* Notificação de item adicionado */}
-      {itemAdicionado && (
-        <div className="toast-notification">
-          <div className="toast-icon">
-            <Icon icon="ic:round-check-circle" width={20} height={20} />
-          </div>
-          <div className="toast-content">
-            <span className="toast-label">Item adicionado</span>
-            <span className="toast-item-name">{itemAdicionado}</span>
-          </div>
+        <div className="modal-header">
+          <h2>Adicionar Item</h2>
+          <button className="modal-close" onClick={onClose}>
+            <Icon icon="ic:round-close" width={24} height={24} />
+          </button>
         </div>
-      )}
-    </>
+
+        <form onSubmit={handleSubmit} className="modal-form">
+          <input
+            ref={inputRef}
+            type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder="Digite o nome do item..."
+            className="modal-input"
+            autoComplete="off"
+          />
+
+          {input && (
+            <button type="submit" className="modal-submit">
+              Adicionar
+            </button>
+          )}
+        </form>
+
+        {showSuggestions && suggestions.length > 0 && (
+          <div className="modal-suggestions">
+            <div className="suggestions-label">Sugestões</div>
+            <div className="suggestions-grid">
+              {suggestions.slice(0, 6).map((suggestion, index) => (
+                <button
+                  key={`${suggestion.nome}-${index}`}
+                  onClick={() => handleSuggestionClick(suggestion)}
+                  className="suggestion-card"
+                >
+                  <div className="suggestion-icon">
+                    <ProductIcon icon={suggestion.icon_name} size={32} />
+                  </div>
+                  <span className="suggestion-name">{suggestion.nome}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
   )
 }
