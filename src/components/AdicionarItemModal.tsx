@@ -15,6 +15,7 @@ export function AdicionarItemModal({ onClose }: AdicionarItemModalProps) {
   const [input, setInput] = useState('')
   const [suggestions, setSuggestions] = useState<SearchCacheItem[]>([])
   const [showSuggestions, setShowSuggestions] = useState(false)
+  const [itemAdicionado, setItemAdicionado] = useState<string | null>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const { currentLista, addItem, user } = useStore()
 
@@ -74,6 +75,12 @@ export function AdicionarItemModal({ onClose }: AdicionarItemModalProps) {
           categoria: newItem.categoria
         }, user.id)
       }
+
+      // Mostrar notificação de sucesso
+      setItemAdicionado(newItem.nome)
+      setTimeout(() => {
+        setItemAdicionado(null)
+      }, 2000)
 
       setInput('')
       setShowSuggestions(false)
@@ -140,6 +147,19 @@ export function AdicionarItemModal({ onClose }: AdicionarItemModalProps) {
           </div>
         )}
       </div>
+
+      {/* Notificação de item adicionado */}
+      {itemAdicionado && (
+        <div className="toast-notification">
+          <div className="toast-icon">
+            <Icon icon="ic:round-check-circle" width={24} height={24} />
+          </div>
+          <div className="toast-content">
+            <span className="toast-label">Item adicionado</span>
+            <span className="toast-item-name">{itemAdicionado}</span>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
