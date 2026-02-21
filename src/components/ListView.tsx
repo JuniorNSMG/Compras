@@ -56,6 +56,13 @@ export function ListView() {
     }
   }, [user])
 
+  // Salvar última lista aberta sempre que mudar
+  useEffect(() => {
+    if (user && currentLista) {
+      preferencesService.setLastOpenedListId(user.id, currentLista.id)
+    }
+  }, [user, currentLista])
+
   useEffect(() => {
     if (currentLista && !modoComprasAtivo) {
       loadItens()
@@ -93,16 +100,24 @@ export function ListView() {
         setListas([newLista])
         setCurrentLista(newLista)
       } else {
-        // Tentar usar a lista padrão, senão usar a primeira
-        const defaultListId = preferencesService.getDefaultListId(user.id)
-        const defaultLista = data.find(l => l.id === defaultListId)
+        // Prioridade: última lista aberta > lista padrão > primeira lista
+        const lastOpenedId = preferencesService.getLastOpenedListId(user.id)
+        const lastOpenedLista = lastOpenedId ? data.find(l => l.id === lastOpenedId) : null
 
-        if (defaultLista) {
-          console.log('⭐ Carregando lista padrão:', defaultLista.nome)
-          setCurrentLista(defaultLista)
+        if (lastOpenedLista) {
+          console.log('📂 Carregando última lista aberta:', lastOpenedLista.nome)
+          setCurrentLista(lastOpenedLista)
         } else {
-          console.log('📋 Carregando primeira lista:', data[0].nome)
-          setCurrentLista(data[0])
+          const defaultListId = preferencesService.getDefaultListId(user.id)
+          const defaultLista = data.find(l => l.id === defaultListId)
+
+          if (defaultLista) {
+            console.log('⭐ Carregando lista padrão:', defaultLista.nome)
+            setCurrentLista(defaultLista)
+          } else {
+            console.log('📋 Carregando primeira lista:', data[0].nome)
+            setCurrentLista(data[0])
+          }
         }
       }
     } catch (error) {

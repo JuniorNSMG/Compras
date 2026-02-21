@@ -6,6 +6,7 @@ const STORAGE_KEY = 'compras-preferences'
 
 interface Preferences {
   defaultListId?: string
+  lastOpenedListId?: string
 }
 
 function getPreferences(userId: string): Preferences {
@@ -52,5 +53,22 @@ export const preferencesService = {
     delete prefs.defaultListId
     setPreferences(userId, prefs)
     console.log('🔄 Lista padrão removida')
+  },
+
+  /**
+   * Obter ID da última lista aberta
+   */
+  getLastOpenedListId(userId: string): string | null {
+    const prefs = getPreferences(userId)
+    return prefs.lastOpenedListId || null
+  },
+
+  /**
+   * Salvar última lista aberta
+   */
+  setLastOpenedListId(userId: string, listId: string): void {
+    const prefs = getPreferences(userId)
+    prefs.lastOpenedListId = listId
+    setPreferences(userId, prefs)
   },
 }
